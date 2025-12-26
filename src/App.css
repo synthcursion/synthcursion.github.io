@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow-y: auto;
+    overflow-y: hidden;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -101,6 +101,8 @@ label {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex: 1;
+    min-height: 0;
 }
 
 .path-grid {
@@ -123,6 +125,75 @@ label {
 .path-grid img.selected {
     border-color: #aaa;
     background-color: #444;
+}
+
+.room-selector-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.room-selector-grid h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.9em;
+    color: #d4af37;
+    border-bottom: 1px solid #444;
+    padding-bottom: 3px;
+}
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.room-item {
+    aspect-ratio: 1;
+    cursor: pointer;
+    border: 1px solid #333;
+    background-color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    overflow: hidden;
+    position: relative;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.room-item:hover {
+    border-color: #666;
+    background-color: #222;
+}
+
+.room-item.selected {
+    border-color: #d4af37;
+    background-color: #3a321a;
+    box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.room-subcategory {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.subcategory-heading {
+    margin: 5px 0 2px 0;
+    font-size: 0.8em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.room-item img {
+    width: 75%;
+    height: 75%;
+    object-fit: cover;
 }
 
 .grid-container {

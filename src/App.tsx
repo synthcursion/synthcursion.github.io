@@ -88,9 +88,6 @@ function App() {
   const [selectedType, setSelectedType] = useState<
     "room" | "path" | "empty" | "medallion"
   >("room");
-  const [selectedRoomCategory, setSelectedRoomCategory] = useState<
-    "past" | "present" | "reward"
-  >("past");
   const [selectedRoomId, setSelectedRoomId] = useState<string>("Garrison"); // Default to Garrison
   const [selectedPathType, setSelectedPathType] = useState<PathType>("path1");
   const [hoveredCell, setHoveredCell] = useState<{
@@ -109,10 +106,15 @@ function App() {
         r.Id !== "PoweredPath" &&
         r.Id !== "Entrance",
     );
-    const past = filtered.filter((r) => !r.IsPresentDay && !r.IsBossReward);
-    const present = filtered.filter((r) => r.IsPresentDay && !r.IsBossReward);
-    const reward = filtered.filter((r) => r.IsBossReward);
-    return { past, present, reward };
+    const past = {
+      regular: filtered.filter((r) => !r.IsPresentDay && !r.IsBossReward),
+      reward: filtered.filter((r) => !r.IsPresentDay && r.IsBossReward),
+    };
+    const present = {
+      regular: filtered.filter((r) => r.IsPresentDay && !r.IsBossReward),
+      reward: filtered.filter((r) => r.IsPresentDay && r.IsBossReward),
+    };
+    return { present, past };
   }, []);
 
   const calculatedGrid = useMemo(() => {
@@ -424,16 +426,6 @@ function App() {
     window.history.replaceState({}, "", url.toString());
   }, [grid]);
 
-  // Sync selectedRoomId when category changes
-  useEffect(() => {
-    const categoryRooms = roomsByType[selectedRoomCategory];
-    if (categoryRooms.length > 0) {
-      if (!categoryRooms.find((r) => r.Id === selectedRoomId)) {
-        setSelectedRoomId(categoryRooms[0].Id);
-      }
-    }
-  }, [selectedRoomCategory, roomsByType, selectedRoomId]);
-
   const handleCellClick = (x: number, y: number) => {
     const newGrid = [...grid.map((row) => [...row])];
 
@@ -501,10 +493,13 @@ function App() {
     } else if (selectedType === "medallion") {
       const cell = newGrid[x][y];
       if (cell && cell.type === "room") {
-        newGrid[x][y] = {
-          ...cell,
-          hasMedallion: !cell.hasMedallion,
-        };
+        if (selectedRoomId === "medallion_levelup") {
+          newGrid[x][y] = {
+            ...cell,
+            hasMedallion: !cell.hasMedallion,
+          };
+        }
+        // Handle other medallions if needed in the future
       }
     } else if (selectedType === "room") {
       newGrid[x][y] = {
@@ -558,9 +553,24 @@ function App() {
 
   const getIconPath = (cell: GridCell) => {
     if (cell.type === "room") {
-      const roomInfo = roomsPerLevelData.find(
-        (r) => roomsData[r.Room].Id === cell.roomId && r.Level === cell.tier,
+      const roomLevelInfo = roomsPerLevelData.filter(
+        (rl) => roomsData[rl.Room].Id === cell.roomId,
       );
+      // Try to find the specific tier first
+      let roomInfo = roomLevelInfo.find((r) => r.Level === cell.tier);
+
+      // If specific tier not found, find the closest available tier
+      if (!roomInfo && roomLevelInfo.length > 0) {
+        const availableLevels = roomLevelInfo.map((rl) => rl.Level);
+        const closestLevel = availableLevels.reduce((prev, curr) => {
+          return Math.abs(curr - (cell.tier || 1)) <
+            Math.abs(prev - (cell.tier || 1))
+            ? curr
+            : prev;
+        });
+        roomInfo = roomLevelInfo.find((rl) => rl.Level === closestLevel);
+      }
+
       if (roomInfo && roomInfo.Icon_DDSFile) {
         const fileName = roomInfo.Icon_DDSFile.split("/")
           .pop()
@@ -677,86 +687,123 @@ function App() {
           <h2>Temple Builder</h2>
           <p className="subtitle">Plan your PoE2 Incursion Temple</p>
         </div>
-        <div className="tool-section">
-          <button
-            className={selectedType === "room" ? "active" : ""}
-            onClick={() => setSelectedType("room")}
-          >
-            Room
-          </button>
-          <button
-            className={selectedType === "path" ? "active" : ""}
-            onClick={() => setSelectedType("path")}
-          >
-            Path
-          </button>
-          <button
-            className={selectedType === "empty" ? "active" : ""}
-            onClick={() => setSelectedType("empty")}
-          >
-            Eraser
-          </button>
-          <button
-            className={selectedType === "medallion" ? "active" : ""}
-            onClick={() => setSelectedType("medallion")}
-            title="Quipolatl's Medallion (+1 Tier)"
-          >
-            Medal
-          </button>
+        <div className="options">
+          <div className="room-selector-grid">
+            {/* Rooms */}
+            {Object.entries(roomsByType).map(([category, types]) => (
+              <div key={category} className="room-category">
+                <h4>{category.charAt(0).toUpperCase() + category.slice(1)}</h4>
+                {Object.entries(types).map(([subCategory, rooms]) => (
+                  <div key={subCategory} className="room-subcategory">
+                    <div className="room-grid">
+                      {rooms.map((r) => {
+                        const roomLevelInfo = roomsPerLevelData.filter(
+                          (rl) => roomsData[rl.Room].Id === r.Id,
+                        );
+                        const minLevel =
+                          roomLevelInfo.length > 0
+                            ? Math.min(...roomLevelInfo.map((rl) => rl.Level))
+                            : null;
+                        const roomInfo = roomLevelInfo.find(
+                          (rl) => rl.Level === minLevel,
+                        );
+
+                        const iconDDS =
+                          roomInfo?.Icon_DDSFile || r.Icon_DDSFile;
+                        const iconName = iconDDS
+                          .split("/")
+                          .pop()
+                          ?.replace(".dds", ".png")
+                          .toLowerCase();
+                        const iconUrl = iconName
+                          ? `/ggpk/${iconName}`
+                          : "/ggpk/roomgeneric.png";
+                        return (
+                          <div
+                            key={r.Id}
+                            className={`room-item ${selectedType === "room" && selectedRoomId === r.Id ? "selected" : ""}`}
+                            onClick={() => {
+                              setSelectedType("room");
+                              setSelectedRoomId(r.Id);
+                            }}
+                            title={r.Name}
+                          >
+                            <img src={iconUrl} alt={r.Name} />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+
+            {/* Paths */}
+            <div className="room-category">
+              <h4>Paths</h4>
+              <div className="room-grid">
+                {Object.keys(PATH_TYPES).map((pt) => (
+                  <div
+                    key={pt}
+                    className={`room-item ${selectedType === "path" && selectedPathType === pt ? "selected" : ""}`}
+                    onClick={() => {
+                      setSelectedType("path");
+                      setSelectedPathType(pt as PathType);
+                    }}
+                    title={pt}
+                  >
+                    <img src={`/ggpk/${pt}.png`} alt={pt} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="room-category">
+              <h4>Medallions</h4>
+              <div className="room-grid">
+                {[
+                  {
+                    id: "medallion_levelup",
+                    title:
+                      "Quipolatl's Medallion (Use to increase the Tier of a Room (up to a maximum of 3))",
+                    icon: "incursion2tileglowmedallionlevelup.png",
+                  },
+                  {
+                    id: "medallion_lock",
+                    title:
+                      "Juatalotli's Medallion (Use to prevent the next Destabilisation of a Room)",
+                    icon: "incursion2tileglowmedallionlock.png",
+                  },
+                ].map((m) => (
+                  <div
+                    key={m.id}
+                    className={`room-item ${selectedType === "medallion" && selectedRoomId === m.id ? "selected" : ""}`}
+                    onClick={() => {
+                      setSelectedType("medallion");
+                      setSelectedRoomId(m.id);
+                    }}
+                    title={m.title}
+                  >
+                    <img src={`/ggpk/${m.icon}`} alt={m.title} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="room-category">
+              <h4>Eraser</h4>
+              <div className="room-grid">
+                <div
+                  className={`room-item ${selectedType === "empty" ? "selected" : ""}`}
+                  onClick={() => setSelectedType("empty")}
+                  title="Eraser"
+                >
+                  <img src="/ggpk/incursion2tileempty.png" alt="Eraser" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        {selectedType === "room" && (
-          <div className="options">
-            <div className="tool-section">
-              <button
-                className={selectedRoomCategory === "past" ? "active" : ""}
-                onClick={() => setSelectedRoomCategory("past")}
-              >
-                Past
-              </button>
-              <button
-                className={selectedRoomCategory === "present" ? "active" : ""}
-                onClick={() => setSelectedRoomCategory("present")}
-              >
-                Present
-              </button>
-              <button
-                className={selectedRoomCategory === "reward" ? "active" : ""}
-                onClick={() => setSelectedRoomCategory("reward")}
-              >
-                Reward
-              </button>
-            </div>
-            <label>Select Room:</label>
-            <select
-              value={selectedRoomId}
-              onChange={(e) => setSelectedRoomId(e.target.value)}
-            >
-              {roomsByType[selectedRoomCategory].map((r) => (
-                <option key={r.Id} value={r.Id}>
-                  {r.Name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {selectedType === "path" && (
-          <div className="options">
-            <label>Select Path:</label>
-            <div className="path-grid">
-              {Object.keys(PATH_TYPES).map((pt) => (
-                <img
-                  key={pt}
-                  src={`/ggpk/${pt}.png`}
-                  className={selectedPathType === pt ? "selected" : ""}
-                  onClick={() => setSelectedPathType(pt as PathType)}
-                  title={pt}
-                />
-              ))}
-            </div>
-          </div>
-        )}
 
         <div className="actions">
           <button onClick={shareLayout}>Share Link</button>
@@ -771,22 +818,6 @@ function App() {
           >
             Clear Grid
           </button>
-        </div>
-
-        <div className="help-text">
-          <p>Instructions:</p>
-          <ul>
-            <li>Select a tool (Room, Path, Eraser, Medal)</li>
-            <li>Configure options (Room type)</li>
-            <li>Click on the grid to place/remove/apply medal</li>
-            <li>Tiers and Power are calculated automatically</li>
-            <li>
-              Upgrades: +1 per connected 'UpgradedBy' room (max 3). Special: 3x
-              rooms need 2 copies for first upgrade.
-            </li>
-            <li>Use "Share Link" to copy your layout URL</li>
-            <li>Hover over a cell to see detailed information</li>
-          </ul>
         </div>
       </div>
 
