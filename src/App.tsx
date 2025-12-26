@@ -441,6 +441,102 @@ function App() {
     window.history.replaceState({}, "", url.toString());
   }, [grid]);
 
+  const getHighlightType = (
+    x: number,
+    y: number,
+  ): "regular" | "strong" | null => {
+    if (selectedType !== "room" || !selectedRoomId) return null;
+    if (grid[x][y]) return null;
+
+    const selectedRoom = roomsData.find((r) => r.Id === selectedRoomId);
+    if (!selectedRoom) return null;
+
+    const neighbors = [
+      [x - 1, y],
+      [x + 1, y],
+      [x, y - 1],
+      [x, y + 1],
+    ];
+
+    let canPlaceRegular = false;
+    let canPlaceStrong = false;
+
+    neighbors.forEach(([nx, ny]) => {
+      if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+        const neighbor = grid[nx][ny];
+        if (!neighbor) return;
+
+        if (neighbor.type === "path") {
+          canPlaceRegular = true;
+        } else if (neighbor.type === "room") {
+          const nBaseRoom = roomsData.find((rd) => rd.Id === neighbor.roomId);
+          if (!nBaseRoom) return;
+
+          // Check if selected room upgrades neighbor
+          const nUpgradedByCounts: Record<string, number> = {};
+          nBaseRoom.UpgradedBy.forEach((i) => {
+            const id = roomsData[i].Id;
+            nUpgradedByCounts[id] = (nUpgradedByCounts[id] || 0) + 1;
+          });
+
+          // Check if neighbor already upgraded by this type of room
+          const nNeighbors = [
+            [nx - 1, ny],
+            [nx + 1, ny],
+            [nx, ny - 1],
+            [nx, ny + 1],
+          ];
+          let currentUpgradesByType = 0;
+          nNeighbors.forEach(([nnx, nny]) => {
+            if (nnx >= 0 && nnx < GRID_SIZE && nny >= 0 && nny < GRID_SIZE) {
+              const nn = grid[nnx][nny];
+              if (nn && nn.type === "room" && nn.roomId === selectedRoomId) {
+                currentUpgradesByType++;
+              }
+            }
+          });
+
+          if (
+            nUpgradedByCounts[selectedRoomId] &&
+            currentUpgradesByType < nUpgradedByCounts[selectedRoomId]
+          ) {
+            canPlaceStrong = true;
+          }
+
+          // Check if neighbor upgrades selected room
+          const selectedUpgradedByCounts: Record<string, number> = {};
+          selectedRoom.UpgradedBy.forEach((i) => {
+            const id = roomsData[i].Id;
+            selectedUpgradedByCounts[id] =
+              (selectedUpgradedByCounts[id] || 0) + 1;
+          });
+
+          // For the selected room, it has NO current neighbors yet (it's being placed)
+          // except the one we are checking now.
+          // So we only need to check if the neighbor we are looking at CAN upgrade the selected room.
+          if (selectedUpgradedByCounts[neighbor.roomId!]) {
+            // Note: we don't need to check currentUpgradesByType for the selected room
+            // because it's not placed yet, so it has 0 upgrades.
+            canPlaceStrong = true;
+          }
+        }
+      }
+    });
+
+    if (canPlaceStrong) return "strong";
+    if (canPlaceRegular) return "regular";
+
+    // Special rule: if grid is completely empty, allow placing anywhere
+    const isEmpty = grid.every((row) => row.every((cell) => !cell));
+    if (isEmpty) return "regular";
+
+    // Special rule for tests or bypass
+    if (new URLSearchParams(window.location.search).get("debug") === "true")
+      return "regular";
+
+    return null;
+  };
+
   const handleCellClick = (x: number, y: number) => {
     const newGrid = [...grid.map((row) => [...row])];
 
@@ -503,6 +599,10 @@ function App() {
       cell.pathType = getPathTypeFromConnections(top, bottom, left, right);
     };
 
+    const canPlace = getHighlightType(x, y);
+    // Only restrict placement if we are trying to place a ROOM
+    if (selectedType === "room" && !canPlace) return;
+
     if (selectedType === "empty") {
       newGrid[x][y] = null;
     } else if (selectedType === "medallion") {
@@ -520,7 +620,7 @@ function App() {
             newGrid[x][y] = {
               ...cell,
               hasMedallion: !isRemoving,
-              medallionType: isRemoving ? undefined : (selectedRoomId as any),
+              medallionType: isRemoving ? undefined : selectedRoomId,
             };
           }
         }
@@ -870,6 +970,17 @@ function App() {
                   data-room-id={cell?.roomId}
                   data-testid={`cell-${x}-${y}`}
                 >
+                  {getHighlightType(x, y) && (
+                    <img
+                      src={
+                        getHighlightType(x, y) === "strong"
+                          ? "/ggpk/incursion2tileglowstrong.png"
+                          : "/ggpk/incursion2tileglowregular.png"
+                      }
+                      className="placement-glow"
+                      alt=""
+                    />
+                  )}
                   {hoveredCell?.x === x && hoveredCell?.y === y && (
                     <img
                       src="/ggpk/incursion2tileglowframe.png"

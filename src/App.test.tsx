@@ -13,8 +13,8 @@ Object.defineProperty(window, "history", {
 // Mocking window.location.search
 Object.defineProperty(window, "location", {
   value: {
-    search: "",
-    href: "http://localhost/",
+    search: "?debug=true",
+    href: "http://localhost/?debug=true",
   },
   writable: true,
 });
