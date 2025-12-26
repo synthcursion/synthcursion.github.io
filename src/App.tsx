@@ -217,45 +217,167 @@ function App() {
       });
     });
 
+    const calculatePower = (
+      gridToPower: (GridCell | null)[][],
+      gens: { r: number; c: number; tier: number }[],
+    ) => {
+      // Reset all power
+      gridToPower.forEach((row) =>
+        row.forEach((cell) => {
+          if (cell) {
+            cell.isPowered = false;
+            cell.poweredByGenerators = [];
+          }
+        }),
+      );
+
+      gens.forEach((gen) => {
+        const queue: { r: number; c: number; dist: number }[] = [
+          { r: gen.r, c: gen.c, dist: 0 },
+        ];
+        const visited = new Set<string>();
+        visited.add(`${gen.r},${gen.c}`);
+
+        while (queue.length > 0) {
+          const { r, c, dist } = queue.shift()!;
+
+          if (gridToPower[r][c]) {
+            // Check if already powered by this generator to avoid duplicates
+            const alreadyPoweredByThisGen = gridToPower[r][
+              c
+            ]!.poweredByGenerators!.some((p) => p.r === gen.r && p.c === gen.c);
+            if (!alreadyPoweredByThisGen) {
+              gridToPower[r][c]!.isPowered = true;
+              gridToPower[r][c]!.poweredByGenerators!.push({
+                r: gen.r,
+                c: gen.c,
+                tier: gen.tier,
+                distance: dist,
+              });
+            }
+          }
+
+          const maxRange = gen.tier + 2;
+          if (dist >= maxRange) continue;
+
+          // Check neighbors
+          const neighbors = [
+            { nr: r, nc: c + 1, side: "top" as const, opp: "bottom" as const },
+            { nr: r, nc: c - 1, side: "bottom" as const, opp: "top" as const },
+            { nr: r - 1, nc: c, side: "left" as const, opp: "right" as const },
+            { nr: r + 1, nc: c, side: "right" as const, opp: "left" as const },
+          ];
+
+          neighbors.forEach(({ nr, nc, side, opp }) => {
+            if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
+              if (visited.has(`${nr},${nc}`)) return;
+
+              const currentCell = gridToPower[r][c];
+              const neighborCell = gridToPower[nr][nc];
+
+              if (!neighborCell) return;
+
+              // Rooms connect to everything adjacent
+              // Paths connect based on their pathType
+              let canConnect = false;
+              if (currentCell?.type === "room") {
+                const isCurrentGenerator = currentCell.roomId === 7;
+                if (isCurrentGenerator) {
+                  // Generators connect to all adjacent rooms and paths (if path has connection)
+                  if (neighborCell.type === "room") {
+                    canConnect = true;
+                  } else if (neighborCell.type === "path") {
+                    const conns = getConnectionsFromPathType(
+                      neighborCell.pathType!,
+                    );
+                    if (conns[opp]) canConnect = true;
+                  }
+                } else {
+                  // Non-generator rooms ONLY connect to other rooms
+                  // This preserves the old behavior for room-to-room if we want it,
+                  // BUT the new requirement might imply that even this should be restricted.
+                  // "a room is considered powered if it is adjacent to any path tile..."
+                  // If we want Room A (powered by path) to power Room B, we keep this.
+                  // If we want Room B to ONLY be powered if it's NEXT TO A PATH, we should disable this.
+                  if (neighborCell.type === "room") {
+                    canConnect = true;
+                  }
+                }
+              } else if (currentCell?.type === "path") {
+                const currentConns = getConnectionsFromPathType(
+                  currentCell.pathType!,
+                );
+
+                if (neighborCell.type === "room") {
+                  const isGenerator = neighborCell.roomId === 7;
+                  if (isGenerator) {
+                    // Generators STILL require a connection to be powered from a path
+                    if (currentConns[side]) canConnect = true;
+                  } else {
+                    // Non-generator rooms are powered if adjacent to a powered path
+                    // REGARDLESS of path's connections
+                    canConnect = true;
+                  }
+                } else if (neighborCell.type === "path") {
+                  // Paths STILL require valid connection from both sides
+                  if (currentConns[side]) {
+                    const neighborConns = getConnectionsFromPathType(
+                      neighborCell.pathType!,
+                    );
+                    if (neighborConns[opp]) canConnect = true;
+                  }
+                }
+              }
+
+              if (canConnect) {
+                visited.add(`${nr},${nc}`);
+                // Only paths and generator rooms propagate power further
+                // Non-generator rooms are "terminal" in the power flow from paths
+                const isNonGeneratorRoom =
+                  neighborCell.type === "room" && neighborCell.roomId !== 7;
+
+                if (!isNonGeneratorRoom) {
+                  queue.push({ r: nr, c: nc, dist: dist + 1 });
+                } else {
+                  // Still need to record that it is powered
+                  // This is already done by the pop from queue if we pushed it,
+                  // but since we are NOT pushing it, we do it here.
+                  if (gridToPower[nr][nc]) {
+                    // Check if already powered by this generator to avoid duplicates
+                    const alreadyPoweredByThisGen = gridToPower[nr][
+                      nc
+                    ]!.poweredByGenerators!.some(
+                      (p) => p.r === gen.r && p.c === gen.c,
+                    );
+                    if (!alreadyPoweredByThisGen) {
+                      gridToPower[nr][nc]!.isPowered = true;
+                      gridToPower[nr][nc]!.poweredByGenerators!.push({
+                        r: gen.r,
+                        c: gen.c,
+                        tier: gen.tier,
+                        distance: dist + 1,
+                      });
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+    };
+
     // 2. Calculate Power based on Phase 1 Tiers
-    const generators: { r: number; c: number; tier: number; name: string }[] =
-      [];
+    const generators: { r: number; c: number; tier: number }[] = [];
     newGrid.forEach((row, r) => {
       row.forEach((cell, c) => {
         if (cell && cell.type === "room" && cell.roomId === 7) {
-          generators.push({ r, c, tier: cell.tier || 1, name: "Generator" });
+          generators.push({ r, c, tier: cell.tier || 1 });
         }
       });
     });
 
-    // Reset all power
-    newGrid.forEach((row) =>
-      row.forEach((cell) => {
-        if (cell) {
-          cell.isPowered = false;
-          cell.poweredByGenerators = [];
-        }
-      }),
-    );
-
-    generators.forEach((gen) => {
-      const range = gen.tier;
-      for (let r = 0; r < GRID_SIZE; r++) {
-        for (let c = 0; c < GRID_SIZE; c++) {
-          const dist = Math.abs(r - gen.r) + Math.abs(c - gen.c);
-          if (dist <= range) {
-            if (newGrid[r][c]) {
-              newGrid[r][c]!.isPowered = true;
-              newGrid[r][c]!.poweredByGenerators!.push({
-                r: gen.r,
-                c: gen.c,
-                tier: gen.tier,
-              });
-            }
-          }
-        }
-      }
-    });
+    calculatePower(newGrid, generators);
 
     // 3. Phase 2: Add Power-based upgrades
     newGrid.forEach((row) => {
@@ -263,10 +385,9 @@ function App() {
         if (cell && cell.type === "room") {
           const baseRoom = roomsData.find((r) => r._index === cell.roomId);
           if (baseRoom && cell.isPowered && baseRoom.UpgradedByPower > 0) {
-            cell.tier = Math.min(
-              3,
-              (cell.tier || 1) + baseRoom.UpgradedByPower,
-            );
+            const uniqueGens = cell.poweredByGenerators?.length || 0;
+            const powerBonus = Math.min(uniqueGens, baseRoom.UpgradedByPower);
+            cell.tier = Math.min(3, (cell.tier || 1) + powerBonus);
           }
         }
       });
@@ -295,31 +416,7 @@ function App() {
           }
         });
       });
-      newGrid.forEach((row) =>
-        row.forEach((cell) => {
-          if (cell) {
-            cell.isPowered = false;
-            cell.poweredByGenerators = [];
-          }
-        }),
-      );
-      finalGenerators.forEach((gen) => {
-        for (let r = 0; r < GRID_SIZE; r++) {
-          for (let c = 0; c < GRID_SIZE; c++) {
-            const dist = Math.abs(r - gen.r) + Math.abs(c - gen.c);
-            if (dist <= gen.tier) {
-              if (newGrid[r][c]) {
-                newGrid[r][c]!.isPowered = true;
-                newGrid[r][c]!.poweredByGenerators!.push({
-                  r: gen.r,
-                  c: gen.c,
-                  tier: gen.tier,
-                });
-              }
-            }
-          }
-        }
-      });
+      calculatePower(newGrid, finalGenerators);
     }
 
     return newGrid;
@@ -560,7 +657,8 @@ function App() {
                   <ul>
                     {cell.poweredByGenerators.map((gen, i) => (
                       <li key={i}>
-                        Generator at ({gen.r}, {gen.c}) [T{gen.tier}]
+                        Generator at ({gen.r}, {gen.c}) [T{gen.tier}] (Dist:{" "}
+                        {gen.distance})
                       </li>
                     ))}
                   </ul>
@@ -579,7 +677,8 @@ function App() {
                   <ul>
                     {cell.poweredByGenerators.map((gen, i) => (
                       <li key={i}>
-                        Generator at ({gen.r}, {gen.c}) [T{gen.tier}]
+                        Generator at ({gen.r}, {gen.c}) [T{gen.tier}] (Dist:{" "}
+                        {gen.distance})
                       </li>
                     ))}
                   </ul>

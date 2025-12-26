@@ -57,7 +57,12 @@ export interface GridCell {
   isPowered?: boolean;
   hasMedallion?: boolean;
   upgradedByRooms?: string[]; // Names of adjacent rooms that contribute to upgrade
-  poweredByGenerators?: { r: number; c: number; tier: number }[]; // Info about generators providing power
+  poweredByGenerators?: {
+    r: number;
+    c: number;
+    tier: number;
+    distance: number;
+  }[]; // Info about generators providing power
 }
 
 export interface TempleState {
