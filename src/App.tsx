@@ -76,7 +76,7 @@ const getPathTypeFromConnections = (
 function App() {
   const [grid, setGrid] = useState<(GridCell | null)[][]>(() => {
     const saved = queryString.parse(window.location.search, {
-      arrayFormat: "index",
+      arrayFormat: "bracket",
     });
 
     if (saved.rooms || saved.paths || saved.medallions) {
@@ -87,13 +87,16 @@ function App() {
       // Unremovable four-way path at ENTRY
       newGrid[ENTRY.x][ENTRY.y] = { type: "path", pathType: "pathfourway" };
 
-      const rooms = (saved.rooms as string[]) || [];
-      const paths = (saved.paths as string[]) || [];
-      const medallions = (saved.medallions as string[]) || [];
+      let rooms = (saved.rooms as string | string[]) || [];
+      if (typeof rooms === "string") rooms = [rooms];
+      let paths = (saved.paths as string | string[]) || [];
+      if (typeof paths === "string") paths = [paths];
+      let medallions = (saved.medallions as string | string[]) || [];
+      if (typeof medallions === "string") medallions = [medallions];
 
       rooms.forEach((val) => {
         if (!val) return;
-        const [roomId, x, y] = val.split("@");
+        const [roomId, x, y] = val.split("-");
         const ix = parseInt(x);
         const iy = parseInt(y);
         if (!isNaN(ix) && !isNaN(iy)) {
@@ -103,7 +106,7 @@ function App() {
 
       paths.forEach((val) => {
         if (!val) return;
-        const [x, y, pathType] = val.split(",");
+        const [x, y, pathType] = val.split("-");
         const ix = parseInt(x);
         const iy = parseInt(y);
         if (!isNaN(ix) && !isNaN(iy)) {
@@ -113,7 +116,7 @@ function App() {
 
       medallions.forEach((val) => {
         if (!val) return;
-        const [x, y, medallionType] = val.split(",");
+        const [x, y, medallionType] = val.split("-");
         const ix = parseInt(x);
         const iy = parseInt(y);
         if (!isNaN(ix) && !isNaN(iy)) {
@@ -529,7 +532,6 @@ function App() {
   ): "regular" | "strong" | "deletable" | null => {
     if (grid[x][y]) {
       // If we're hovering a tile that could be deleted
-      const cell = grid[x][y];
       if (isDeletable(x, y)) {
         return "deletable";
       }
@@ -832,11 +834,6 @@ function App() {
 
     // Architect's Chamber can be placed anywhere, but only if one doesn't exist
     if (roomId2 === "Architect") {
-      const exists = targetGrid.some((row) =>
-        row.some(
-          (cell) => cell?.type === "room" && cell.roomId === "Architect",
-        ),
-      );
       // If we are checking IF it's placeable, and it ALREADY exists at (x,y), then it is placeable there.
       // But isPlaceableAt is usually called for checking if a placement is valid.
       // If it exists ELSEWHERE, return false.
@@ -1046,7 +1043,6 @@ function App() {
           if (!cell.medallionType || isRemoving) {
             newGrid[x][y] = {
               ...cell,
-              hasMedallion: !isRemoving,
               medallionType: isRemoving ? undefined : selectedRoomId,
             };
           }
@@ -1076,7 +1072,6 @@ function App() {
           roomId: selectedRoomId,
           tier: 1, // Will be calculated
           isPowered: false, // Will be calculated
-          hasMedallion: false,
         };
       }
     } else if (selectedType === "path") {
