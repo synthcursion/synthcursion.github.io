@@ -988,7 +988,7 @@ function App() {
               checked={debugMode}
               onChange={(e) => setDebugMode(e.target.checked)}
             />
-            ignore placement restrictions
+            Ignore placement restrictions
           </label>
           <button onClick={shareLayout}>Share Link</button>
           <button
