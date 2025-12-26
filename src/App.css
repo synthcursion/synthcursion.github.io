@@ -222,3 +222,60 @@ label {
   flex-direction: column;
   gap: 10px;
 }
+
+.hover-info {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(20, 20, 20, 0.9);
+  border: 1px solid #d4af37;
+  padding: 15px;
+  border-radius: 4px;
+  z-index: 1000;
+  width: 250px;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  font-size: 0.9em;
+}
+
+.hover-header {
+  font-weight: bold;
+  color: #888;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 3px;
+}
+
+.hover-room-name {
+  font-size: 1.1em;
+  color: #d4af37;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.hover-section {
+  margin-top: 10px;
+}
+
+.section-title {
+  color: #aaa;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.hover-info ul {
+  margin: 0;
+  padding-left: 15px;
+  list-style-type: disc;
+}
+
+.hover-info li {
+  color: #ddd;
+  margin-bottom: 2px;
+}
+
+.hover-empty {
+  color: #666;
+  font-style: italic;
+}

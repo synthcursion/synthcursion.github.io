@@ -53,6 +53,10 @@ function App() {
   >("past");
   const [selectedRoomId, setSelectedRoomId] = useState<number>(3); // Default to Garrison
   const [selectedPathType, setSelectedPathType] = useState<PathType>("path1");
+  const [hoveredCell, setHoveredCell] = useState<{
+    r: number;
+    c: number;
+  } | null>(null);
 
   const roomsByType = useMemo(() => {
     const filtered = roomsData.filter(
@@ -82,9 +86,11 @@ function App() {
     newGrid.forEach((row, r) => {
       row.forEach((cell, c) => {
         if (cell && cell.type === "room") {
+          cell.upgradedByRooms = [];
           const baseRoom = roomsData.find((rd) => rd._index === cell.roomId);
           if (baseRoom) {
             const connectedCounts: Record<number, number> = {};
+            const connectedRoomNames: Record<number, string> = {};
             const neighbors = [
               [r - 1, c],
               [r + 1, c],
@@ -97,6 +103,12 @@ function App() {
                 if (neighbor && neighbor.type === "room") {
                   connectedCounts[neighbor.roomId!] =
                     (connectedCounts[neighbor.roomId!] || 0) + 1;
+                  const nBaseRoom = roomsData.find(
+                    (rd) => rd._index === neighbor.roomId,
+                  );
+                  if (nBaseRoom) {
+                    connectedRoomNames[neighbor.roomId!] = nBaseRoom.Name;
+                  }
                 }
               }
             });
@@ -113,6 +125,7 @@ function App() {
 
             if (hasThreeCopy) {
               let hasTwoOfThree = false;
+              let upgradeId = -1;
               for (const idStr in upgradeByCounts) {
                 const id = Number(idStr);
                 if (
@@ -120,6 +133,7 @@ function App() {
                   (connectedCounts[id] || 0) >= 2
                 ) {
                   hasTwoOfThree = true;
+                  upgradeId = id;
                   break;
                 }
               }
@@ -129,6 +143,9 @@ function App() {
                   const id = Number(idStr);
                   if (upgradeByCounts[id]) {
                     totalMatches += connectedCounts[id];
+                    for (let i = 0; i < connectedCounts[id]; i++) {
+                      cell.upgradedByRooms!.push(connectedRoomNames[id]);
+                    }
                   }
                 }
                 bonus = totalMatches >= 3 ? 2 : 1;
@@ -138,10 +155,16 @@ function App() {
             } else {
               for (const idStr in upgradeByCounts) {
                 const id = Number(idStr);
-                bonus += Math.min(
-                  connectedCounts[id] || 0,
-                  upgradeByCounts[id],
-                );
+                if (upgradeByCounts[id] && connectedCounts[id]) {
+                  const applied = Math.min(
+                    connectedCounts[id],
+                    upgradeByCounts[id],
+                  );
+                  bonus += applied;
+                  for (let i = 0; i < applied; i++) {
+                    cell.upgradedByRooms!.push(connectedRoomNames[id]);
+                  }
+                }
               }
             }
 
@@ -153,18 +176,24 @@ function App() {
     });
 
     // 2. Calculate Power based on Phase 1 Tiers
-    const generators: { r: number; c: number; tier: number }[] = [];
+    const generators: { r: number; c: number; tier: number; name: string }[] =
+      [];
     newGrid.forEach((row, r) => {
       row.forEach((cell, c) => {
         if (cell && cell.type === "room" && cell.roomId === 7) {
-          generators.push({ r, c, tier: cell.tier || 1 });
+          generators.push({ r, c, tier: cell.tier || 1, name: "Generator" });
         }
       });
     });
 
     // Reset all power
     newGrid.forEach((row) =>
-      row.forEach((cell) => cell && (cell.isPowered = false)),
+      row.forEach((cell) => {
+        if (cell) {
+          cell.isPowered = false;
+          cell.poweredByGenerators = [];
+        }
+      }),
     );
 
     generators.forEach((gen) => {
@@ -173,7 +202,14 @@ function App() {
         for (let c = 0; c < GRID_SIZE; c++) {
           const dist = Math.abs(r - gen.r) + Math.abs(c - gen.c);
           if (dist <= range) {
-            if (newGrid[r][c]) newGrid[r][c]!.isPowered = true;
+            if (newGrid[r][c]) {
+              newGrid[r][c]!.isPowered = true;
+              newGrid[r][c]!.poweredByGenerators!.push({
+                r: gen.r,
+                c: gen.c,
+                tier: gen.tier,
+              });
+            }
           }
         }
       }
@@ -218,38 +254,30 @@ function App() {
         });
       });
       newGrid.forEach((row) =>
-        row.forEach((cell) => cell && (cell.isPowered = false)),
+        row.forEach((cell) => {
+          if (cell) {
+            cell.isPowered = false;
+            cell.poweredByGenerators = [];
+          }
+        }),
       );
       finalGenerators.forEach((gen) => {
         for (let r = 0; r < GRID_SIZE; r++) {
           for (let c = 0; c < GRID_SIZE; c++) {
             const dist = Math.abs(r - gen.r) + Math.abs(c - gen.c);
             if (dist <= gen.tier) {
-              if (newGrid[r][c]) newGrid[r][c]!.isPowered = true;
+              if (newGrid[r][c]) {
+                newGrid[r][c]!.isPowered = true;
+                newGrid[r][c]!.poweredByGenerators!.push({
+                  r: gen.r,
+                  c: gen.c,
+                  tier: gen.tier,
+                });
+              }
             }
           }
         }
       });
-      // Tiers might need one last adjustment if power changed
-      newGrid.forEach((row) => {
-        row.forEach((cell) => {
-          if (cell && cell.type === "room") {
-            const baseRoom = roomsData.find((r) => r._index === cell.roomId);
-            if (baseRoom && cell.isPowered && baseRoom.UpgradedByPower > 0) {
-              // We need to re-apply power upgrade, but from Phase 1 tier
-              // Actually, cell.tier here might already have power upgrade from previous pass.
-              // Let's re-calculate from Phase 1 tier to be safe.
-              // We'd need to store Phase 1 tiers or recalculate them.
-              // Simplification: if it was already powered, it already got the bonus.
-              // If it became powered, it needs the bonus.
-              // If it lost power, it needs to lose the bonus.
-              // Let's just do a full 2nd pass.
-            }
-          }
-        });
-      });
-      // To be strictly correct and simple: repeat Phase 1 + 2 logic with current power?
-      // No, Phase 1 is power-independent.
     }
 
     return newGrid;
@@ -350,20 +378,78 @@ function App() {
     const halfWidth = 620;
     const halfHeight = 508;
 
-    // x = centerX + (c - r) * (halfWidth / 9)
-    // y = centerY + (r + c - 8) * (halfHeight / 9)
-    // Adjusting indices so (4,4) is at (centerX, centerY)
-    // (0,0) is at top corner-ish
-    // (8,8) is at bottom corner-ish
-    // (0,8) is at right corner-ish
-    // (8,0) is at left corner-ish
-
     return {
       left: `${centerX + (c - r) * (halfWidth / 8)}px`,
       top: `${centerY + (r + c - 8) * (halfHeight / 8)}px`,
       width: `${(halfWidth * 2) / 8}px`,
       height: `${(halfHeight * 2) / 8}px`,
     };
+  };
+
+  const getHoverInfo = () => {
+    if (!hoveredCell) return null;
+    const { r, c } = hoveredCell;
+    const cell = calculatedGrid[r][c];
+    return (
+      <div className="hover-info">
+        <div className="hover-header">
+          Cell ({r}, {c})
+        </div>
+        {cell && cell.type === "room" && (
+          <>
+            <div className="hover-room-name">
+              {roomsData.find((rd) => rd._index === cell.roomId)?.Name} (T
+              {cell.tier})
+            </div>
+            {cell.upgradedByRooms && cell.upgradedByRooms.length > 0 && (
+              <div className="hover-section">
+                <div className="section-title">Upgraded By:</div>
+                <ul>
+                  {cell.upgradedByRooms.map((name, i) => (
+                    <li key={i}>{name}</li>
+                  ))}
+                  {cell.hasMedallion && <li>Quipolatl's Medallion (+1)</li>}
+                </ul>
+              </div>
+            )}
+            {cell.isPowered &&
+              cell.poweredByGenerators &&
+              cell.poweredByGenerators.length > 0 && (
+                <div className="hover-section">
+                  <div className="section-title">Powered By:</div>
+                  <ul>
+                    {cell.poweredByGenerators.map((gen, i) => (
+                      <li key={i}>
+                        Generator at ({gen.r}, {gen.c}) [T{gen.tier}]
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+          </>
+        )}
+        {cell && cell.type === "path" && (
+          <>
+            <div className="hover-room-name">Path: {cell.pathType}</div>
+            {cell.isPowered &&
+              cell.poweredByGenerators &&
+              cell.poweredByGenerators.length > 0 && (
+                <div className="hover-section">
+                  <div className="section-title">Powered By:</div>
+                  <ul>
+                    {cell.poweredByGenerators.map((gen, i) => (
+                      <li key={i}>
+                        Generator at ({gen.r}, {gen.c}) [T{gen.tier}]
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+          </>
+        )}
+        {!cell && <div className="hover-empty">Empty Cell</div>}
+      </div>
+    );
   };
 
   return (
@@ -481,11 +567,13 @@ function App() {
               rooms need 2 copies for first upgrade.
             </li>
             <li>Use "Share Link" to copy your layout URL</li>
+            <li>Hover over a cell to see detailed information</li>
           </ul>
         </div>
       </div>
 
       <div className="grid-container">
+        {getHoverInfo()}
         <div className="grid-background">
           <div className="grid">
             {calculatedGrid.map((row, r) =>
@@ -495,6 +583,8 @@ function App() {
                   className={`cell ${cell ? cell.type : "empty"}`}
                   style={getCellPosition(r, c)}
                   onClick={() => handleCellClick(r, c)}
+                  onMouseEnter={() => setHoveredCell({ r, c })}
+                  onMouseLeave={() => setHoveredCell(null)}
                 >
                   {cell ? (
                     <div className="cell-content">
