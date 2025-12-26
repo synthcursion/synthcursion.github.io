@@ -14,7 +14,8 @@ const roomsPerLevelData = roomsPerLevelDataRaw as IncursionRoomPerLevel[];
 
 const GRID_SIZE = 9;
 
-const PATH_TYPES: Record<PathType, ("left" | "right" | "top" | "bottom")[]> = {
+type Direction = "left" | "right" | "top" | "bottom";
+const PATH_TYPES: Record<PathType, Direction[]> = {
   path1: ["top", "bottom"],
   path2: ["left", "right"],
   pathconnect1: ["top", "bottom"],
@@ -46,13 +47,10 @@ const getPathTypeFromConnections = (
   left: boolean,
   right: boolean,
 ): PathType => {
-  const entries = Object.entries(PATH_TYPES) as [
-    PathType,
-    ("left" | "right" | "top" | "bottom")[],
-  ][];
+  const entries = Object.entries(PATH_TYPES) as [PathType, Direction[]][];
 
   // Try to find an exact match first
-  const exactMatch = entries.find(([_, conns]) => {
+  const exactMatch = entries.find(([, conns]) => {
     const connectionsNeeded = [
       top ? "top" : null,
       bottom ? "bottom" : null,
@@ -61,7 +59,7 @@ const getPathTypeFromConnections = (
     ].filter(Boolean);
 
     if (conns.length !== connectionsNeeded.length) return false;
-    return connectionsNeeded.every((c) => conns.includes(c as any));
+    return connectionsNeeded.every((c) => conns.includes(c as Direction));
   });
 
   if (exactMatch) return exactMatch[0];
@@ -111,10 +109,8 @@ function App() {
         r.Id !== "PoweredPath" &&
         r.Id !== "Entrance",
     );
-    const past = filtered.filter((r) => r.IsPastExclusive && !r.IsBossReward);
-    const present = filtered.filter(
-      (r) => !r.IsPastExclusive && !r.IsBossReward,
-    );
+    const past = filtered.filter((r) => !r.IsPresentDay && !r.IsBossReward);
+    const present = filtered.filter((r) => r.IsPresentDay && !r.IsBossReward);
     const reward = filtered.filter((r) => r.IsBossReward);
     return { past, present, reward };
   }, []);
@@ -167,7 +163,6 @@ function App() {
 
             if (hasThreeCopy) {
               let hasTwoOfThree = false;
-              let upgradeId = -1;
               for (const idStr in upgradeByCounts) {
                 const id = Number(idStr);
                 if (
@@ -175,7 +170,6 @@ function App() {
                   (connectedCounts[id] || 0) >= 2
                 ) {
                   hasTwoOfThree = true;
-                  upgradeId = id;
                   break;
                 }
               }
@@ -758,7 +752,7 @@ function App() {
                   key={pt}
                   src={`/ggpk/${pt}.png`}
                   className={selectedPathType === pt ? "selected" : ""}
-                  onClick={() => setSelectedPathType(pt)}
+                  onClick={() => setSelectedPathType(pt as PathType)}
                   title={pt}
                 />
               ))}

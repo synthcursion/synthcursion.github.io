@@ -6,7 +6,7 @@ export interface IncursionRoom {
   ConvertedBy: number[];
   ConvertedTo: number[];
   UpgradedByPower: number;
-  IsPastExclusive: boolean;
+  IsPresentDay: boolean;
   IsBossReward: boolean;
   Name: string;
   Icon_DDSFile: string;

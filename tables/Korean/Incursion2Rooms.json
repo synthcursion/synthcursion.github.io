@@ -7,7 +7,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -20,7 +20,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -33,7 +33,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -55,7 +55,7 @@
       9
     ],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "수비실",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGarrison.dds"
@@ -75,7 +75,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "지휘관",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCommander.dds"
@@ -91,7 +91,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "갑주 창고",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArmoury.dds"
@@ -106,7 +106,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "대장간",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSmithy.dds"
@@ -122,7 +122,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "발전기",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGenerator.dds"
@@ -135,7 +135,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "첩보대장",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"
@@ -155,7 +155,7 @@
       12
     ],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "군단 주둔지",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperLegionBarracks.dds"
@@ -170,7 +170,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "인조육체 연구소",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSynthflesh.dds"
@@ -185,7 +185,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "살점 의사",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverFleshSurgeon.dds"
@@ -200,7 +200,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "초월적 주둔지",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverTranscendentBarracks.dds"
@@ -216,7 +216,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "연금술 연구소",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAlchemyLab.dds"
@@ -231,7 +231,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "마석학자",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverThaumaturge.dds"
@@ -244,7 +244,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 2,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "골렘 가공소",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGolemWorks.dds"
@@ -260,7 +260,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "타락의 방",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCorruption.dds"
@@ -273,7 +273,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "보물 금고실",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverVault.dds"
@@ -286,7 +286,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "희생의 방",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSacrificialChamber.dds"
@@ -299,7 +299,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "희생의 방으로 업그레이드할 방 선택",
     "Icon_DDSFile": ""
@@ -312,7 +312,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "건축가의 방",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArchitect.dds"
@@ -325,7 +325,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -338,7 +338,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "화폐 금고실",
     "Icon_DDSFile": ""
@@ -351,7 +351,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "혈통 젬 금고실",
     "Icon_DDSFile": ""
@@ -364,7 +364,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "증강물 금고실",
     "Icon_DDSFile": ""
@@ -377,7 +377,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "서판 금고실",
     "Icon_DDSFile": ""
@@ -390,7 +390,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "고유 금고실",
     "Icon_DDSFile": ""
@@ -403,7 +403,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "왕실 전실",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAccessChamber.dds"
@@ -416,7 +416,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "앗지리의 석실",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAtziri.dds"
@@ -429,7 +429,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "추출실",
     "Icon_DDSFile": ""
@@ -442,7 +442,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "첩보대장",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"

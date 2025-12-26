@@ -7,7 +7,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -20,7 +20,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -33,7 +33,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -55,7 +55,7 @@
       9
     ],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Гарнизон",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGarrison.dds"
@@ -75,7 +75,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Командир",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCommander.dds"
@@ -91,7 +91,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Оружейная",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArmoury.dds"
@@ -106,7 +106,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Кузница",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSmithy.dds"
@@ -122,7 +122,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Генератор",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGenerator.dds"
@@ -135,7 +135,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Соглядатай",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"
@@ -155,7 +155,7 @@
       12
     ],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Бараки легиона",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperLegionBarracks.dds"
@@ -170,7 +170,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Лаборатория плотосинтеза",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSynthflesh.dds"
@@ -185,7 +185,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Хирург плоти",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverFleshSurgeon.dds"
@@ -200,7 +200,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Бараки вознесённых",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverTranscendentBarracks.dds"
@@ -216,7 +216,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Алхимическая лаборатория",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAlchemyLab.dds"
@@ -231,7 +231,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Волшебник",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverThaumaturge.dds"
@@ -244,7 +244,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 2,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Мастерская големов",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGolemWorks.dds"
@@ -260,7 +260,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Зал осквернения",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCorruption.dds"
@@ -273,7 +273,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Сокровищница",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverVault.dds"
@@ -286,7 +286,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Жертвенный зал",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSacrificialChamber.dds"
@@ -299,7 +299,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Пожертвуйте комнатой, чтобы улучшить Жертвенный зал",
     "Icon_DDSFile": ""
@@ -312,7 +312,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Кабинет архитектора",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArchitect.dds"
@@ -325,7 +325,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -338,7 +338,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "Хранилище валюты",
     "Icon_DDSFile": ""
@@ -351,7 +351,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "Хранилище династических камней",
     "Icon_DDSFile": ""
@@ -364,7 +364,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "Хранилище усилителей",
     "Icon_DDSFile": ""
@@ -377,7 +377,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "Хранилище плиток",
     "Icon_DDSFile": ""
@@ -390,7 +390,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "Хранилище уникальных предметов",
     "Icon_DDSFile": ""
@@ -403,7 +403,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "Царская приёмная",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAccessChamber.dds"
@@ -416,7 +416,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Покои Атзири",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAtziri.dds"
@@ -429,7 +429,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "Зал извлечения",
     "Icon_DDSFile": ""
@@ -442,7 +442,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Соглядатай",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"

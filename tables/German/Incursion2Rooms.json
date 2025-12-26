@@ -7,7 +7,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -20,7 +20,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -33,7 +33,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -55,7 +55,7 @@
       9
     ],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Garnison",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGarrison.dds"
@@ -75,7 +75,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Kommandant",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCommander.dds"
@@ -91,7 +91,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Waffenkammer",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArmoury.dds"
@@ -106,7 +106,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Schmiede",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSmithy.dds"
@@ -122,7 +122,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Generator",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGenerator.dds"
@@ -135,7 +135,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Spionagemeister",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"
@@ -155,7 +155,7 @@
       12
     ],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Legionskaserne",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperLegionBarracks.dds"
@@ -170,7 +170,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Kunstfleischlabor",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSynthflesh.dds"
@@ -185,7 +185,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Fleischchirurg",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverFleshSurgeon.dds"
@@ -200,7 +200,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Transzendente Kaserne",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverTranscendentBarracks.dds"
@@ -216,7 +216,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Alchemielabor",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAlchemyLab.dds"
@@ -231,7 +231,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Thaumaturge",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverThaumaturge.dds"
@@ -244,7 +244,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 2,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Golemwerkstatt",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGolemWorks.dds"
@@ -260,7 +260,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Verderbungskammer",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCorruption.dds"
@@ -273,7 +273,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Schatzkammer",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverVault.dds"
@@ -286,7 +286,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Opferkammer",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSacrificialChamber.dds"
@@ -299,7 +299,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Opfert einen Raum, um Opferkammer aufzuwerten",
     "Icon_DDSFile": ""
@@ -312,7 +312,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "Kammer des Architekten",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArchitect.dds"
@@ -325,7 +325,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -338,7 +338,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "Schatzkammer für Währung",
     "Icon_DDSFile": ""
@@ -351,7 +351,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "Schatzkammer für Abstammungsgemmen",
     "Icon_DDSFile": ""
@@ -364,7 +364,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "Schatzkammer für Augmentationen",
     "Icon_DDSFile": ""
@@ -377,7 +377,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "Schatzkammer für Tafeln",
     "Icon_DDSFile": ""
@@ -390,7 +390,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "Schatzkammer für einzigartige Gegenstände",
     "Icon_DDSFile": ""
@@ -403,7 +403,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "Königliches Vorzimmer",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAccessChamber.dds"
@@ -416,7 +416,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Atziris Kammer",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAtziri.dds"
@@ -429,7 +429,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "Extraktionskammer",
     "Icon_DDSFile": ""
@@ -442,7 +442,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "Spionagemeister",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"

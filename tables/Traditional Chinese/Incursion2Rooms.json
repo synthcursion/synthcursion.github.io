@@ -7,7 +7,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -20,7 +20,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -33,7 +33,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -55,7 +55,7 @@
       9
     ],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "衛兵",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGarrison.dds"
@@ -75,7 +75,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "指揮官",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCommander.dds"
@@ -91,7 +91,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "軍械庫",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArmoury.dds"
@@ -106,7 +106,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "鑄造師",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSmithy.dds"
@@ -122,7 +122,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "發電機",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGenerator.dds"
@@ -135,7 +135,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "情報師",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"
@@ -155,7 +155,7 @@
       12
     ],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "軍團營房",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperLegionBarracks.dds"
@@ -170,7 +170,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "合膚實驗室",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSynthflesh.dds"
@@ -185,7 +185,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "血肉外科醫師",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverFleshSurgeon.dds"
@@ -200,7 +200,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 1,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "超凡營房",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverTranscendentBarracks.dds"
@@ -216,7 +216,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "鍊金實驗室",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAlchemyLab.dds"
@@ -231,7 +231,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "巫術師",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverThaumaturge.dds"
@@ -244,7 +244,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 2,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "魔像工坊",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGolemWorks.dds"
@@ -260,7 +260,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "腐化之室",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCorruption.dds"
@@ -273,7 +273,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "藏寶庫",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverVault.dds"
@@ -286,7 +286,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "獻祭之室",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSacrificialChamber.dds"
@@ -299,7 +299,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "犧牲一間房間來升級獻祭之室",
     "Icon_DDSFile": ""
@@ -312,7 +312,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "建築師之室",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArchitect.dds"
@@ -325,7 +325,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": false,
     "Name": "",
     "Icon_DDSFile": ""
@@ -338,7 +338,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "通貨密庫",
     "Icon_DDSFile": ""
@@ -351,7 +351,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "譜系寶石密庫",
     "Icon_DDSFile": ""
@@ -364,7 +364,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "增幅密庫",
     "Icon_DDSFile": ""
@@ -377,7 +377,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "石板密庫",
     "Icon_DDSFile": ""
@@ -390,7 +390,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": true,
+    "IsPresentDay": true,
     "IsBossReward": true,
     "Name": "傳奇密庫",
     "Icon_DDSFile": ""
@@ -403,7 +403,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "皇家通道室",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAccessChamber.dds"
@@ -416,7 +416,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "阿茲里的密室",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAtziri.dds"
@@ -429,7 +429,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": true,
     "Name": "萃取室",
     "Icon_DDSFile": ""
@@ -442,7 +442,7 @@
     "ConvertedBy": [],
     "ConvertedTo": [],
     "UpgradedByPower": 0,
-    "IsPastExclusive": false,
+    "IsPresentDay": false,
     "IsBossReward": false,
     "Name": "情報師",
     "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"
