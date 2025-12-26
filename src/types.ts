@@ -51,15 +51,15 @@ export type PathType =
 
 export interface GridCell {
   type: "room" | "path" | "empty";
-  roomId?: number;
+  roomId?: string;
   tier?: number;
   pathType?: PathType;
   isPowered?: boolean;
   hasMedallion?: boolean;
   upgradedByRooms?: string[]; // Names of adjacent rooms that contribute to upgrade
   poweredByGenerators?: {
-    r: number;
-    c: number;
+    x: number;
+    y: number;
     tier: number;
     distance: number;
   }[]; // Info about generators providing power
