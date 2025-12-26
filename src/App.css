@@ -162,9 +162,17 @@ label {
 }
 
 .cell:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  outline: 1px solid #d4af37;
   z-index: 100;
+}
+
+.hover-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
 }
 
 .cell img {
@@ -196,15 +204,6 @@ label {
   z-index: 20;
 }
 
-.powered-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  box-shadow: inset 0 0 10px #00ffff;
-  pointer-events: none;
-}
 
 .medallion-icon {
   position: absolute;

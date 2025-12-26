@@ -574,19 +574,6 @@ function App() {
           .toLowerCase();
         return `/ggpk/${fileName}`;
       }
-      // Fallback to roomsData if level specific not found
-      const baseRoom = roomsData.find((r) => r._index === cell.roomId);
-      if (baseRoom && baseRoom.Icon_DDSFile) {
-        let fileName = baseRoom.Icon_DDSFile.split("/")
-          .pop()
-          ?.replace(".dds", ".png")
-          .toLowerCase();
-        // Map RoomHoverX to iconX if needed
-        if (fileName?.startsWith("roomhover")) {
-          fileName = fileName.replace("roomhover", "icon");
-        }
-        return `/ggpk/${fileName}`;
-      }
       return cell.isPowered
         ? "/ggpk/roomgenericpowered.png"
         : "/ggpk/roomgeneric.png";
@@ -824,7 +811,15 @@ function App() {
                   onClick={() => handleCellClick(r, c)}
                   onMouseEnter={() => setHoveredCell({ r, c })}
                   onMouseLeave={() => setHoveredCell(null)}
+                  data-powered={cell?.isPowered}
                 >
+                  {hoveredCell?.r === r && hoveredCell?.c === c && (
+                    <img
+                      src="/ggpk/incursion2tileglowframe.png"
+                      className="hover-glow"
+                      alt=""
+                    />
+                  )}
                   {cell ? (
                     <div className="cell-content">
                       <img src={getIconPath(cell)} alt="" />
@@ -838,7 +833,6 @@ function App() {
                           alt="Medallion"
                         />
                       )}
-                      {cell.isPowered && <div className="powered-glow" />}
                     </div>
                   ) : (
                     <img src="/ggpk/incursion2tileempty.png" alt="" />

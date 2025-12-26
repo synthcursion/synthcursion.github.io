@@ -227,8 +227,8 @@ describe("Generator Power Calculation", () => {
 
     // In current implementation, (3,5) would NOT be powered because Path1 (T-B) has no Left connection.
     // The requirement says it SHOULD be powered.
-    // Rooms show power via a glow div, not the icon src
-    expect(cells[32].querySelector(".powered-glow")).not.toBeNull();
+    // Rooms show power via a data attribute
+    expect(cells[32].getAttribute("data-powered")).toBe("true");
   });
 
   describe("Golem Works UpgradedByPower", () => {
@@ -295,10 +295,10 @@ describe("Generator Power Calculation", () => {
     fireEvent.click(cells[33]); // (3,6) Path B
 
     // Verify Room A is powered
-    expect(cells[32].querySelector(".powered-glow")).not.toBeNull();
+    expect(cells[32].getAttribute("data-powered")).toBe("true");
 
     // Verify Room B and Path B are NOT powered (they are only adjacent to Room A)
-    expect(cells[23].querySelector(".powered-glow")).toBeNull();
+    expect(cells[23].getAttribute("data-powered")).not.toBe("true");
     expect(cells[33].querySelector("img")?.getAttribute("src")).not.toContain(
       "powered",
     );
