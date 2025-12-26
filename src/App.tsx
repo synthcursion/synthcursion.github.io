@@ -453,8 +453,36 @@ function App() {
     x: number,
     y: number,
   ): "regular" | "strong" | null => {
-    if (selectedType !== "room" || !selectedRoomId) return null;
     if (grid[x][y]) return null;
+
+    if (selectedType === "path") {
+      const connections = getConnectionsFromPathType(selectedPathType);
+      const neighbors = [
+        { nx: x, ny: y + 1, side: "top" as const },
+        { nx: x, ny: y - 1, side: "bottom" as const },
+        { nx: x - 1, ny: y, side: "left" as const },
+        { nx: x + 1, ny: y, side: "right" as const },
+      ];
+
+      let canPlace = false;
+      neighbors.forEach(({ nx, ny, side }) => {
+        if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+          const neighbor = grid[nx][ny];
+          if (neighbor && neighbor.type === "path" && connections[side]) {
+            canPlace = true;
+          }
+        }
+      });
+
+      if (canPlace) return "regular";
+
+      const isEmpty = grid.every((row) => row.every((cell) => !cell));
+      if (isEmpty) return "regular";
+
+      return null;
+    }
+
+    if (selectedType !== "room" || !selectedRoomId) return null;
 
     const selectedRoom = roomsData.find((r) => r.Id === selectedRoomId);
     if (!selectedRoom) return null;
@@ -613,8 +641,13 @@ function App() {
     };
 
     const canPlace = getHighlightType(x, y);
-    // Only restrict placement if we are trying to place a ROOM
-    if (selectedType === "room" && !canPlace && !debugMode) return;
+    // Only restrict placement if we are trying to place a ROOM or PATH
+    if (
+      (selectedType === "room" || selectedType === "path") &&
+      !canPlace &&
+      !debugMode
+    )
+      return;
 
     if (selectedType === "empty") {
       newGrid[x][y] = null;
