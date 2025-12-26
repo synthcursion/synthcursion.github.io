@@ -656,6 +656,11 @@ function App() {
     if (canPlaceStrong) return "strong";
     if (canPlaceRegular) return "regular";
 
+    // Reward rooms can be placed anywhere
+    if (selectedRoom?.IsBossReward) {
+      return "regular";
+    }
+
     // Architect's Chamber can be placed anywhere, but only if one doesn't exist
     if (selectedRoomId === "Architect") {
       const exists = grid.some((row) =>
@@ -803,6 +808,11 @@ function App() {
     });
 
     if (canPlaceStrong || canPlaceRegular) return true;
+
+    // Reward rooms can be placed anywhere
+    if (room.IsBossReward) {
+      return true;
+    }
 
     // Architect's Chamber can be placed anywhere, but only if one doesn't exist
     if (roomId === "Architect") {
