@@ -139,20 +139,21 @@ function App() {
               if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
                 const neighbor = newGrid[nr][nc];
                 if (neighbor && neighbor.type === "room") {
-                  connectedCounts[neighbor.roomId!] =
-                    (connectedCounts[neighbor.roomId!] || 0) + 1;
                   const nBaseRoom = roomsData.find(
                     (rd) => rd.Id === neighbor.roomId,
                   );
                   if (nBaseRoom) {
-                    connectedRoomNames[neighbor.roomId!] = nBaseRoom.Name;
+                    connectedCounts[nBaseRoom.Id] =
+                      (connectedCounts[nBaseRoom.Id] || 0) + 1;
+                    connectedRoomNames[nBaseRoom.Id] = nBaseRoom.Name;
                   }
                 }
               }
             });
 
-            const upgradeByCounts: Record<number, number> = {};
-            baseRoom.UpgradedBy.forEach((id) => {
+            const upgradeByCounts: Record<string, number> = {};
+            baseRoom.UpgradedBy.forEach((i) => {
+              const id = roomsData[i].Id;
               upgradeByCounts[id] = (upgradeByCounts[id] || 0) + 1;
             });
 
@@ -163,8 +164,7 @@ function App() {
 
             if (hasThreeCopy) {
               let hasTwoOfThree = false;
-              for (const idStr in upgradeByCounts) {
-                const id = Number(idStr);
+              for (const id in upgradeByCounts) {
                 if (
                   upgradeByCounts[id] === 3 &&
                   (connectedCounts[id] || 0) >= 2
@@ -189,8 +189,7 @@ function App() {
                 bonus = 0;
               }
             } else {
-              for (const idStr in upgradeByCounts) {
-                const id = Number(idStr);
+              for (const id in upgradeByCounts) {
                 if (upgradeByCounts[id] && connectedCounts[id]) {
                   const applied = Math.min(
                     connectedCounts[id],
