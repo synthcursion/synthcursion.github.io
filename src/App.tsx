@@ -165,6 +165,7 @@ function App() {
         r.Id !== "SacrificeRoom" &&
         r.Id !== "Path" &&
         r.Id !== "PoweredPath" &&
+        r.Id !== "Atziri" &&
         r.Id !== "Entrance",
     );
     const past = {
@@ -555,7 +556,12 @@ function App() {
           return !cell;
         }),
       );
-      if (isEmpty) return "regular";
+      if (isEmpty) {
+        const isNextToEntry =
+          (Math.abs(x - ENTRY.x) === 1 && y === ENTRY.y) ||
+          (x === ENTRY.x && Math.abs(y - ENTRY.y) === 1);
+        if (isNextToEntry) return "regular";
+      }
 
       return null;
     }
@@ -649,14 +655,29 @@ function App() {
     if (canPlaceStrong) return "strong";
     if (canPlaceRegular) return "regular";
 
-    // Special rule: if grid is completely empty (except for the unremovable ENTRY path), allow placing anywhere
+    // Architect's Chamber can be placed anywhere, but only if one doesn't exist
+    if (selectedRoomId === "Architect") {
+      const exists = grid.some((row) =>
+        row.some(
+          (cell) => cell?.type === "room" && cell.roomId === "Architect",
+        ),
+      );
+      if (!exists) return "regular";
+    }
+
+    // Special rule: if grid is completely empty (except for the unremovable ENTRY path), only allow cells next to entryway
     const isEmpty = grid.every((row, x) =>
       row.every((cell, y) => {
         if (x === ENTRY.x && y === ENTRY.y) return true;
         return !cell;
       }),
     );
-    if (isEmpty && selectedRoomId !== "Generator") return "regular";
+    if (isEmpty && selectedRoomId !== "Generator") {
+      const isNextToEntry =
+        (Math.abs(x - ENTRY.x) === 1 && y === ENTRY.y) ||
+        (x === ENTRY.x && Math.abs(y - ENTRY.y) === 1);
+      if (isNextToEntry) return "regular";
+    }
 
     return null;
   };
@@ -756,6 +777,16 @@ function App() {
         }
       }
     } else if (selectedType === "room") {
+      // Architect's Chamber: only one allowed
+      if (selectedRoomId === "Architect") {
+        const exists = grid.some((row) =>
+          row.some(
+            (cell) => cell?.type === "room" && cell.roomId === "Architect",
+          ),
+        );
+        if (exists) return;
+      }
+
       newGrid[x][y] = {
         type: "room",
         roomId: selectedRoomId,
@@ -869,6 +900,25 @@ function App() {
   const getHoverInfo = () => {
     if (!hoveredCell) return null;
     const { x, y } = hoveredCell;
+
+    if (x === 4 && y === 9) {
+      const atziriRoom = roomsData.find((r) => r.Id === "Atziri");
+      return (
+        <div className="hover-info">
+          <div className="hover-header">Cell (4, 9)</div>
+          <div className="hover-room-name">
+            {atziriRoom?.Name || "Atziri's Chamber"}
+          </div>
+          <div className="hover-section">
+            <div className="section-title">Description:</div>
+            <div className="hover-description">
+              The final chamber of the Queen.
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     const cell = calculatedGrid[x][y];
     return (
       <div className="hover-info">
@@ -1177,6 +1227,19 @@ function App() {
                 </div>
               )),
             )}
+            {/* Atziri's Chamber at fixed location (4, 9) */}
+            <div
+              className="cell room"
+              style={getCellPosition(4, 9)}
+              onMouseEnter={() => setHoveredCell({ x: 4, y: 9 })}
+              onMouseLeave={() => setHoveredCell(null)}
+              data-cell-type="room"
+              data-room-id="Atziri"
+            >
+              <div className="cell-content">
+                <img src="/ggpk/iconatziri.png" alt="Atziri's Chamber" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
