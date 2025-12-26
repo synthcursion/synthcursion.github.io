@@ -181,8 +181,10 @@ function App() {
                   const id = Number(idStr);
                   if (upgradeByCounts[id]) {
                     totalMatches += connectedCounts[id];
-                    for (let i = 0; i < connectedCounts[id]; i++) {
-                      cell.upgradedByRooms!.push(connectedRoomNames[id]);
+                    if (cell.medallionType !== "medallion_lock") {
+                      for (let i = 0; i < connectedCounts[id]; i++) {
+                        cell.upgradedByRooms!.push(connectedRoomNames[id]);
+                      }
                     }
                   }
                 }
@@ -198,15 +200,23 @@ function App() {
                     upgradeByCounts[id],
                   );
                   bonus += applied;
-                  for (let i = 0; i < applied; i++) {
-                    cell.upgradedByRooms!.push(connectedRoomNames[id]);
+                  if (cell.medallionType !== "medallion_lock") {
+                    for (let i = 0; i < applied; i++) {
+                      cell.upgradedByRooms!.push(connectedRoomNames[id]);
+                    }
                   }
                 }
               }
             }
 
-            const tier = 1 + bonus + (cell.hasMedallion ? 1 : 0);
-            cell.tier = Math.min(3, tier);
+            if (cell.medallionType === "medallion_lock") {
+              cell.tier = 1;
+            } else {
+              const medallionBonus =
+                cell.medallionType === "medallion_levelup" ? 1 : 0;
+              const tier = 1 + bonus + medallionBonus;
+              cell.tier = Math.min(3, tier);
+            }
           }
         }
       });
@@ -380,7 +390,12 @@ function App() {
       row.forEach((cell) => {
         if (cell && cell.type === "room") {
           const baseRoom = roomsData.find((r) => r.Id === cell.roomId);
-          if (baseRoom && cell.isPowered && baseRoom.UpgradedByPower > 0) {
+          if (
+            baseRoom &&
+            cell.isPowered &&
+            baseRoom.UpgradedByPower > 0 &&
+            cell.medallionType !== "medallion_lock"
+          ) {
             const uniqueGens = cell.poweredByGenerators?.length || 0;
             const powerBonus = Math.min(uniqueGens, baseRoom.UpgradedByPower);
             cell.tier = Math.min(3, (cell.tier || 1) + powerBonus);
@@ -499,11 +514,15 @@ function App() {
         ) {
           const isRemoving =
             cell.hasMedallion && cell.medallionType === selectedRoomId;
-          newGrid[x][y] = {
-            ...cell,
-            hasMedallion: !isRemoving,
-            medallionType: isRemoving ? undefined : (selectedRoomId as any),
-          };
+
+          // Only allow applying if no medallion, or removing existing same medallion
+          if (!cell.hasMedallion || isRemoving) {
+            newGrid[x][y] = {
+              ...cell,
+              hasMedallion: !isRemoving,
+              medallionType: isRemoving ? undefined : (selectedRoomId as any),
+            };
+          }
         }
       }
     } else if (selectedType === "room") {

@@ -311,4 +311,50 @@ describe("Generator Power Calculation", () => {
     );
     expect(glowImage).toBeTruthy();
   });
+
+  it("does not upgrade room tier if lock medallion is applied", () => {
+    render(<App />);
+    // Place Golem Works (which upgrades by power)
+    fireEvent.click(screen.getByTitle("Golem Works"));
+    const cell = screen.getByTestId("cell-4-4");
+    fireEvent.click(cell);
+
+    // Apply lock medallion
+    fireEvent.click(screen.getByTitle(/Juatalotli's Medallion/));
+    fireEvent.click(cell);
+
+    // Place a Generator next to it
+    fireEvent.click(screen.getByTitle("Generator"));
+    fireEvent.click(screen.getByTestId("cell-4-5"));
+
+    // Golem Works should be T1 because of the lock, even though it's powered
+    expect(cell.getAttribute("data-tier")).toBe("1");
+    expect(cell.getAttribute("data-powered")).toBe("true");
+  });
+
+  it("prevents applying a medallion to a room that has a different medallion applied", () => {
+    render(<App />);
+    fireEvent.click(screen.getByTitle("Garrison"));
+    const cell = screen.getByTestId("cell-4-4");
+    fireEvent.click(cell);
+
+    // Apply levelup medallion
+    fireEvent.click(screen.getByTitle(/Quipolatl's Medallion/));
+    fireEvent.click(cell);
+    expect(
+      cell.querySelector('img[src*="incursion2tileglowmedallionlevelup.png"]'),
+    ).toBeTruthy();
+
+    // Try to apply lock medallion
+    fireEvent.click(screen.getByTitle(/Juatalotli's Medallion/));
+    fireEvent.click(cell);
+
+    // Should still have levelup medallion, not lock
+    expect(
+      cell.querySelector('img[src*="incursion2tileglowmedallionlevelup.png"]'),
+    ).toBeTruthy();
+    expect(
+      cell.querySelector('img[src*="incursion2tileglowmedallionlock.png"]'),
+    ).toBeFalsy();
+  });
 });
