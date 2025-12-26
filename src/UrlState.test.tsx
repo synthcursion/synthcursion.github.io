@@ -3,8 +3,10 @@ import App from "./App.tsx";
 import { expect, test, vi } from "vitest";
 
 test("loads state from URL correctly", () => {
-  window.location.search =
-    "debug=false&paths[]=pathfourway-4-0&rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1";
+  const params =
+    "?debug=false&paths[]=pathfourway-4-0&rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1";
+
+  window.history.pushState({}, "", params);
 
   // Mock window.history.replaceState
   window.history.replaceState = vi.fn();

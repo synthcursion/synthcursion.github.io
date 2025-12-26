@@ -15,7 +15,7 @@ const roomsPerLevelData = roomsPerLevelDataRaw as IncursionRoomPerLevel[];
 
 const GRID_SIZE = 9;
 
-export const ENTRY = { x: 4, y: 0 };
+const ENTRY = { x: 4, y: 0 };
 
 type Direction = "left" | "right" | "top" | "bottom";
 const PATH_TYPES: Record<PathType, Direction[]> = {

@@ -1,6 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import App, { ENTRY } from "./App";
+import App from "./App";
+
+export const ENTRY = { x: 4, y: 0 };
 
 // Mock URL and window.history since the App uses it for persistence
 const mockReplaceState = vi.fn();
