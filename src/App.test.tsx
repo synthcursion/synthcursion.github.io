@@ -271,4 +271,44 @@ describe("Generator Power Calculation", () => {
       "true",
     );
   });
+
+  it("renders medallion glow when a room has a medallion", () => {
+    render(<App />);
+    // Place a room
+    fireEvent.click(screen.getByTitle("Garrison"));
+    const cell = screen.getByTestId("cell-4-4");
+    fireEvent.click(cell);
+
+    // Apply medallion
+    const medallionButton = screen.getByTitle(/Quipolatl's Medallion/);
+    fireEvent.click(medallionButton);
+    fireEvent.click(cell);
+
+    // Check if the medallion glow image is rendered for levelup
+    const images = cell.querySelectorAll("img");
+    const glowImage = Array.from(images).find((img) =>
+      img.src.includes("incursion2tileglowmedallionlevelup.png"),
+    );
+    expect(glowImage).toBeTruthy();
+  });
+
+  it("renders medallion glow for lock medallion", () => {
+    render(<App />);
+    // Place a room
+    fireEvent.click(screen.getByTitle("Garrison"));
+    const cell = screen.getByTestId("cell-4-4");
+    fireEvent.click(cell);
+
+    // Apply lock medallion
+    const medallionButton = screen.getByTitle(/Juatalotli's Medallion/);
+    fireEvent.click(medallionButton);
+    fireEvent.click(cell);
+
+    // Check if the medallion glow image is rendered for lock
+    const images = cell.querySelectorAll("img");
+    const glowImage = Array.from(images).find((img) =>
+      img.src.includes("incursion2tileglowmedallionlock.png"),
+    );
+    expect(glowImage).toBeTruthy();
+  });
 });

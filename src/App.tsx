@@ -493,13 +493,18 @@ function App() {
     } else if (selectedType === "medallion") {
       const cell = newGrid[x][y];
       if (cell && cell.type === "room") {
-        if (selectedRoomId === "medallion_levelup") {
+        if (
+          selectedRoomId === "medallion_levelup" ||
+          selectedRoomId === "medallion_lock"
+        ) {
+          const isRemoving =
+            cell.hasMedallion && cell.medallionType === selectedRoomId;
           newGrid[x][y] = {
             ...cell,
-            hasMedallion: !cell.hasMedallion,
+            hasMedallion: !isRemoving,
+            medallionType: isRemoving ? undefined : (selectedRoomId as any),
           };
         }
-        // Handle other medallions if needed in the future
       }
     } else if (selectedType === "room") {
       newGrid[x][y] = {
@@ -634,7 +639,13 @@ function App() {
                   {cell.upgradedByRooms.map((name, i) => (
                     <li key={i}>{name}</li>
                   ))}
-                  {cell.hasMedallion && <li>Quipolatl's Medallion (+1)</li>}
+                  {cell.hasMedallion && (
+                    <li>
+                      {cell.medallionType === "medallion_lock"
+                        ? "Juatalotli's Medallion (Lock)"
+                        : "Quipolatl's Medallion (+1)"}
+                    </li>
+                  )}
                 </ul>
               </div>
             )}
@@ -866,6 +877,17 @@ function App() {
                       src={`/ggpk/roomtier${cell.tier}.png`}
                       className="tier-icon"
                       alt={`Tier ${cell.tier}`}
+                    />
+                  )}
+                  {cell?.hasMedallion && (
+                    <img
+                      src={
+                        cell.medallionType === "medallion_lock"
+                          ? "/ggpk/incursion2tileglowmedallionlock.png"
+                          : "/ggpk/incursion2tileglowmedallionlevelup.png"
+                      }
+                      className="medallion-glow"
+                      alt=""
                     />
                   )}
                   {cell?.hasMedallion && (

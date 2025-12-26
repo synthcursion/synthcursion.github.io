@@ -1,4 +1,4 @@
-import type { Plugin, ResolvedConfig } from "vite";
+import type { Plugin, ResolvedConfig, UserConfig } from "vite";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import {
@@ -95,4 +95,4 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
-});
+} as UserConfig);
