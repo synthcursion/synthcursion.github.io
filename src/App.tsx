@@ -30,6 +30,77 @@ const PATH_TYPES: PathType[] = [
   "paththreeway4", // connects all but right
 ];
 
+const getConnectionsFromPathType = (type: PathType) => {
+  const top = [
+    "path1",
+    "pathcornerbot",
+    "pathcornerright",
+    "pathfourway",
+    "paththreeway1",
+    "paththreeway3",
+    "paththreeway4",
+    "pathconnect1",
+  ].includes(type);
+  const bottom = [
+    "path1",
+    "pathcornerleft",
+    "pathcornertop",
+    "pathfourway",
+    "paththreeway1",
+    "paththreeway2",
+    "paththreeway4",
+    "pathconnect1",
+  ].includes(type);
+  const left = [
+    "path2",
+    "pathcornerbot",
+    "pathcornerleft",
+    "pathfourway",
+    "paththreeway2",
+    "paththreeway3",
+    "paththreeway4",
+    "pathconnect2",
+  ].includes(type);
+  const right = [
+    "path2",
+    "pathcornerright",
+    "pathcornertop",
+    "pathfourway",
+    "paththreeway1",
+    "paththreeway2",
+    "paththreeway3",
+    "pathconnect2",
+  ].includes(type);
+  return { top, bottom, left, right };
+};
+
+const getPathTypeFromConnections = (
+  top: boolean,
+  bottom: boolean,
+  left: boolean,
+  right: boolean,
+): PathType => {
+  const count = [top, bottom, left, right].filter(Boolean).length;
+  if (count === 4) return "pathfourway";
+  if (count === 3) {
+    if (!left) return "paththreeway1";
+    if (!top) return "paththreeway2";
+    if (!bottom) return "paththreeway3";
+    if (!right) return "paththreeway4";
+  }
+  if (count === 2) {
+    if (top && bottom) return "path1";
+    if (left && right) return "path2";
+    if (left && top) return "pathcornerbot";
+    if (top && right) return "pathcornerright";
+    if (left && bottom) return "pathcornerleft";
+    if (bottom && right) return "pathcornertop";
+  }
+  if (top || bottom) return "path1";
+  if (left || right) return "path2";
+  return "path1"; // Default
+};
+
 function App() {
   const [grid, setGrid] = useState<(GridCell | null)[][]>(() => {
     const saved = new URLSearchParams(window.location.search).get("s");
@@ -303,6 +374,64 @@ function App() {
 
   const handleCellClick = (r: number, c: number) => {
     const newGrid = [...grid.map((row) => [...row])];
+
+    const updateCellConnections = (
+      row: number,
+      col: number,
+      currentGrid: (GridCell | null)[][],
+      triggeringR: number,
+      triggeringC: number,
+    ) => {
+      const cell = currentGrid[row][col];
+      if (!cell || cell.type !== "path") return;
+
+      let { top, bottom, left, right } = getConnectionsFromPathType(
+        cell.pathType!,
+      );
+
+      // Check if the triggering cell is an adjacent neighbor that exists
+      const isNeighbor = (nr: number, nc: number) => {
+        if (nr < 0 || nr >= GRID_SIZE || nc < 0 || nc >= GRID_SIZE)
+          return false;
+        return !!currentGrid[nr][nc];
+      };
+
+      // Add connection if neighbor exists
+      if (
+        row + 1 === triggeringR &&
+        col === triggeringC &&
+        isNeighbor(triggeringR, triggeringC)
+      )
+        top = true;
+      if (
+        row - 1 === triggeringR &&
+        col === triggeringC &&
+        isNeighbor(triggeringR, triggeringC)
+      )
+        bottom = true;
+      if (
+        row === triggeringR &&
+        col - 1 === triggeringC &&
+        isNeighbor(triggeringR, triggeringC)
+      )
+        left = true;
+      if (
+        row === triggeringR &&
+        col + 1 === triggeringC &&
+        isNeighbor(triggeringR, triggeringC)
+      )
+        right = true;
+
+      // Also always check all neighbors during initial placement or whenever triggered
+      // to ensure we don't miss existing ones
+      if (isNeighbor(row + 1, col)) top = true;
+      if (isNeighbor(row - 1, col)) bottom = true;
+      if (isNeighbor(row, col - 1)) left = true;
+      if (isNeighbor(row, col + 1)) right = true;
+
+      cell.pathType = getPathTypeFromConnections(top, bottom, left, right);
+    };
+
     if (selectedType === "empty") {
       newGrid[r][c] = null;
     } else if (selectedType === "medallion") {
@@ -322,12 +451,40 @@ function App() {
         hasMedallion: false,
       };
     } else if (selectedType === "path") {
+      // For new paths, use the selectedPathType but also check neighbors
+      const top = r + 1 < GRID_SIZE && !!newGrid[r + 1][c];
+      const bottom = r - 1 >= 0 && !!newGrid[r - 1][c];
+      const left = c - 1 >= 0 && !!newGrid[r][c - 1];
+      const right = c + 1 < GRID_SIZE && !!newGrid[r][c + 1];
+
+      const initialConnections = getConnectionsFromPathType(selectedPathType);
+
       newGrid[r][c] = {
         type: "path",
-        pathType: selectedPathType,
+        pathType: getPathTypeFromConnections(
+          initialConnections.top || top,
+          initialConnections.bottom || bottom,
+          initialConnections.left || left,
+          initialConnections.right || right,
+        ),
         isPowered: false, // Will be calculated
       };
     }
+
+    // Update neighbors if they are paths
+    const neighbors = [
+      [r + 1, c],
+      [r - 1, c],
+      [r, c + 1],
+      [r, c - 1],
+    ];
+
+    neighbors.forEach(([nr, nc]) => {
+      if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
+        updateCellConnections(nr, nc, newGrid, r, c);
+      }
+    });
+
     setGrid(newGrid);
   };
 
