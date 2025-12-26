@@ -156,6 +156,7 @@ function App() {
     });
     return (parsed.debug as boolean) || false;
   });
+  const [copyStatus, setCopyStatus] = useState<boolean>(false);
 
   const roomsByType = useMemo(() => {
     const filtered = roomsData.filter(
@@ -1232,7 +1233,10 @@ function App() {
   const shareLayout = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url).then(() => {
-      alert("Link copied to clipboard!");
+      setCopyStatus(true);
+      setTimeout(() => {
+        setCopyStatus(false);
+      }, 5000);
     });
   };
 
@@ -1482,7 +1486,9 @@ function App() {
             />
             ignore placement restrictions
           </label>
-          <button onClick={shareLayout}>Share Link</button>
+          <button onClick={shareLayout}>
+            {copyStatus ? "Link copied" : "Share Link"}
+          </button>
           <button
             onClick={() =>
               setGrid(
