@@ -696,6 +696,13 @@ function App() {
   ): boolean => {
     if (x === ENTRY.x && y === ENTRY.y) return true;
 
+    // Boss/reward rooms are always placeable (but need to be reachable, checked elsewhere)
+    if (cellToPlace.type === "room") {
+      const roomId = cellToPlace.roomId;
+      const room = roomsData.find((r) => r.Id === roomId);
+      if (room?.IsBossReward) return true;
+    }
+
     if (cellToPlace.type === "path") {
       const connections = getConnectionsFromPathType(cellToPlace.pathType!);
       const neighbors = [
@@ -727,9 +734,9 @@ function App() {
 
     if (cellToPlace.type !== "room" || !cellToPlace.roomId) return false;
 
-    const roomId = cellToPlace.roomId;
-    const room = roomsData.find((r) => r.Id === roomId);
-    if (!room) return false;
+    const roomId2 = cellToPlace.roomId;
+    const room2 = roomsData.find((r) => r.Id === roomId2);
+    if (!room2) return false;
 
     const neighbors = [
       { nx: x - 1, ny: y, opp: "right" as const },
@@ -744,10 +751,16 @@ function App() {
     neighbors.forEach(({ nx, ny, opp }) => {
       if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
         const neighbor = targetGrid[nx][ny];
-        if (!neighbor) return;
+        if (!neighbor) {
+          // Check if it's the ENTRY
+          if (nx === ENTRY.x && ny === ENTRY.y) {
+            canPlaceRegular = true;
+          }
+          return;
+        }
 
         if (neighbor.type === "path") {
-          if (roomId === "Generator") {
+          if (roomId2 === "Generator") {
             const conns = getConnectionsFromPathType(neighbor.pathType!);
             if (conns[opp]) {
               canPlaceRegular = true;
@@ -756,7 +769,7 @@ function App() {
             canPlaceRegular = true;
           }
         } else if (neighbor.type === "room") {
-          if (roomId === "Generator") return; // Generators only next to paths
+          if (roomId2 === "Generator") return; // Generators only next to paths
 
           const nBaseRoom = roomsData.find((rd) => rd.Id === neighbor.roomId);
           if (!nBaseRoom) return;
@@ -779,22 +792,22 @@ function App() {
           nNeighbors.forEach(([nnx, nny]) => {
             if (nnx >= 0 && nnx < GRID_SIZE && nny >= 0 && nny < GRID_SIZE) {
               const nn = targetGrid[nnx][nny];
-              if (nn && nn.type === "room" && nn.roomId === roomId) {
+              if (nn && nn.type === "room" && nn.roomId === roomId2) {
                 currentUpgradesByType++;
               }
             }
           });
 
           if (
-            nUpgradedByCounts[roomId] &&
-            currentUpgradesByType < nUpgradedByCounts[roomId]
+            nUpgradedByCounts[roomId2] &&
+            currentUpgradesByType < nUpgradedByCounts[roomId2]
           ) {
             canPlaceStrong = true;
           }
 
           // Check if neighbor upgrades selected room
           const selectedUpgradedByCounts: Record<string, number> = {};
-          room.UpgradedBy.forEach((i) => {
+          room2.UpgradedBy.forEach((i) => {
             const id = roomsData[i].Id;
             selectedUpgradedByCounts[id] =
               (selectedUpgradedByCounts[id] || 0) + 1;
@@ -810,12 +823,12 @@ function App() {
     if (canPlaceStrong || canPlaceRegular) return true;
 
     // Reward rooms can be placed anywhere
-    if (room.IsBossReward) {
+    if (room2.IsBossReward) {
       return true;
     }
 
     // Architect's Chamber can be placed anywhere, but only if one doesn't exist
-    if (roomId === "Architect") {
+    if (roomId2 === "Architect") {
       const exists = targetGrid.some((row) =>
         row.some(
           (cell) => cell?.type === "room" && cell.roomId === "Architect",
@@ -843,7 +856,7 @@ function App() {
         return !cell;
       }),
     );
-    if (isEmpty && roomId !== "Generator") {
+    if (isEmpty && roomId2 !== "Generator") {
       const isNextToEntry =
         (Math.abs(x - ENTRY.x) === 1 && y === ENTRY.y) ||
         (x === ENTRY.x && Math.abs(y - ENTRY.y) === 1);
@@ -853,16 +866,105 @@ function App() {
     return false;
   };
 
+  const isReachableFromEntry = (
+    currentGrid: (GridCell | null)[][],
+  ): Set<string> => {
+    const reachable = new Set<string>();
+    const queue: { x: number; y: number }[] = [{ x: ENTRY.x, y: ENTRY.y }];
+    reachable.add(`${ENTRY.x},${ENTRY.y}`);
+
+    while (queue.length > 0) {
+      const { x, y } = queue.shift()!;
+
+      const neighbors = [
+        { nr: x, nc: y + 1, side: "top" as const, opp: "bottom" as const },
+        { nr: x, nc: y - 1, side: "bottom" as const, opp: "top" as const },
+        { nr: x - 1, nc: y, side: "left" as const, opp: "right" as const },
+        { nr: x + 1, nc: y, side: "right" as const, opp: "left" as const },
+      ];
+
+      neighbors.forEach(({ nr, nc, side, opp }) => {
+        if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
+          if (reachable.has(`${nr},${nc}`)) return;
+
+          const currentCell = currentGrid[x][y];
+          const neighborCell = currentGrid[nr][nc];
+
+          if (!neighborCell) return;
+
+          let canConnect = false;
+          if (currentCell?.type === "room") {
+            if (neighborCell.type === "room") {
+              canConnect = true;
+            } else if (neighborCell.type === "path") {
+              const conns = getConnectionsFromPathType(neighborCell.pathType!);
+              if (conns[opp]) canConnect = true;
+            }
+          } else if (currentCell?.type === "path") {
+            const currentConns = getConnectionsFromPathType(
+              currentCell.pathType!,
+            );
+            if (neighborCell.type === "room") {
+              canConnect = true;
+            } else if (neighborCell.type === "path") {
+              if (currentConns[side]) {
+                const neighborConns = getConnectionsFromPathType(
+                  neighborCell.pathType!,
+                );
+                if (neighborConns[opp]) canConnect = true;
+              }
+            }
+          }
+
+          if (canConnect) {
+            reachable.add(`${nr},${nc}`);
+            queue.push({ x: nr, y: nc });
+          }
+        }
+      });
+    }
+
+    return reachable;
+  };
+
   const isDeletable = (x: number, y: number): boolean => {
     if (x === ENTRY.x && y === ENTRY.y) return false;
     const cellToDelete = grid[x][y];
     if (!cellToDelete) return false;
 
+    // Boss and reward rooms are always deletable
+    if (cellToDelete.type === "room") {
+      const room = roomsData.find((rd) => rd.Id === cellToDelete.roomId);
+      if (room?.IsBossReward) return true;
+    }
+
     // Create a hypothetical grid where the cell is removed
     const nextGrid = grid.map((row) => [...row]);
     nextGrid[x][y] = null;
 
-    // Check all neighbors of (x, y)
+    // Check reachability in the new grid
+    const reachable = isReachableFromEntry(nextGrid);
+
+    // Any non-boss, non-reward room must still be reachable from ENTRY
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        const cell = nextGrid[r][c];
+        if (cell && cell.type === "room") {
+          const room = roomsData.find((rd) => rd.Id === cell.roomId);
+          if (
+            room &&
+            !room.IsBossReward &&
+            room.Id !== "Architect" &&
+            room.Id !== "Atziri" &&
+            !reachable.has(`${r},${c}`)
+          ) {
+            return false;
+          }
+        }
+      }
+    }
+
+    // Also check local placement validity for immediate neighbors
     const neighbors = [
       [x - 1, y],
       [x + 1, y],
@@ -874,7 +976,6 @@ function App() {
       if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
         const neighbor = nextGrid[nx][ny];
         if (neighbor) {
-          // If the neighbor is no longer placeable, then (x, y) is not deletable
           if (!isPlaceableAt(nx, ny, nextGrid, neighbor)) {
             return false;
           }
