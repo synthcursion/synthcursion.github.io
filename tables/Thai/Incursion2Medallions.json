@@ -1,0 +1,112 @@
+[
+  {
+    "_index": 0,
+    "Id": "Nothing",
+    "Name": "",
+    "FlavourText": "",
+    "Icon_DDSFile": "",
+    "": 0,
+    "MiscObject": null,
+    "Description": "",
+    "SoundEffect": null
+  },
+  {
+    "_index": 1,
+    "Id": "PreventDeletionOfRoom",
+    "Name": "เหรียญตราฮัวตาล็อตลี",
+    "FlavourText": "สถาปนิกแห่งคลังสมบัติทำการรวบรวมวัตถุจากประวัติศาสตร์วาล์\r\nอย่างสุดความสามารถเพื่อรักษาให้รอดพ้นจากจุดจบ\r\nเธออนุญาตให้เขาทำเช่นนี้ เพราะมันให้ประโยชน์กับเธอได้ดีนัก",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionPreventDeletionOfRoom.dds",
+    "": 0,
+    "MiscObject": 889,
+    "Description": "ป้องกันการ[IncursionDestabiliztion|ระงับเสถียรภาพ]ของห้องหนึ่งในครั้งถัดไป",
+    "SoundEffect": 1234
+  },
+  {
+    "_index": 2,
+    "Id": "RerollRewardRoom",
+    "Name": "เหรียญตราเฮโยคี",
+    "FlavourText": "สถาปนิกแห่งการทำลายล้างจงใจให้ตนเองลาโลกไปด้วยระเบิด\r\nที่เกิดขึ้นจาก 'อุบัติเหตุ' เธอสั่งให้รวบรวมชิ้นส่วนของเขา\r\nประกอบร่างเขาขึ้นมาใหม่ให้เขากลายเป็นผู้ที่เหนือมนุษย์ ความตายไม่ช่วยให้หลุดพ้น",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRewardRoom.dds",
+    "": 0,
+    "MiscObject": 890,
+    "Description": "สุ่มของรางวัลภายในหีบพระคลังของรางวัล",
+    "SoundEffect": 1235
+  },
+  {
+    "_index": 3,
+    "Id": "LevelUpRoom",
+    "Name": "เหรียญตราคุยโปลาทัล",
+    "FlavourText": "สถาปนิกแห่งศูนย์กลางเสนอให้สร้างวิหารแอ็ทโซแอทล์เป็นต้นแบบ\r\nเขานึกว่าโครงการนี้จะช่วยให้เขาอยู่ปลอดภัย\r\nทว่าเขาได้แต่สร้างสถานที่ครองบัลลังก์อีกแห่งให้กับเธอเพียงเท่านั้น",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionLevelUpRoom.dds",
+    "": 0,
+    "MiscObject": 891,
+    "Description": "เพิ่มระดับของห้องหนึ่ง",
+    "SoundEffect": 1236
+  },
+  {
+    "_index": 4,
+    "Id": "BonusRoom",
+    "Name": "เหรียญตราอูรูมอที",
+    "FlavourText": "สถาปนิกแห่งการขยายสถานมักจะอยู่ห่างไกล\r\nคอยทำโครงการต่างๆ ตามชายขอบของจักรวรรดิเสมอมา\r\nเขาหมดข้ออ้างหลังจากที่ลูกสาวของเขา... ถูกแต่งตั้ง... เข้าไปในวิหารราชสำนัก",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionBonusRoom.dds",
+    "": 0,
+    "MiscObject": 892,
+    "Description": "เพิ่มห้อง: {0}",
+    "SoundEffect": 1237
+  },
+  {
+    "_index": 5,
+    "Id": "IncreaseMaxTokens",
+    "Name": "เหรียญตราโจเพค",
+    "FlavourText": "สถาปนิกแห่งพลังอำนาจเลือกที่จะหมกมุ่นอยู่กับงาน\r\nมุ่งแสวงหาอิสรภาพในปัญญา เธอตามเขาไปกระทั่งที่นั่น\r\nคอยศึกษาทฤษฎีเพื่อให้เจตนาของเขาไม่ผันแปร",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxTokens.dds",
+    "": 0,
+    "MiscObject": 893,
+    "Description": "เพิ่มความจุ[IncursionCrystal|คริสตัล]สูงสุด",
+    "SoundEffect": 1238
+  },
+  {
+    "_index": 6,
+    "Id": "IncreaseMaxMedallions",
+    "Name": "เหรียญตราแอซคาพา",
+    "FlavourText": "สถาปนิกแห่งสมาคมเริงรมย์ไปกับการส่งเครื่องประดับอย่างต่อเนื่อง\r\nเพื่อหลอกล่อองค์ราชินี ทว่าที่จริงแล้ว เธอแทบไม่ได้ดูเครื่องประดับเหล่านั้นเสียด้วยซ้ำ",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxMedallions.dds",
+    "": 0,
+    "MiscObject": 894,
+    "Description": "เพิ่มความจุเหรียญตราสูงสุด",
+    "SoundEffect": 1239
+  },
+  {
+    "_index": 7,
+    "Id": "ExtraRewardRoom",
+    "Name": "เหรียญตราเอสตาซุนที",
+    "FlavourText": "สถาปนิกแห่งสถานนิรภัยอ้อนวอนทั้งขุนนางและผู้มุ่งเกี้ยวพาราสี\r\nวิงวอนให้พวกเขาเลิกส่งสมบัติให้กับองค์ราชินี\r\nเพราะเขาไม่อาจกลับบ้านได้จนกว่าจะหมดหน้าที่...",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionExtraRewardRoom.dds",
+    "": 0,
+    "MiscObject": 895,
+    "Description": "วางหีบพระคลังของรางวัลเพิ่มเติม 1 ใบ หลังจากที่สยบสถาปนิกได้สำเร็จ",
+    "SoundEffect": 1240
+  },
+  {
+    "_index": 8,
+    "Id": "RerollHand",
+    "Name": "เหรียญตราพูฮวาเท",
+    "FlavourText": "สถาปนิกแห่งเตาหลอมไม่ปล่อยให้เตาของเขาว่าง\r\nเพราะองค์ราชินีมักทอดพระเนตรมายังผู้ที่เกียจคร้าน\r\nโถงของเธอล้วนประดับประดาไปด้วยงานฝีมือที่เขาสร้างขึ้นมาอย่างจนตรอก",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRemainingRewardRoom.dds",
+    "": 0,
+    "MiscObject": 896,
+    "Description": "สุ่มห้องที่สามารถวางได้\r\nไม่สามารถสุ่มห้องของรางวัลขึ้นมาใหม่ได้ด้วยวิธีนี้",
+    "SoundEffect": 1241
+  },
+  {
+    "_index": 9,
+    "Id": "AddTempleMod",
+    "Name": "เหรียญตราซานทีพี",
+    "FlavourText": "สถาปนิกแห่งการปกปิดสานความลับเอาไว้ในศิลา\r\nด้วยช่องทางและพลังที่ไม่มีผู้ใดควรพบเห็น\r\nชื่อเสียงของเขาเป็นที่เลื่องลือใต้เงาของแบบที่เขาสร้างขึ้นมา",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRandomWaystoneModifier.dds",
+    "": 0,
+    "MiscObject": 897,
+    "Description": "เพิ่มม็อด[Waystone|ศิลานำทาง]แบบสุ่ม 1 อย่างให้กับการบุกวิหาร 10 ครั้งถัดไป สูงสุด 8 อย่าง",
+    "SoundEffect": 1242
+  }
+]

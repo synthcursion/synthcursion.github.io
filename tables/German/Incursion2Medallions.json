@@ -1,0 +1,112 @@
+[
+  {
+    "_index": 0,
+    "Id": "Nothing",
+    "Name": "",
+    "FlavourText": "",
+    "Icon_DDSFile": "",
+    "": 0,
+    "MiscObject": null,
+    "Description": "",
+    "SoundEffect": null
+  },
+  {
+    "_index": 1,
+    "Id": "PreventDeletionOfRoom",
+    "Name": "Juatalotlis Medaillon",
+    "FlavourText": "Der Architekt des Hortes sammelte jedes Stück Vaal-Geschichte,\r\ndas er konnte, in der Hoffnung, sie bis zum Ende zu erhalten.\r\nSie gestattete ihm dies, denn es diente auch ihren Zwecken.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionPreventDeletionOfRoom.dds",
+    "": 0,
+    "MiscObject": 889,
+    "Description": "Verhindert die nächste [IncursionDestabilization|Destabilisierung] eines Raums",
+    "SoundEffect": 1234
+  },
+  {
+    "_index": 2,
+    "Id": "RerollRewardRoom",
+    "Name": "Hayoxis Medaillon",
+    "FlavourText": "Der Architekt der Zerstörung sorgte durch eine \"zufällige\" Explosion für seinen eigenen Untergang. Sie befahl, seine Teile zu sammeln, den Körper zusammenzusetzen und zu transzendieren. Der Tod war kein Ausweg.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRewardRoom.dds",
+    "": 0,
+    "MiscObject": 890,
+    "Description": "Würfelt die Belohnung einer Belohnungs-Schatzkammer neu",
+    "SoundEffect": 1235
+  },
+  {
+    "_index": 3,
+    "Id": "LevelUpRoom",
+    "Name": "Quipolatls Medaillon",
+    "FlavourText": "Der Architekt des Nexus schlug den Tempel von Atzoatl als einen Prototypen\r\nvor. Er dachte, das Projekt würde ihn schützen. Stattdessen war alles,\r\nwas er erreichte, ihr einen weiteren Ort der Macht zu verschaffen.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionLevelUpRoom.dds",
+    "": 0,
+    "MiscObject": 891,
+    "Description": "Verbessert den Level eines Raums",
+    "SoundEffect": 1236
+  },
+  {
+    "_index": 4,
+    "Id": "BonusRoom",
+    "Name": "Uromotis Medaillon",
+    "FlavourText": "Der Architekt der Erweiterung war immerzu distanziert, arbeitete an Projekten\r\nam Rande des Reichs. Seine Entschuldigungen schwanden, kurz nachdem\r\nseiner Tochter ... am königlichen Tempel ... eine Stelle gegeben wurde.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionBonusRoom.dds",
+    "": 0,
+    "MiscObject": 892,
+    "Description": "Raum hinzufügen: {0}",
+    "SoundEffect": 1237
+  },
+  {
+    "_index": 5,
+    "Id": "IncreaseMaxTokens",
+    "Name": "Xopecs Medaillon",
+    "FlavourText": "Der Architekt der Energie entschied sich, sich in seine Arbeit zu stürzen,\r\nauf der Suche nach geistiger Freiheit. Sie folgte ihm sogar dorthin, lernte\r\ndie Theorien, und stellte sicher, dass er nicht von ihrem Auftrag abwich.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxTokens.dds",
+    "": 0,
+    "MiscObject": 893,
+    "Description": "Erhöht die maximale [IncursionCrystal|Kristall]-Kapazität",
+    "SoundEffect": 1238
+  },
+  {
+    "_index": 6,
+    "Id": "IncreaseMaxMedallions",
+    "Name": "Azcapas Medaillon",
+    "FlavourText": "Der Architekt der Gilde war mehr als glücklich, einen nicht-endenden Strom von Schmuckstücken und Juwelen zu schaffen, um die Königin abzulenken, aber in Wahrheit schaute sie sich kaum eines davon an.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxMedallions.dds",
+    "": 0,
+    "MiscObject": 894,
+    "Description": "Erhöht die maximale Medaillon-Kapazität",
+    "SoundEffect": 1239
+  },
+  {
+    "_index": 7,
+    "Id": "ExtraRewardRoom",
+    "Name": "Estazuntis Medaillon",
+    "FlavourText": "Der Architekt der Schatzkammer flehte Adlige und Gönner an,\r\nsie mögen der Königin keine Schätze mehr überbringen. Er\r\nkonnte nicht nach Hause zurückkehren, bis seine Aufgabe erfüllt war ...",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionExtraRewardRoom.dds",
+    "": 0,
+    "MiscObject": 895,
+    "Description": "Platziert eine extra Belohnungs-Schatzkammer nach dem Besiegen des Architekten",
+    "SoundEffect": 1240
+  },
+  {
+    "_index": 8,
+    "Id": "RerollHand",
+    "Name": "Puhuartes Medaillon",
+    "FlavourText": "Der Architekt der Schmiede ließ sein Feuer nie ausgehen,\r\ndenn das Auge der Königin ruhte auf den Müßiggängern. Ihre Hallen waren\r\nmit seinen verzweifelten Handwerkskünsten geschmückt.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRemainingRewardRoom.dds",
+    "": 0,
+    "MiscObject": 896,
+    "Description": "Würfelt für die Platzierung verfügbare Räume neu\r\nBelohnungs-Schatzkammern können nicht auf diese Weise neu gewürfelt werden",
+    "SoundEffect": 1241
+  },
+  {
+    "_index": 9,
+    "Id": "AddTempleMod",
+    "Name": "Zantipis Medaillon",
+    "FlavourText": "Der Architekt der Verschleierung versteckte Geheimnisse in Stein,\r\nmit Passagen und Kräften, die niemand sehen sollte.\r\nSein Ruhm wuchs im Schatten seiner Entwürfe.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRandomWaystoneModifier.dds",
+    "": 0,
+    "MiscObject": 897,
+    "Description": "Fügt für die nächsten 10 Tempelläufe einen zufälligen [Waystone|Wegstein]-Modifikator hinzu, bis zu einem Maximum von 8 Modifikatoren",
+    "SoundEffect": 1242
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "_index": 0,
+    "Id": "Nothing",
+    "Name": "",
+    "FlavourText": "",
+    "Icon_DDSFile": "",
+    "": 0,
+    "MiscObject": null,
+    "Description": "",
+    "SoundEffect": null
+  },
+  {
+    "_index": 1,
+    "Id": "PreventDeletionOfRoom",
+    "Name": "Médaillon de Juatalotli",
+    "FlavourText": "L'Architecte du Trésor rassembla tous les morceaux\r\nd'histoire Vaal qu'il put, espérant les préserver contre la fin.\r\nElle lui permit cela, car cette entreprise servait également ses propres desseins.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionPreventDeletionOfRoom.dds",
+    "": 0,
+    "MiscObject": 889,
+    "Description": "Empêche la prochaine [IncursionDestabilization|Déstabilisation] d'une salle",
+    "SoundEffect": 1234
+  },
+  {
+    "_index": 2,
+    "Id": "RerollRewardRoom",
+    "Name": "Médaillon d'Hayoxi",
+    "FlavourText": "L'Architecte de la Destruction orchestra sa propre mort dans une explosion\r\n« accidentelle ». Elle ordonna de rassembler ses morceaux, de réassembler son corps et de le transcender. La mort n'était pas une échappatoire.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRewardRoom.dds",
+    "": 0,
+    "MiscObject": 890,
+    "Description": "Relance la récompense d'une Chambre forte de Récompense",
+    "SoundEffect": 1235
+  },
+  {
+    "_index": 3,
+    "Id": "LevelUpRoom",
+    "Name": "Médaillon de Quipolatl",
+    "FlavourText": "L'Architecte du Nexus proposa le Temple d'Atzoatl comme prototype.\r\nIl pensait que ce projet le mettrait à l'abri. Au lieu de cela, il n'eut pour seul\r\naccomplissement que de lui construire un nouveau siège de pouvoir.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionLevelUpRoom.dds",
+    "": 0,
+    "MiscObject": 891,
+    "Description": "Améliore le Palier d'une Salle",
+    "SoundEffect": 1236
+  },
+  {
+    "_index": 4,
+    "Id": "BonusRoom",
+    "Name": "Médaillon d'Uromoti",
+    "FlavourText": "L'Architecte de l'Expansion était toujours distant, travaillant sur des\r\nprojets aux confins de l'Empire. Ses excuses s'évanouirent peu après\r\nqu'une position eut été « offerte » à sa fille au Temple royal.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionBonusRoom.dds",
+    "": 0,
+    "MiscObject": 892,
+    "Description": "Ajoute la Salle : {0}",
+    "SoundEffect": 1237
+  },
+  {
+    "_index": 5,
+    "Id": "IncreaseMaxTokens",
+    "Name": "Médaillon de Xopec",
+    "FlavourText": "L'Architecte de la Puissance choisit de se noyer dans son travail,\r\ncherchant la liberté de l'esprit. Elle le suivit même là,\r\napprenant les théories, s'assurant qu'il ne s'éloigne pas de son dessein.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxTokens.dds",
+    "": 0,
+    "MiscObject": 893,
+    "Description": "Augmente la Capacité maximale de [IncursionCrystal|Cristaux]",
+    "SoundEffect": 1238
+  },
+  {
+    "_index": 6,
+    "Id": "IncreaseMaxMedallions",
+    "Name": "Médaillon d'Azcapa",
+    "FlavourText": "L'Architecte de la Guilde était plus qu'heureux de créer\r\nun flux incessant de babioles et de brimborions pour distraire la\r\nReine, mais en réalité, elle n'y prêtait presque pas attention.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxMedallions.dds",
+    "": 0,
+    "MiscObject": 894,
+    "Description": "Augmente la Capacité maximale de Médaillons",
+    "SoundEffect": 1239
+  },
+  {
+    "_index": 7,
+    "Id": "ExtraRewardRoom",
+    "Name": "Médaillon d'Estazunti",
+    "FlavourText": "L'Architecte de la Chambre forte implorait les nobles et les courtisans,\r\nles suppliant d'arrêter d'envoyer des trésors à la Reine. Il ne pouvait\r\njamais rentrer chez lui avant que sa besogne ne soit accomplie…",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionExtraRewardRoom.dds",
+    "": 0,
+    "MiscObject": 895,
+    "Description": "Place une Chambre forte de Récompense supplémentaire après avoir vaincu l'Architecte",
+    "SoundEffect": 1240
+  },
+  {
+    "_index": 8,
+    "Id": "RerollHand",
+    "Name": "Médaillon de Puhuarte",
+    "FlavourText": "L'Architecte de la Forge maintenait son âtre en activité,\r\ncar l'œil de la Reine s'attardait sur les oisifs. Ses salles étaient\r\nornées de son artisanat désespéré.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRemainingRewardRoom.dds",
+    "": 0,
+    "MiscObject": 896,
+    "Description": "Relance les Salles disponibles pour le placement\r\nLes Chambres fortes de Récompense ne peuvent pas être relancées de cette manière",
+    "SoundEffect": 1241
+  },
+  {
+    "_index": 9,
+    "Id": "AddTempleMod",
+    "Name": "Médaillon Zantipi",
+    "FlavourText": "L'Architecte de la Dissimulation tissait des secrets dans la pierre,\r\ncréant des passages et des pouvoirs que nul ne devait découvrir.\r\nSa renommée grandit dans l'ombre de ses propres conceptions.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRandomWaystoneModifier.dds",
+    "": 0,
+    "MiscObject": 897,
+    "Description": "Ajoute un Modificateur de [Waystone|Pierre de téléportation] pour vos 10 prochaines incursions dans le Temple, jusqu'à un maximum de 8 Modificateurs",
+    "SoundEffect": 1242
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "_index": 0,
+    "Id": "Nothing",
+    "Name": "",
+    "FlavourText": "",
+    "Icon_DDSFile": "",
+    "": 0,
+    "MiscObject": null,
+    "Description": "",
+    "SoundEffect": null
+  },
+  {
+    "_index": 1,
+    "Id": "PreventDeletionOfRoom",
+    "Name": "Медальон Ваталотли",
+    "FlavourText": "Архитектор складов собрал все частицы истории ваал,\r\nкакие только мог, надеясь сохранить их вопреки концу.\r\nОна позволила ему это, поскольку это служило и её целям тоже.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionPreventDeletionOfRoom.dds",
+    "": 0,
+    "MiscObject": 889,
+    "Description": "Предотвращает следующую [IncursionDestabilization|дестабилизацию] комнаты",
+    "SoundEffect": 1234
+  },
+  {
+    "_index": 2,
+    "Id": "RerollRewardRoom",
+    "Name": "Медальон Хайоши",
+    "FlavourText": "Архитектор разрушения позаботился о собственной кончине при\r\n«‎случайном» взрыве. Она приказала собрать его останки,\r\nсоединить и превозвысить тело. Смерть не стала бегством.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRewardRoom.dds",
+    "": 0,
+    "MiscObject": 890,
+    "Description": "Меняет награду в хранилище с наградами",
+    "SoundEffect": 1235
+  },
+  {
+    "_index": 3,
+    "Id": "LevelUpRoom",
+    "Name": "Медальон Квиполатля",
+    "FlavourText": "Архитектор сопряжения предложил храм Ацоатль в качестве прототипа.\r\nОн полагал, что проект позволит ему быть в отдалении и безопасности.\r\nВместо этого всё, чего он достиг, – построил ей ещё один центр власти.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionLevelUpRoom.dds",
+    "": 0,
+    "MiscObject": 891,
+    "Description": "Повышает уровень комнаты",
+    "SoundEffect": 1236
+  },
+  {
+    "_index": 4,
+    "Id": "BonusRoom",
+    "Name": "Медальон Уромоти",
+    "FlavourText": "Архитектор завоеваний всегда был занят, всегда далеко, работал\r\nнад проектами на границе царства. Его отговорки исчезли вскоре\r\nпосле того, как его дочери... дали... должность при храме царицы.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionBonusRoom.dds",
+    "": 0,
+    "MiscObject": 892,
+    "Description": "Добавляет комнату: {0}",
+    "SoundEffect": 1237
+  },
+  {
+    "_index": 5,
+    "Id": "IncreaseMaxTokens",
+    "Name": "Медальон Шопека",
+    "FlavourText": "Архитектор силы выбрал закопаться в работе, ища свободы разума.\r\nОна преследовала его даже там, изучив теории и цифры, следя\r\nза тем, чтобы он не отклонялся от отданных ею распоряжений.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxTokens.dds",
+    "": 0,
+    "MiscObject": 893,
+    "Description": "Увеличивает допустимый максимум [IncursionCrystal|кристаллов]",
+    "SoundEffect": 1238
+  },
+  {
+    "_index": 6,
+    "Id": "IncreaseMaxMedallions",
+    "Name": "Медальон Азкапы",
+    "FlavourText": "Архитектор гильдии был более чем рад обеспечить\r\nнепрерывный поток цацек и побрякушек, чтобы отвлечь\r\nцарицу, но, на деле, она на них даже толком не смотрела.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxMedallions.dds",
+    "": 0,
+    "MiscObject": 894,
+    "Description": "Увеличивает число ячеек для медальонов",
+    "SoundEffect": 1239
+  },
+  {
+    "_index": 7,
+    "Id": "ExtraRewardRoom",
+    "Name": "Медальон Эстазунти",
+    "FlavourText": "Архитектор хранилища молил аристократов и ухажёров,\r\nчтобы они перестали слать сокровища царице. Он не мог\r\nвернуться домой, пока его задача не будет выполнена...",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionExtraRewardRoom.dds",
+    "": 0,
+    "MiscObject": 895,
+    "Description": "Добавляет дополнительное хранилище с наградами после победы над архитектором",
+    "SoundEffect": 1240
+  },
+  {
+    "_index": 8,
+    "Id": "RerollHand",
+    "Name": "Медальон Пухварте",
+    "FlavourText": "Архитектор горна не давал своему очагу простаивать,\r\nибо взгляд царицы задерживался на безработных.\r\nЕё залы были украшены его отчаянным искусством.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRemainingRewardRoom.dds",
+    "": 0,
+    "MiscObject": 896,
+    "Description": "Сбрасывает доступные для размещения комнаты\r\nХранилища с наградами нельзя изменить",
+    "SoundEffect": 1241
+  },
+  {
+    "_index": 9,
+    "Id": "AddTempleMod",
+    "Name": "Медальон Зантипи",
+    "FlavourText": "Архитектор тайника вплетал секреты в камень,\r\nпутями и силами, которых никто не должен был видеть.\r\nЕго известность росла в тени его изобретений.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRandomWaystoneModifier.dds",
+    "": 0,
+    "MiscObject": 897,
+    "Description": "Добавляет случайное свойство [Waystone|путевого камня] на следующие 10 открытий храма, до максимум 8 свойств",
+    "SoundEffect": 1242
+  }
+]

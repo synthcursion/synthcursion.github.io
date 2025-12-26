@@ -1,0 +1,112 @@
+[
+  {
+    "_index": 0,
+    "Id": "Nothing",
+    "Name": "",
+    "FlavourText": "",
+    "Icon_DDSFile": "",
+    "": 0,
+    "MiscObject": null,
+    "Description": "",
+    "SoundEffect": null
+  },
+  {
+    "_index": 1,
+    "Id": "PreventDeletionOfRoom",
+    "Name": "フアタロトリのメダリオン",
+    "FlavourText": "貯蔵庫のアーキテクトは終末を迎えても保存できるよう、可能な限りのヴァールの歴史を集めた。それは彼女の目的にも適っていたため、彼女はそれを許した。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionPreventDeletionOfRoom.dds",
+    "": 0,
+    "MiscObject": 889,
+    "Description": "次回起きる[IncursionDestabilization|部屋の不安定化]を防ぐ",
+    "SoundEffect": 1234
+  },
+  {
+    "_index": 2,
+    "Id": "RerollRewardRoom",
+    "Name": "ハヨキのメダリオン",
+    "FlavourText": "破壊のアーキテクトは爆発『事故』で確実な自殺を図った。彼女は彼の肉片を集めさせ、体を再構築させ、超越させた。死んでも逃げることはできなかった。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRewardRoom.dds",
+    "": 0,
+    "MiscObject": 890,
+    "Description": "報酬の宝物庫の報酬をリロールする",
+    "SoundEffect": 1235
+  },
+  {
+    "_index": 3,
+    "Id": "LevelUpRoom",
+    "Name": "キポラトルのメダリオン",
+    "FlavourText": "ネクサスのアーキテクトはプロトタイプとしてアッツォアトルの神殿を提案した。その仕事が彼を遠く安全な場所に留めてくれると考えたのだ。だが、彼が達成したのは彼女のために新たな権力の座を作ることだけだった。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionLevelUpRoom.dds",
+    "": 0,
+    "MiscObject": 891,
+    "Description": "部屋1個のティアを上げる",
+    "SoundEffect": 1236
+  },
+  {
+    "_index": 4,
+    "Id": "BonusRoom",
+    "Name": "ウロモティのメダリオン",
+    "FlavourText": "拡張のアーキテクトは常に忙しく、常に遠く、帝国の縁での計画に励んでいた。彼の娘が王宮での役割を……与えられると……彼の口実はすぐになくなった。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionBonusRoom.dds",
+    "": 0,
+    "MiscObject": 892,
+    "Description": "以下の部屋を追加: {0}",
+    "SoundEffect": 1237
+  },
+  {
+    "_index": 5,
+    "Id": "IncreaseMaxTokens",
+    "Name": "ゾペックのメダリオン",
+    "FlavourText": "力のアーキテクトは精神の自由を求め、自身の仕事に没頭した。彼女はそこへさえやってきて、仮説や数字を学び、彼が彼女の命令から逸れてしまわぬように見張った。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxTokens.dds",
+    "": 0,
+    "MiscObject": 893,
+    "Description": "[IncursionCrystal|クリスタル]の最大容量を増加させる",
+    "SoundEffect": 1238
+  },
+  {
+    "_index": 6,
+    "Id": "IncreaseMaxMedallions",
+    "Name": "アズカパのメダリオン",
+    "FlavourText": "ギルドのアーキテクトは女王の気を逸らすために喜んであれこれの品をとめどなく提供したが、実際の所、彼女はそれらを殆ど見てもいなかった。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxMedallions.dds",
+    "": 0,
+    "MiscObject": 894,
+    "Description": "メダリオンの最大容量を増加させる",
+    "SoundEffect": 1239
+  },
+  {
+    "_index": 7,
+    "Id": "ExtraRewardRoom",
+    "Name": "エスタズンティのメダリオン",
+    "FlavourText": "宝物庫のアーキテクトは貴族や求婚者たちに女王に財宝を贈るのをやめるよう懇願した。彼は仕事を終えるまで決して帰ることはできないのだ……",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionExtraRewardRoom.dds",
+    "": 0,
+    "MiscObject": 895,
+    "Description": "アーキテクトを倒した後に追加の報酬の宝物庫を配置する",
+    "SoundEffect": 1240
+  },
+  {
+    "_index": 8,
+    "Id": "RerollHand",
+    "Name": "プフアテのメダリオン",
+    "FlavourText": "鍛冶場のアーキテクトは炉を働かせ続けた。女王の目は休んでいる者を見ていたからだ。彼女の神殿は彼の必死な職人技で飾られていた。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRemainingRewardRoom.dds",
+    "": 0,
+    "MiscObject": 896,
+    "Description": "設置可能な部屋をリロールする\r\nこの方法では報酬の宝物庫はリロールできない",
+    "SoundEffect": 1241
+  },
+  {
+    "_index": 9,
+    "Id": "AddTempleMod",
+    "Name": "ザンティピのメダリオン",
+    "FlavourText": "隠匿のアーキテクトは石に秘密を編み込み、何者の目にも触れぬ通路や力を作った。彼の名声は彼の作品の影の中で高まっていった。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRandomWaystoneModifier.dds",
+    "": 0,
+    "MiscObject": 897,
+    "Description": "今後10回の神殿の探索時にランダムな[Waystone|ウェイストーン]モッドを1個追加する。モッドの最大数は8個まで",
+    "SoundEffect": 1242
+  }
+]

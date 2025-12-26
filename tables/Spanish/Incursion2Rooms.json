@@ -1,0 +1,450 @@
+[
+  {
+    "_index": 0,
+    "Id": "Nothing",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 1,
+    "Id": "Path",
+    "IsPathway": true,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 2,
+    "Id": "PoweredPath",
+    "IsPathway": true,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 3,
+    "Id": "Garrison",
+    "IsPathway": false,
+    "UpgradedBy": [
+      4,
+      5
+    ],
+    "ConvertedBy": [
+      10,
+      8
+    ],
+    "ConvertedTo": [
+      12,
+      9
+    ],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Guarnición",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGarrison.dds"
+  },
+  {
+    "_index": 4,
+    "Id": "Commander",
+    "IsPathway": false,
+    "UpgradedBy": [
+      3,
+      3,
+      3,
+      12,
+      12,
+      12
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Comandante",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCommander.dds"
+  },
+  {
+    "_index": 5,
+    "Id": "Armoury",
+    "IsPathway": false,
+    "UpgradedBy": [
+      6,
+      13
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Armería",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArmoury.dds"
+  },
+  {
+    "_index": 6,
+    "Id": "Smithy",
+    "IsPathway": false,
+    "UpgradedBy": [
+      15
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 1,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Herrería",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSmithy.dds"
+  },
+  {
+    "_index": 7,
+    "Id": "Generator",
+    "IsPathway": false,
+    "UpgradedBy": [
+      14,
+      18
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Generador",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGenerator.dds"
+  },
+  {
+    "_index": 8,
+    "Id": "ViperSpymaster",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Maestra de espionaje",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"
+  },
+  {
+    "_index": 9,
+    "Id": "ViperLegionBarracks",
+    "IsPathway": false,
+    "UpgradedBy": [
+      5,
+      8
+    ],
+    "ConvertedBy": [
+      10
+    ],
+    "ConvertedTo": [
+      12
+    ],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Barracones de la legión",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperLegionBarracks.dds"
+  },
+  {
+    "_index": 10,
+    "Id": "SynthfleshLab",
+    "IsPathway": false,
+    "UpgradedBy": [
+      11
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 1,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Laboratorio de carne sintética",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSynthflesh.dds"
+  },
+  {
+    "_index": 11,
+    "Id": "FleshSurgeon",
+    "IsPathway": false,
+    "UpgradedBy": [
+      10
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Cirujano de carne",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverFleshSurgeon.dds"
+  },
+  {
+    "_index": 12,
+    "Id": "TranscendentBarracks",
+    "IsPathway": false,
+    "UpgradedBy": [
+      10
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 1,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Barracones trascendentes",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverTranscendentBarracks.dds"
+  },
+  {
+    "_index": 13,
+    "Id": "AlchemyLab",
+    "IsPathway": false,
+    "UpgradedBy": [
+      14,
+      14
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Laboratorio de alquimia",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAlchemyLab.dds"
+  },
+  {
+    "_index": 14,
+    "Id": "Thaumaturge",
+    "IsPathway": false,
+    "UpgradedBy": [
+      18
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Taumaturgo",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverThaumaturge.dds"
+  },
+  {
+    "_index": 15,
+    "Id": "GolemWorks",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 2,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Fábrica de gólems",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverGolemWorks.dds"
+  },
+  {
+    "_index": 16,
+    "Id": "Corruption",
+    "IsPathway": false,
+    "UpgradedBy": [
+      14,
+      18
+    ],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Cámara de corrupción",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverCorruption.dds"
+  },
+  {
+    "_index": 17,
+    "Id": "Vault",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Sala de tesoros",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverVault.dds"
+  },
+  {
+    "_index": 18,
+    "Id": "SacrificialChamber",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Cámara de sacrificios",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverSacrificialChamber.dds"
+  },
+  {
+    "_index": 19,
+    "Id": "SacrificeRoom",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Sacrifica una sala para mejorar la Cámara de sacrificios",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 20,
+    "Id": "Architect",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "Cámara del arquitecto",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverArchitect.dds"
+  },
+  {
+    "_index": 21,
+    "Id": "Entrance",
+    "IsPathway": true,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": false,
+    "Name": "",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 22,
+    "Id": "CurrencyReward",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": true,
+    "Name": "Sala de objetos monetarios",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 23,
+    "Id": "LineageSupportReward",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": true,
+    "Name": "Sala de gemas de linaje",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 24,
+    "Id": "SocketableReward",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": true,
+    "Name": "Sala de mejoras",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 25,
+    "Id": "TabletReward",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": true,
+    "Name": "Sala de tablillas",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 26,
+    "Id": "UniqueReward",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": true,
+    "IsBossReward": true,
+    "Name": "Sala de únicos",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 27,
+    "Id": "AccessChamber",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": true,
+    "Name": "Cámara de acceso real",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAccessChamber.dds"
+  },
+  {
+    "_index": 28,
+    "Id": "Atziri",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Cámara de Atziri",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverAtziri.dds"
+  },
+  {
+    "_index": 29,
+    "Id": "UnsocketingReward",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": true,
+    "Name": "Cámara de extracción",
+    "Icon_DDSFile": ""
+  },
+  {
+    "_index": 30,
+    "Id": "DeadSpymaster",
+    "IsPathway": false,
+    "UpgradedBy": [],
+    "ConvertedBy": [],
+    "ConvertedTo": [],
+    "UpgradedByPower": 0,
+    "IsPastExclusive": false,
+    "IsBossReward": false,
+    "Name": "Maestro de espionaje",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomHover/RoomHoverViperSpymaster.dds"
+  }
+]

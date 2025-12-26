@@ -1,0 +1,112 @@
+[
+  {
+    "_index": 0,
+    "Id": "Nothing",
+    "Name": "",
+    "FlavourText": "",
+    "Icon_DDSFile": "",
+    "": 0,
+    "MiscObject": null,
+    "Description": "",
+    "SoundEffect": null
+  },
+  {
+    "_index": 1,
+    "Id": "PreventDeletionOfRoom",
+    "Name": "Medalhão de Juatalotli",
+    "FlavourText": "O Arquiteto do Tesouro reuniu cada pedacinho da história vaal\r\n que encontrou, querendo guardar tudo antes do fim.\r\n Ela deixou, já que aquilo também servia aos planos dela.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionPreventDeletionOfRoom.dds",
+    "": 0,
+    "MiscObject": 889,
+    "Description": "Impede a próxima [IncursionDestabilization|desestabilização] de uma sala",
+    "SoundEffect": 1234
+  },
+  {
+    "_index": 2,
+    "Id": "RerollRewardRoom",
+    "Name": "Medalhão de Hayoxi",
+    "FlavourText": "O Arquiteto da Destruição tratou de se matar em uma explosão\r\n \"acidental\". Ela mandou recolher os pedaços, reconstruir\r\n o corpo e transcendê-lo. Nem a morte oferecia uma saída.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRewardRoom.dds",
+    "": 0,
+    "MiscObject": 890,
+    "Description": "Recria a recompensa de um Cofre de Recompensa",
+    "SoundEffect": 1235
+  },
+  {
+    "_index": 3,
+    "Id": "LevelUpRoom",
+    "Name": "Medalhão de Quipolatl",
+    "FlavourText": "O Arquiteto do Nexus propôs que o templo de Atzoatl fosse\r\n um protótipo, achando que isso o manteria seguro.\r\n No fim, isso apenas deu a ela mais um trono.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionLevelUpRoom.dds",
+    "": 0,
+    "MiscObject": 891,
+    "Description": "Melhora o nível de uma sala",
+    "SoundEffect": 1236
+  },
+  {
+    "_index": 4,
+    "Id": "BonusRoom",
+    "Name": "Medalhão de Uromoti",
+    "FlavourText": "O Arquiteto da Expansão vivia longe, ocupado com projetos na\r\n fronteirado império, até que suas desculpas acabaram\r\n quando a filha dele foi… \"designada\"… ao Templo Real.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionBonusRoom.dds",
+    "": 0,
+    "MiscObject": 892,
+    "Description": "Adiciona sala: {0}",
+    "SoundEffect": 1237
+  },
+  {
+    "_index": 5,
+    "Id": "IncreaseMaxTokens",
+    "Name": "Medalhão de Xopec",
+    "FlavourText": "O Arquiteto do Poder mergulhou no trabalho para tentar\r\n libertar a mente. Ela o seguiu até lá e aprendeu teorias,\r\n tudo para garantir que ele se desviasse do plano.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxTokens.dds",
+    "": 0,
+    "MiscObject": 893,
+    "Description": "Aumenta a capacidade de [IncursionCrystal|cristais] máximos",
+    "SoundEffect": 1238
+  },
+  {
+    "_index": 6,
+    "Id": "IncreaseMaxMedallions",
+    "Name": "Medalhão de Azcapa",
+    "FlavourText": "O Arquiteto da Guilda não via problemas em\r\n criar inúmeras bugigangas para distrair a rainha, mas,\r\n no fundo, ela quase não ligava para aquilo.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxMedallions.dds",
+    "": 0,
+    "MiscObject": 894,
+    "Description": "Aumenta a capacidade de medalhões máximos",
+    "SoundEffect": 1239
+  },
+  {
+    "_index": 7,
+    "Id": "ExtraRewardRoom",
+    "Name": "Medalhão de Estazunti",
+    "FlavourText": "O Arquiteto do Cofre suplicou aos nobres e pretendentes que\r\n parassem de enviar tesouros à rainha. Ele jamais poderia\r\n voltar para casa enquanto não concluísse sua tarefa...",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionExtraRewardRoom.dds",
+    "": 0,
+    "MiscObject": 895,
+    "Description": "Coloca um Cofre de Recompensa adicional após derrotar o Arquiteto",
+    "SoundEffect": 1240
+  },
+  {
+    "_index": 8,
+    "Id": "RerollHand",
+    "Name": "Medalhão de Puhuarte",
+    "FlavourText": "O Arquiteto da Forja mantinha suas chamas ocupadas,\r\npois o olhar da rainha se detinha sobre os ociosos.\r\nSeus salões estavam adornados com sua afoita habilidade.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRemainingRewardRoom.dds",
+    "": 0,
+    "MiscObject": 896,
+    "Description": "Refaz as salas para montar disponíveis\r\nOs Cofres de Recompensas não podem ser refeitos desta forma",
+    "SoundEffect": 1241
+  },
+  {
+    "_index": 9,
+    "Id": "AddTempleMod",
+    "Name": "Medalhão de Zantipi",
+    "FlavourText": "O Arquiteto do Ocultamento teceu segredos na pedra,\r\ncriando passagens e poderes que ninguém deveria conhecer.\r\nSua fama cresceu nas sombras de seus projetos.",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRandomWaystoneModifier.dds",
+    "": 0,
+    "MiscObject": 897,
+    "Description": "Adiciona um modificador de [Waystone|Pedra-guia] para as próximas 10 incursões ao templo (máximo de 8 modificadores)",
+    "SoundEffect": 1242
+  }
+]

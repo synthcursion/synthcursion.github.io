@@ -1,0 +1,214 @@
+#root {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+.app-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  background-color: #2a2a2a;
+  border-right: 1px solid #444;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.header h2 {
+  margin: 0;
+  color: #d4af37;
+  font-family: serif;
+}
+
+.subtitle {
+  margin: 5px 0 0;
+  font-size: 0.9em;
+  color: #888;
+}
+
+.tool-section {
+  display: flex;
+  gap: 10px;
+}
+
+.tool-section button {
+  flex: 1;
+}
+
+button {
+  background-color: #333;
+  color: #ddd;
+  border: 1px solid #555;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: #444;
+  border-color: #777;
+}
+
+button.active {
+  background-color: #d4af37 !important;
+  color: #000 !important;
+  border-color: #fff !important;
+  font-weight: bold;
+}
+
+select, input[type="text"] {
+  background-color: #111;
+  color: #eee;
+  border: 1px solid #444;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+label {
+  font-size: 0.85em;
+  color: #aaa;
+  margin-top: 5px;
+}
+
+.help-text {
+  margin-top: 20px;
+  font-size: 0.8em;
+  color: #666;
+  border-top: 1px solid #333;
+  padding-top: 10px;
+}
+
+.help-text ul {
+  padding-left: 20px;
+  margin: 5px 0;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.path-grid img {
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background-color: #111;
+}
+
+.path-grid img:hover {
+  border-color: #666;
+}
+
+.path-grid img.selected {
+  border-color: #aaa;
+  background-color: #444;
+}
+
+.grid-container {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  background-color: #000;
+}
+
+.grid-background {
+  width: 2848px;
+  height: 1536px;
+  background-image: url('/ggpk/incursion2mainbg.png');
+  background-size: 2848px 1536px;
+  background-repeat: no-repeat;
+  background-position: top left;
+  position: relative;
+}
+
+.grid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cell {
+  position: absolute;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.cell:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  outline: 1px solid #d4af37;
+  z-index: 100;
+}
+
+.cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cell-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tier {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #d4af37;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  pointer-events: none;
+  border: 1px solid #d4af37;
+  z-index: 20;
+}
+
+.powered-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 10px #00ffff;
+  pointer-events: none;
+}
+
+.actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

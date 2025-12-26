@@ -1,0 +1,112 @@
+[
+  {
+    "_index": 0,
+    "Id": "Nothing",
+    "Name": "",
+    "FlavourText": "",
+    "Icon_DDSFile": "",
+    "": 0,
+    "MiscObject": null,
+    "Description": "",
+    "SoundEffect": null
+  },
+  {
+    "_index": 1,
+    "Id": "PreventDeletionOfRoom",
+    "Name": "瓦爾羅特聖徽",
+    "FlavourText": "珍藏建築師收集了他所能找到的每一件瓦爾歷史物品，希望在末日來臨時能將其保留下來。女王允許他這麼做，因為這同樣符合她的目的。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionPreventDeletionOfRoom.dds",
+    "": 0,
+    "MiscObject": 889,
+    "Description": "防止下一次房間[IncursionDestabilization|不穩定]",
+    "SoundEffect": 1234
+  },
+  {
+    "_index": 2,
+    "Id": "RerollRewardRoom",
+    "Name": "荷霖蔡聖徽",
+    "FlavourText": "毀滅建築師在一場「意外的」爆炸中確保了自己的滅亡。女王下令收集他的殘骸，將其身體重組並使之超越凡俗。死亡無法成為他的逃脫。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRewardRoom.dds",
+    "": 0,
+    "MiscObject": 890,
+    "Description": "重骰獎勵密庫的獎勵",
+    "SoundEffect": 1235
+  },
+  {
+    "_index": 3,
+    "Id": "LevelUpRoom",
+    "Name": "克特帕托聖徽",
+    "FlavourText": "核心建築師提出將阿茲瓦特神廟作為一個原型。他以為這個專案能讓他保持距離和安全。然而，他所成就的一切不過是為女王建造了另一個權力寶座。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionLevelUpRoom.dds",
+    "": 0,
+    "MiscObject": 891,
+    "Description": "提升房間的階級",
+    "SoundEffect": 1236
+  },
+  {
+    "_index": 4,
+    "Id": "BonusRoom",
+    "Name": "烏爾摩堤聖徽",
+    "FlavourText": "擴張建築師總是很忙碌，總是在遠方，在帝國邊緣執行專案。在他女兒被……「賜予」皇家神廟的一個職位後，他的藉口很快就消失了。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionBonusRoom.dds",
+    "": 0,
+    "MiscObject": 892,
+    "Description": "增加房間：{0}",
+    "SoundEffect": 1237
+  },
+  {
+    "_index": 5,
+    "Id": "IncreaseMaxTokens",
+    "Name": "柔派克聖徽",
+    "FlavourText": "力量建築師選擇將自己埋首於工作中，尋求心靈上的自由。女王即使在那裡也跟隨著他，學習理論和數字，確保他沒有偏離她的命令。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxTokens.dds",
+    "": 0,
+    "MiscObject": 893,
+    "Description": "增加最大[IncursionCrystal|水晶]容量",
+    "SoundEffect": 1238
+  },
+  {
+    "_index": 6,
+    "Id": "IncreaseMaxMedallions",
+    "Name": "阿茲卡帕聖徽",
+    "FlavourText": "公會建築師非常樂意持續不斷地創造飾品和小玩意來分散女王的注意力，但事實上，女王幾乎從未看過它們。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionIncreaseMaxMedallions.dds",
+    "": 0,
+    "MiscObject": 894,
+    "Description": "增加最大聖徽容量",
+    "SoundEffect": 1239
+  },
+  {
+    "_index": 7,
+    "Id": "ExtraRewardRoom",
+    "Name": "艾斯祖太聖徽",
+    "FlavourText": "寶庫建築師懇求貴族和求婚者們，請求他們停止向女王進貢寶藏。他在任務完成之前永遠無法回家……",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionExtraRewardRoom.dds",
+    "": 0,
+    "MiscObject": 895,
+    "Description": "擊敗建築師後放置一個額外獎勵密庫",
+    "SoundEffect": 1240
+  },
+  {
+    "_index": 8,
+    "Id": "RerollHand",
+    "Name": "普希瓦爾聖徽",
+    "FlavourText": "鍛造建築師讓爐火日夜不熄，\r\n因為女王的目光總會在閒散者身上停留。\r\n她的廳堂裝飾著他那出於絕望的工藝。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRerollRemainingRewardRoom.dds",
+    "": 0,
+    "MiscObject": 896,
+    "Description": "重骰可供放置的房間\r\n獎勵寶庫無法透過此方式重骰",
+    "SoundEffect": 1241
+  },
+  {
+    "_index": 9,
+    "Id": "AddTempleMod",
+    "Name": "善堤比聖徽",
+    "FlavourText": "隱匿建築師將秘密編織入石，\r\n創造出不應為人所見的通道與力量。\r\n他的聲望在他設計的陰影中滋長。",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/MedallionRandomWaystoneModifier.dds",
+    "": 0,
+    "MiscObject": 897,
+    "Description": "為接下來 10 次神廟探索增加 1 個隨機[Waystone|換界石]詞綴，上限為 8 個詞綴",
+    "SoundEffect": 1242
+  }
+]

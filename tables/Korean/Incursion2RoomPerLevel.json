@@ -1,0 +1,822 @@
+[
+  {
+    "_index": 0,
+    "Room": 1,
+    "Level": 1,
+    "Id": "",
+    "Description": "",
+    "Name": "길",
+    "Icon_DDSFile": "",
+    "Mod": 14507,
+    "ModValues": [
+      40
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 1,
+    "Room": 3,
+    "Level": 1,
+    "Id": "garrison_lvl1",
+    "Description": "장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "위병소",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGarrison.dds",
+    "Mod": 14411,
+    "ModValues": [
+      10,
+      0
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 2,
+    "Room": 3,
+    "Level": 2,
+    "Id": "garrison_lvl2",
+    "Description": "장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "주둔지",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGarrison.dds",
+    "Mod": 14411,
+    "ModValues": [
+      15,
+      15
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 3,
+    "Room": 3,
+    "Level": 3,
+    "Id": "garrison_lvl3",
+    "Description": "장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "전쟁의 전당",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGarrison.dds",
+    "Mod": 14411,
+    "ModValues": [
+      20,
+      30
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 4,
+    "Room": 4,
+    "Level": 1,
+    "Id": "commander_lvl1",
+    "Description": "더 높은 확률로 우로모티의 메달리온이 나오며, 등급이 높아지면 확률이 증가함\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "지휘관의 방",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconCommander.dds",
+    "Mod": 14412,
+    "ModValues": [
+      15
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 5,
+    "Room": 4,
+    "Level": 2,
+    "Id": "commander_lvl2",
+    "Description": "더 높은 확률로 우로모티의 메달리온이 나오며, 등급이 높아지면 확률이 증가함\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "지휘관의 전당",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconCommander.dds",
+    "Mod": 14412,
+    "ModValues": [
+      30
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 6,
+    "Room": 4,
+    "Level": 3,
+    "Id": "commander_lvl3",
+    "Description": "더 높은 확률로 우로모티의 메달리온이 나오며, 등급이 높아지면 확률이 증가함\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "지휘관의 본부",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconCommander.dds",
+    "Mod": 14412,
+    "ModValues": [
+      60
+    ],
+    "Description2": "Low chance for advanced Medallions"
+  },
+  {
+    "_index": 7,
+    "Room": 5,
+    "Level": 1,
+    "Id": "armoury_lvl1",
+    "Description": "장비 포함",
+    "Name": "창고",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconArmoury.dds",
+    "Mod": 14413,
+    "ModValues": [
+      15
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 8,
+    "Room": 5,
+    "Level": 2,
+    "Id": "armoury_lvl2",
+    "Description": "여러 개의 장비 포함",
+    "Name": "병기창",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconArmoury.dds",
+    "Mod": 14413,
+    "ModValues": [
+      30
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 9,
+    "Room": 5,
+    "Level": 3,
+    "Id": "armoury_lvl3",
+    "Description": "희귀 장비 포함",
+    "Name": "회랑",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconArmoury.dds",
+    "Mod": 14413,
+    "ModValues": [
+      60
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 10,
+    "Room": 6,
+    "Level": 1,
+    "Id": "smithy_lvl1",
+    "Description": "장비 퀄리티를 올려 주는 작업대 포함\r\n3등급일 때 장비 퀄리티를 20% 위로 추가로 올릴 수 있음",
+    "Name": "청동세공실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSmithy.dds",
+    "Mod": 14414,
+    "ModValues": [
+      15
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 11,
+    "Room": 6,
+    "Level": 2,
+    "Id": "smithy_lvl2",
+    "Description": "장비에 증강물 홈을 올려 주는 작업대 포함\r\n3등급일 때 장비 퀄리티를 20% 위로 올릴 수 있음",
+    "Name": "방어구의 방",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSmithy.dds",
+    "Mod": 14414,
+    "ModValues": [
+      30
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 12,
+    "Room": 6,
+    "Level": 3,
+    "Id": "smithy_lvl3",
+    "Description": "장비 퀄리티를 20% 위로 올려 주는 작업대 포함",
+    "Name": "황금 대장간",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSmithy.dds",
+    "Mod": 14414,
+    "ModValues": [
+      60
+    ],
+    "Description2": "High chance for advanced Medallions"
+  },
+  {
+    "_index": 13,
+    "Room": 7,
+    "Level": 1,
+    "Id": "generator_lvl1",
+    "Description": "주변의 방에 동력을 공급하며, 등급이 높아지면 범위가 증가함\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "발전기",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGenerator.dds",
+    "Mod": 14420,
+    "ModValues": [
+      15,
+      0
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 14,
+    "Room": 7,
+    "Level": 2,
+    "Id": "generator_lvl2",
+    "Description": "주변의 방에 동력을 공급하며, 등급이 높아지면 범위가 증가함\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "강화의 성소",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGenerator.dds",
+    "Mod": 14420,
+    "ModValues": [
+      30,
+      0
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 15,
+    "Room": 7,
+    "Level": 3,
+    "Id": "generator_lvl3",
+    "Description": "주변의 방에 동력을 공급하며, 등급이 높아지면 범위가 증가함\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "태양의 연결부",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGenerator.dds",
+    "Mod": 14420,
+    "ModValues": [
+      60,
+      1
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 16,
+    "Room": 8,
+    "Level": 1,
+    "Id": "viperspymaster_lvl1",
+    "Description": "더 높은 확률로 주앗탈로틀리의 메달리온이 나오며, 등급이 높아지면 확률이 증가함\r\n다른 첩보대장을 암살하여 레벨을 올릴 수 있음",
+    "Name": "첩보대장의 서재",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconViperSpymaster.dds",
+    "Mod": 14647,
+    "ModValues": [
+      8,
+      0
+    ],
+    "Description2": "Low chance for Juatalotli's Medallion"
+  },
+  {
+    "_index": 17,
+    "Room": 8,
+    "Level": 2,
+    "Id": "viperspymaster_lvl2",
+    "Description": "더 높은 확률로 주앗탈로틀리의 메달리온이 나오며, 등급이 높아지면 확률이 증가함\r\n다른 첩보대장을 암살하여 레벨을 올릴 수 있음",
+    "Name": "그림자의 전당",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconViperSpymaster.dds",
+    "Mod": 14647,
+    "ModValues": [
+      15,
+      0
+    ],
+    "Description2": "Low chance for Juatalotli's Medallion"
+  },
+  {
+    "_index": 18,
+    "Room": 8,
+    "Level": 3,
+    "Id": "viperspymaster_lvl3",
+    "Description": "높은 확률로 주앗탈로틀리의 메달리온이 나옴\r\n다른 첩보대장을 암살할 수 있음",
+    "Name": "편재의 원형 감옥",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconViperSpymaster.dds",
+    "Mod": 14647,
+    "ModValues": [
+      30,
+      1
+    ],
+    "Description2": "High chance for Juatalotli's Medallion"
+  },
+  {
+    "_index": 19,
+    "Room": 9,
+    "Level": 2,
+    "Id": "viperlegionbarracks_lvl2",
+    "Description": "",
+    "Name": "독사의 충신들",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconViperLegionBarracks.dds",
+    "Mod": 14415,
+    "ModValues": [
+      30
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 20,
+    "Room": 9,
+    "Level": 3,
+    "Id": "viperlegionbarracks_lvl3",
+    "Description": "",
+    "Name": "정예 군단",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconViperLegionBarracks.dds",
+    "Mod": 14415,
+    "ModValues": [
+      60
+    ],
+    "Description2": "High chance for advanced Medallions"
+  },
+  {
+    "_index": 21,
+    "Room": 10,
+    "Level": 1,
+    "Id": "synthfleshlab_lvl1",
+    "Description": "",
+    "Name": "보철물 연구실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSynthflesh.dds",
+    "Mod": 14416,
+    "ModValues": [
+      10
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 22,
+    "Room": 10,
+    "Level": 2,
+    "Id": "synthfleshlab_lvl2",
+    "Description": "",
+    "Name": "인조육체 지성소",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSynthflesh.dds",
+    "Mod": 14416,
+    "ModValues": [
+      20
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 23,
+    "Room": 10,
+    "Level": 3,
+    "Id": "synthfleshlab_lvl3",
+    "Description": "",
+    "Name": "초월의 용광로",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSynthflesh.dds",
+    "Mod": 14416,
+    "ModValues": [
+      40
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 24,
+    "Room": 11,
+    "Level": 1,
+    "Id": "fleshsurgeon_lvl1",
+    "Description": "3등급일 때 팔다리 개조 가능",
+    "Name": "의사의 병동",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconFleshSurgeon.dds",
+    "Mod": 14417,
+    "ModValues": [
+      10
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 25,
+    "Room": 11,
+    "Level": 2,
+    "Id": "fleshsurgeon_lvl2",
+    "Description": "3등급일 때 팔다리 개조 가능",
+    "Name": "의사의 극장",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconFleshSurgeon.dds",
+    "Mod": 14417,
+    "ModValues": [
+      20
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 26,
+    "Room": 11,
+    "Level": 3,
+    "Id": "fleshsurgeon_lvl3",
+    "Description": "팔다리 개조 장치 포함",
+    "Name": "의사의 교향곡",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconFleshSurgeon.dds",
+    "Mod": 14417,
+    "ModValues": [
+      40
+    ],
+    "Description2": "High chance for advanced Medallions"
+  },
+  {
+    "_index": 27,
+    "Room": 12,
+    "Level": 2,
+    "Id": "transcendentbarracks_lvl2",
+    "Description": "",
+    "Name": "강철살점 구역",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconTranscendentBarracks.dds",
+    "Mod": 14418,
+    "ModValues": [
+      30
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 28,
+    "Room": 12,
+    "Level": 3,
+    "Id": "transcendentbarracks_lvl3",
+    "Description": "",
+    "Name": "집단적 군단",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconTranscendentBarracks.dds",
+    "Mod": 14418,
+    "ModValues": [
+      60
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 29,
+    "Room": 13,
+    "Level": 1,
+    "Id": "alchemylab_lvl1",
+    "Description": "3등급일 때 영혼 핵 타락 가능",
+    "Name": "영혼의 방",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconAlchemyLab.dds",
+    "Mod": 14419,
+    "ModValues": [
+      15
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 30,
+    "Room": 13,
+    "Level": 2,
+    "Id": "alchemylab_lvl2",
+    "Description": "3등급일 때 영혼 핵 타락 가능",
+    "Name": "핵심 기계실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconAlchemyLab.dds",
+    "Mod": 14419,
+    "ModValues": [
+      30
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 31,
+    "Room": 13,
+    "Level": 3,
+    "Id": "alchemylab_lvl3",
+    "Description": "영혼 핵을 타락시키는 장치 포함\r\n장치 사용 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "대성구실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconAlchemyLab.dds",
+    "Mod": 14423,
+    "ModValues": [
+      60,
+      50
+    ],
+    "Description2": "High chance for advanced Medallions"
+  },
+  {
+    "_index": 32,
+    "Room": 14,
+    "Level": 1,
+    "Id": "thaumaturge_lvl1",
+    "Description": "젬의 보조 젬 홈을 3개로 만드는 장치 포함\r\n3등급일 때 젬 추가 타락 가능",
+    "Name": "마석학자의 실험실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconThaumaturge.dds",
+    "Mod": 14649,
+    "ModValues": [
+      8,
+      0
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 33,
+    "Room": 14,
+    "Level": 2,
+    "Id": "thaumaturge_lvl2",
+    "Description": "스킬 젬의 퀄리티를 올려 주는 장치 포함\r\n3등급일 때 젬 추가 타락 가능",
+    "Name": "마석학자의 절단실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconThaumaturge.dds",
+    "Mod": 14649,
+    "ModValues": [
+      15,
+      0
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 34,
+    "Room": 14,
+    "Level": 3,
+    "Id": "thaumaturge_lvl3",
+    "Description": "젬을 추가로 타락시키는 장치 포함\r\n장치 사용 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "마석학자의 대성당",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconThaumaturge.dds",
+    "Mod": 14649,
+    "ModValues": [
+      30,
+      1
+    ],
+    "Description2": "High chance for advanced Medallions"
+  },
+  {
+    "_index": 35,
+    "Room": 15,
+    "Level": 1,
+    "Id": "golemworks_lvl1",
+    "Description": "3등급일 때 높은 확률로 퀴폴라틀의 메달리온이 나옴\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "작업장",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGolemWorks.dds",
+    "Mod": 14648,
+    "ModValues": [
+      8,
+      0
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 36,
+    "Room": 15,
+    "Level": 2,
+    "Id": "golemworks_lvl2",
+    "Description": "3등급일 때 높은 확률로 퀴폴라틀의 메달리온이 나옴\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "오토마톤 제조실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGolemWorks.dds",
+    "Mod": 14648,
+    "ModValues": [
+      15,
+      0
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 37,
+    "Room": 15,
+    "Level": 3,
+    "Id": "golemworks_lvl3",
+    "Description": "3등급일 때 높은 확률로 퀴폴라틀의 메달리온이 나옴\r\n장비에 속성을 부여하는 작업대를 포함할 수 있음",
+    "Name": "돌 군단",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconGolemWorks.dds",
+    "Mod": 14648,
+    "ModValues": [
+      30,
+      1
+    ],
+    "Description2": "High chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 38,
+    "Room": 16,
+    "Level": 1,
+    "Id": "corruption_lvl1",
+    "Description": "스킬 젬의 퀄리티를 올려 주는 장치 포함\r\n3등급일 때 장비 추가 타락 가능",
+    "Name": "진홍색 전당",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconCorruption.dds",
+    "Mod": 14422,
+    "ModValues": [
+      15,
+      0
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 39,
+    "Room": 16,
+    "Level": 2,
+    "Id": "corruption_lvl2",
+    "Description": "스킬 젬의 퀄리티를 올려 주는 장치 포함\r\n3등급일 때 장비 추가 타락 가능",
+    "Name": "타락의 기폭제",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconCorruption.dds",
+    "Mod": 14422,
+    "ModValues": [
+      30,
+      0
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 40,
+    "Room": 16,
+    "Level": 3,
+    "Id": "corruption_lvl3",
+    "Description": "장비를 추가로 타락시키는 장치 포함\r\n장치 사용 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "타락의 현장",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconCorruption.dds",
+    "Mod": 14422,
+    "ModValues": [
+      60,
+      1
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 41,
+    "Room": 17,
+    "Level": 1,
+    "Id": "vault",
+    "Description": "다수의 상자 포함\r\n중앙 금고실이 열리면 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "봉인된 금고실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconVault.dds",
+    "Mod": 14419,
+    "ModValues": [
+      25
+    ],
+    "Description2": ""
+  },
+  {
+    "_index": 42,
+    "Room": 18,
+    "Level": 1,
+    "Id": "sacrificechamber_lvl1",
+    "Description": "고유 아이템 포함\r\n3등급일 때 바알 고유 아이템에 추가 속성 부여 가능",
+    "Name": "희생의 제단",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSacrificialChamber.dds",
+    "Mod": 14421,
+    "ModValues": [
+      15,
+      0
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 43,
+    "Room": 18,
+    "Level": 2,
+    "Id": "sacrificechamber_lvl2",
+    "Description": "고유 아이템 포함\r\n3등급일 때 바알 고유 아이템에 추가 속성 부여 가능",
+    "Name": "공물의 전당",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSacrificialChamber.dds",
+    "Mod": 14421,
+    "ModValues": [
+      30,
+      0
+    ],
+    "Description2": "Low chance for Quipolatl's Medallion"
+  },
+  {
+    "_index": 44,
+    "Room": 18,
+    "Level": 3,
+    "Id": "sacrificechamber_lvl3",
+    "Description": "고유 아이템 포함\r\n바알 고유 아이템에 속성을 부여하는 장치 포함\r\n장치 사용 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "봉헌의 정점",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconSacrificialChamber.dds",
+    "Mod": 14421,
+    "ModValues": [
+      60,
+      1
+    ],
+    "Description2": "High chance for advanced Medallions"
+  },
+  {
+    "_index": 45,
+    "Room": 20,
+    "Level": 1,
+    "Id": "architect",
+    "Description": "건축가 처치 시 보상 금고실 선택 가능\r\n높은 확률로 조펙과 아즈카파의 메달리온이 나옴",
+    "Name": "건축가의 방",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconArchitect.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": "High chance for Xopec's and Azcapa's Medallions"
+  },
+  {
+    "_index": 46,
+    "Room": 21,
+    "Level": 1,
+    "Id": "entrance",
+    "Description": "",
+    "Name": "현관",
+    "Icon_DDSFile": "",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 47,
+    "Room": 22,
+    "Level": 1,
+    "Id": "currency_reward",
+    "Description": "대형 화폐 보관함 포함\r\n방 완료 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "키샤라의 금고실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconRewardCurrency.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 48,
+    "Room": 23,
+    "Level": 1,
+    "Id": "lineage_support_reward",
+    "Description": "무작위 혈통 보조 젬 포함\r\n방 완료 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "숭배의 금고실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconRewardGem.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 49,
+    "Room": 24,
+    "Level": 1,
+    "Id": "socketable_reward",
+    "Description": "무작위 고레벨 룬 포함\r\n방 완료 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "지콰니의 금고실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconRewardSocketable.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 50,
+    "Room": 25,
+    "Level": 1,
+    "Id": "tablet_reward",
+    "Description": "서판을 타락시키는 장치 포함\r\n방 완료 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "서판 연구 금고실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconRewardTablet.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 51,
+    "Room": 26,
+    "Level": 1,
+    "Id": "unique_reward",
+    "Description": "고유 아이템 포함\r\n방 완료 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "고대의 성유물 보관실 금고실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconRewardUnique.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 52,
+    "Room": 27,
+    "Level": 1,
+    "Id": "access_chamber",
+    "Description": "앗지리의 석실로 가는 통로 포함\r\n방 완료 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "왕실 전실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconAccessChamber.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 53,
+    "Room": 29,
+    "Level": 1,
+    "Id": "unsocketing_reward",
+    "Description": "홈에 장착된 증강물을 분해하는 장치 포함\r\n방 완료 시 방이 [IncursionDestabilization|불안정해짐]",
+    "Name": "추출실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconRewardExtract.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 54,
+    "Room": 19,
+    "Level": 1,
+    "Id": "",
+    "Description": "",
+    "Name": "희생실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/SacrificeRoom.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 55,
+    "Room": 28,
+    "Level": 1,
+    "Id": "",
+    "Description": "",
+    "Name": "앗지리의 석실",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconAtziri.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": ""
+  },
+  {
+    "_index": 56,
+    "Room": 30,
+    "Level": 1,
+    "Id": "viperspymaster_defeated_lvl1",
+    "Description": "",
+    "Name": "첩보대장의 서재",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconViperSpymaster.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": "Has a higher chance of Juatalotli's Medallion, which increases with tier"
+  },
+  {
+    "_index": 57,
+    "Room": 30,
+    "Level": 2,
+    "Id": "viperspymaster_defeated_lvl2",
+    "Description": "",
+    "Name": "그림자의 전당",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconViperSpymaster.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": "Has a higher chance of Juatalotli's Medallion, which increases with tier"
+  },
+  {
+    "_index": 58,
+    "Room": 30,
+    "Level": 3,
+    "Id": "viperspymaster_defeated_lvl3",
+    "Description": "",
+    "Name": "편재의 원형 감옥",
+    "Icon_DDSFile": "Art/Textures/Interface/2D/2DArt/UIImages/InGame/Incursion2/RoomIcons/IconViperSpymaster.dds",
+    "Mod": null,
+    "ModValues": [],
+    "Description2": "Has a high chance of Juatalotli's Medallion"
+  }
+]
