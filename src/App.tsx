@@ -15,19 +15,19 @@ const roomsPerLevelData = roomsPerLevelDataRaw as IncursionRoomPerLevel[];
 const GRID_SIZE = 9;
 
 const PATH_TYPES: PathType[] = [
-  "path1",
-  "path2",
-  "pathconnect1",
-  "pathconnect2",
-  "pathcornerbot",
-  "pathcornerleft",
-  "pathcornerright",
-  "pathcornertop",
+  "path1", // top to bottom
+  "path2", // left to right
+  "pathconnect1", // rendered on the top or bottom of a cell to bridge path-to-path connections
+  "pathconnect2", // rendered on the left or right of a cell to bridge path-to-path connections
+  "pathcornerbot", // connects left to top ('bot' refers to the isometric location of the corner)
+  "pathcornerleft", // connects top to right
+  "pathcornerright", // connects left to bottom
+  "pathcornertop", // connects bottom to right
   "pathfourway",
-  "paththreeway1",
-  "paththreeway2",
-  "paththreeway3",
-  "paththreeway4",
+  "paththreeway1", // connects all but left
+  "paththreeway2", // connects all but top
+  "paththreeway3", // connects all but bottom
+  "paththreeway4", // connects all but right
 ];
 
 function App() {
