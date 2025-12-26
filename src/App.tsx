@@ -15,6 +15,8 @@ const roomsPerLevelData = roomsPerLevelDataRaw as IncursionRoomPerLevel[];
 
 const GRID_SIZE = 9;
 
+export const ENTRY = { x: 4, y: 0 };
+
 type Direction = "left" | "right" | "top" | "bottom";
 const PATH_TYPES: Record<PathType, Direction[]> = {
   path1: ["top", "bottom"],
@@ -82,6 +84,9 @@ function App() {
         .fill(null)
         .map(() => Array(GRID_SIZE).fill(null));
 
+      // Unremovable four-way path at ENTRY
+      newGrid[ENTRY.x][ENTRY.y] = { type: "path", pathType: "pathfourway" };
+
       const rooms = (saved.rooms as string[]) || [];
       const paths = (saved.paths as string[]) || [];
       const medallions = (saved.medallions as string[]) || [];
@@ -123,7 +128,16 @@ function App() {
 
     return Array(GRID_SIZE)
       .fill(null)
-      .map(() => Array(GRID_SIZE).fill(null));
+      .map((_, x) =>
+        Array(GRID_SIZE)
+          .fill(null)
+          .map((_, y) => {
+            if (x === ENTRY.x && y === ENTRY.y) {
+              return { type: "path", pathType: "pathfourway" };
+            }
+            return null;
+          }),
+      );
   });
 
   const [selectedType, setSelectedType] = useState<
@@ -535,7 +549,12 @@ function App() {
 
       if (canPlace) return "regular";
 
-      const isEmpty = grid.every((row) => row.every((cell) => !cell));
+      const isEmpty = grid.every((row, x) =>
+        row.every((cell, y) => {
+          if (x === ENTRY.x && y === ENTRY.y) return true;
+          return !cell;
+        }),
+      );
       if (isEmpty) return "regular";
 
       return null;
@@ -630,14 +649,21 @@ function App() {
     if (canPlaceStrong) return "strong";
     if (canPlaceRegular) return "regular";
 
-    // Special rule: if grid is completely empty, allow placing anywhere
-    const isEmpty = grid.every((row) => row.every((cell) => !cell));
+    // Special rule: if grid is completely empty (except for the unremovable ENTRY path), allow placing anywhere
+    const isEmpty = grid.every((row, x) =>
+      row.every((cell, y) => {
+        if (x === ENTRY.x && y === ENTRY.y) return true;
+        return !cell;
+      }),
+    );
     if (isEmpty && selectedRoomId !== "Generator") return "regular";
 
     return null;
   };
 
   const handleCellClick = (x: number, y: number) => {
+    if (x === ENTRY.x && y === ENTRY.y) return; // ENTRY is unremovable and unmodifiable
+
     const newGrid = [...grid.map((row) => [...row])];
 
     const updateCellConnections = (
@@ -1054,7 +1080,16 @@ function App() {
               setGrid(
                 Array(GRID_SIZE)
                   .fill(null)
-                  .map(() => Array(GRID_SIZE).fill(null)),
+                  .map((_, x) =>
+                    Array(GRID_SIZE)
+                      .fill(null)
+                      .map((_, y) => {
+                        if (x === ENTRY.x && y === ENTRY.y) {
+                          return { type: "path", pathType: "pathfourway" };
+                        }
+                        return null;
+                      }),
+                  ),
               )
             }
           >
