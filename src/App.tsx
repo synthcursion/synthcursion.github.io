@@ -373,16 +373,18 @@ function App() {
   };
 
   const getCellPosition = (r: number, c: number) => {
-    const centerX = 1424;
-    const centerY = 737;
-    const halfWidth = 620;
-    const halfHeight = 508;
+    // Row 0 is the bottom row, rendered on the lower left edge
+    // col 0 is the left column, rendered on the upper left edge
+    const centerX = 1425;
+    const centerY = 738;
+    const width = 1240;
+    const height = 1016;
 
     return {
-      left: `${centerX + (c - r) * (halfWidth / 8)}px`,
-      top: `${centerY + (r + c - 8) * (halfHeight / 8)}px`,
-      width: `${(halfWidth * 2) / 8}px`,
-      height: `${(halfHeight * 2) / 8}px`,
+      left: `${centerX + (r + c - 8) * (width / 16)}px`,
+      top: `${centerY + (r - c) * (height / 16)}px`,
+      width: `${width / 8}px`,
+      height: `${height / 8}px`,
     };
   };
 
