@@ -814,22 +814,26 @@ function App() {
                       alt=""
                     />
                   )}
-                  {cell ? (
-                    <div className="cell-content">
+                  <div className="cell-content">
+                    {cell ? (
                       <img src={getIconPath(cell)} alt="" />
-                      {cell.type === "room" && cell.tier && (
-                        <span className="tier">T{cell.tier}</span>
-                      )}
-                      {cell.hasMedallion && (
-                        <img
-                          src="/ggpk/medallionleveluproom.png"
-                          className="medallion-icon"
-                          alt="Medallion"
-                        />
-                      )}
-                    </div>
-                  ) : (
-                    <img src="/ggpk/incursion2tileempty.png" alt="" />
+                    ) : (
+                      <img src="/ggpk/incursion2tileempty.png" alt="" />
+                    )}
+                  </div>
+                  {cell?.type === "room" && cell.tier && cell.tier > 1 && (
+                    <img
+                      src={`/ggpk/roomtier${cell.tier}.png`}
+                      className="tier-icon"
+                      alt={`Tier ${cell.tier}`}
+                    />
+                  )}
+                  {cell?.hasMedallion && (
+                    <img
+                      src="/ggpk/medallionleveluproom.png"
+                      className="medallion-icon"
+                      alt="Medallion"
+                    />
                   )}
                 </div>
               )),
