@@ -526,8 +526,15 @@ function App() {
   const getHighlightType = (
     x: number,
     y: number,
-  ): "regular" | "strong" | null => {
-    if (grid[x][y]) return null;
+  ): "regular" | "strong" | "deletable" | null => {
+    if (grid[x][y]) {
+      // If we're hovering a tile that could be deleted
+      const cell = grid[x][y];
+      if (isDeletable(x, y)) {
+        return "deletable";
+      }
+      return null;
+    }
 
     if (selectedType === "path") {
       const connections = getConnectionsFromPathType(selectedPathType);
@@ -542,26 +549,20 @@ function App() {
       neighbors.forEach(({ nx, ny, side }) => {
         if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
           const neighbor = grid[nx][ny];
-          if (neighbor && neighbor.type === "path" && connections[side]) {
-            canPlace = true;
+          if (neighbor && connections[side]) {
+            if (neighbor.type === "path") {
+              canPlace = true;
+            } else if (
+              neighbor.type === "room" &&
+              neighbor.roomId === "Generator"
+            ) {
+              canPlace = true;
+            }
           }
         }
       });
 
       if (canPlace) return "regular";
-
-      const isEmpty = grid.every((row, x) =>
-        row.every((cell, y) => {
-          if (x === ENTRY.x && y === ENTRY.y) return true;
-          return !cell;
-        }),
-      );
-      if (isEmpty) {
-        const isNextToEntry =
-          (Math.abs(x - ENTRY.x) === 1 && y === ENTRY.y) ||
-          (x === ENTRY.x && Math.abs(y - ENTRY.y) === 1);
-        if (isNextToEntry) return "regular";
-      }
 
       return null;
     }
@@ -682,6 +683,198 @@ function App() {
     return null;
   };
 
+  const isPlaceableAt = (
+    x: number,
+    y: number,
+    targetGrid: (GridCell | null)[][],
+    cellToPlace: GridCell,
+  ): boolean => {
+    if (x === ENTRY.x && y === ENTRY.y) return true;
+
+    if (cellToPlace.type === "path") {
+      const connections = getConnectionsFromPathType(cellToPlace.pathType!);
+      const neighbors = [
+        { nx: x, ny: y + 1, side: "top" as const },
+        { nx: x, ny: y - 1, side: "bottom" as const },
+        { nx: x - 1, ny: y, side: "left" as const },
+        { nx: x + 1, ny: y, side: "right" as const },
+      ];
+
+      let canPlace = false;
+      neighbors.forEach(({ nx, ny, side }) => {
+        if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+          const neighbor = targetGrid[nx][ny];
+          if (neighbor && connections[side]) {
+            if (neighbor.type === "path") {
+              canPlace = true;
+            } else if (
+              neighbor.type === "room" &&
+              neighbor.roomId === "Generator"
+            ) {
+              canPlace = true;
+            }
+          }
+        }
+      });
+
+      return canPlace;
+    }
+
+    if (cellToPlace.type !== "room" || !cellToPlace.roomId) return false;
+
+    const roomId = cellToPlace.roomId;
+    const room = roomsData.find((r) => r.Id === roomId);
+    if (!room) return false;
+
+    const neighbors = [
+      { nx: x - 1, ny: y, opp: "right" as const },
+      { nx: x + 1, ny: y, opp: "left" as const },
+      { nx: x, ny: y - 1, opp: "top" as const },
+      { nx: x, ny: y + 1, opp: "bottom" as const },
+    ];
+
+    let canPlaceRegular = false;
+    let canPlaceStrong = false;
+
+    neighbors.forEach(({ nx, ny, opp }) => {
+      if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+        const neighbor = targetGrid[nx][ny];
+        if (!neighbor) return;
+
+        if (neighbor.type === "path") {
+          if (roomId === "Generator") {
+            const conns = getConnectionsFromPathType(neighbor.pathType!);
+            if (conns[opp]) {
+              canPlaceRegular = true;
+            }
+          } else {
+            canPlaceRegular = true;
+          }
+        } else if (neighbor.type === "room") {
+          if (roomId === "Generator") return; // Generators only next to paths
+
+          const nBaseRoom = roomsData.find((rd) => rd.Id === neighbor.roomId);
+          if (!nBaseRoom) return;
+
+          // Check if selected room upgrades neighbor
+          const nUpgradedByCounts: Record<string, number> = {};
+          nBaseRoom.UpgradedBy.forEach((i) => {
+            const id = roomsData[i].Id;
+            nUpgradedByCounts[id] = (nUpgradedByCounts[id] || 0) + 1;
+          });
+
+          // Check if neighbor already upgraded by this type of room
+          const nNeighbors = [
+            [nx - 1, ny],
+            [nx + 1, ny],
+            [nx, ny - 1],
+            [nx, ny + 1],
+          ];
+          let currentUpgradesByType = 0;
+          nNeighbors.forEach(([nnx, nny]) => {
+            if (nnx >= 0 && nnx < GRID_SIZE && nny >= 0 && nny < GRID_SIZE) {
+              const nn = targetGrid[nnx][nny];
+              if (nn && nn.type === "room" && nn.roomId === roomId) {
+                currentUpgradesByType++;
+              }
+            }
+          });
+
+          if (
+            nUpgradedByCounts[roomId] &&
+            currentUpgradesByType < nUpgradedByCounts[roomId]
+          ) {
+            canPlaceStrong = true;
+          }
+
+          // Check if neighbor upgrades selected room
+          const selectedUpgradedByCounts: Record<string, number> = {};
+          room.UpgradedBy.forEach((i) => {
+            const id = roomsData[i].Id;
+            selectedUpgradedByCounts[id] =
+              (selectedUpgradedByCounts[id] || 0) + 1;
+          });
+
+          if (selectedUpgradedByCounts[neighbor.roomId!]) {
+            canPlaceStrong = true;
+          }
+        }
+      }
+    });
+
+    if (canPlaceStrong || canPlaceRegular) return true;
+
+    // Architect's Chamber can be placed anywhere, but only if one doesn't exist
+    if (roomId === "Architect") {
+      const exists = targetGrid.some((row) =>
+        row.some(
+          (cell) => cell?.type === "room" && cell.roomId === "Architect",
+        ),
+      );
+      // If we are checking IF it's placeable, and it ALREADY exists at (x,y), then it is placeable there.
+      // But isPlaceableAt is usually called for checking if a placement is valid.
+      // If it exists ELSEWHERE, return false.
+      const existsElsewhere = targetGrid.some((row, rx) =>
+        row.some(
+          (cell, ry) =>
+            cell?.type === "room" &&
+            cell.roomId === "Architect" &&
+            (rx !== x || ry !== y),
+        ),
+      );
+      if (!existsElsewhere) return true;
+    }
+
+    // Special rule: if grid is completely empty (except for the unremovable ENTRY path), only allow cells next to entryway
+    const isEmpty = targetGrid.every((row, tx) =>
+      row.every((cell, ty) => {
+        if (tx === ENTRY.x && ty === ENTRY.y) return true;
+        if (tx === x && ty === y) return true; // Ignore the cell we are checking
+        return !cell;
+      }),
+    );
+    if (isEmpty && roomId !== "Generator") {
+      const isNextToEntry =
+        (Math.abs(x - ENTRY.x) === 1 && y === ENTRY.y) ||
+        (x === ENTRY.x && Math.abs(y - ENTRY.y) === 1);
+      if (isNextToEntry) return true;
+    }
+
+    return false;
+  };
+
+  const isDeletable = (x: number, y: number): boolean => {
+    if (x === ENTRY.x && y === ENTRY.y) return false;
+    const cellToDelete = grid[x][y];
+    if (!cellToDelete) return false;
+
+    // Create a hypothetical grid where the cell is removed
+    const nextGrid = grid.map((row) => [...row]);
+    nextGrid[x][y] = null;
+
+    // Check all neighbors of (x, y)
+    const neighbors = [
+      [x - 1, y],
+      [x + 1, y],
+      [x, y - 1],
+      [x, y + 1],
+    ];
+
+    for (const [nx, ny] of neighbors) {
+      if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+        const neighbor = nextGrid[nx][ny];
+        if (neighbor) {
+          // If the neighbor is no longer placeable, then (x, y) is not deletable
+          if (!isPlaceableAt(nx, ny, nextGrid, neighbor)) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  };
+
   const handleCellClick = (x: number, y: number) => {
     if (x === ENTRY.x && y === ENTRY.y) return; // ENTRY is unremovable and unmodifiable
 
@@ -691,8 +884,8 @@ function App() {
       row: number,
       col: number,
       currentGrid: (GridCell | null)[][],
-      triggeringR: number,
-      triggeringC: number,
+      removedX?: number,
+      removedY?: number,
     ) => {
       const cell = currentGrid[row][col];
       if (!cell || cell.type !== "path") return;
@@ -701,47 +894,28 @@ function App() {
         cell.pathType!,
       );
 
-      // Check if the triggering cell is an adjacent neighbor that exists
+      // Check all current neighbors to ensure they are connected
       const isNeighbor = (nx: number, ny: number) => {
         if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE)
           return false;
         return !!currentGrid[nx][ny];
       };
 
-      // Add connection if neighbor exists
-      // Top/Bottom are mapped to Column +/- 1 (visual Up-Right/Down-Left)
-      // Left/Right are mapped to Row +/- 1 (visual Up-Left/Down-Right)
-      if (
-        row === triggeringR &&
-        col + 1 === triggeringC &&
-        isNeighbor(triggeringR, triggeringC)
-      )
-        top = true;
-      if (
-        row === triggeringR &&
-        col - 1 === triggeringC &&
-        isNeighbor(triggeringR, triggeringC)
-      )
-        bottom = true;
-      if (
-        row - 1 === triggeringR &&
-        col === triggeringC &&
-        isNeighbor(triggeringR, triggeringC)
-      )
-        left = true;
-      if (
-        row + 1 === triggeringR &&
-        col === triggeringC &&
-        isNeighbor(triggeringR, triggeringC)
-      )
-        right = true;
-
-      // Also always check all neighbors during initial placement or whenever triggered
-      // to ensure we don't miss existing ones
       if (isNeighbor(row, col + 1)) top = true;
       if (isNeighbor(row, col - 1)) bottom = true;
       if (isNeighbor(row - 1, col)) left = true;
       if (isNeighbor(row + 1, col)) right = true;
+
+      // Special case: if we just removed a neighbor, we DON'T remove the connection
+      // because of the "permanent logic" requirement in tests.
+      // Actually, the previous code was:
+      /*
+      if (isNeighbor(row, col + 1)) top = true;
+      if (isNeighbor(row, col - 1)) bottom = true;
+      if (isNeighbor(row - 1, col)) left = true;
+      if (isNeighbor(row + 1, col)) right = true;
+      */
+      // This only ADDED connections.
 
       cell.pathType = getPathTypeFromConnections(top, bottom, left, right);
     };
@@ -756,6 +930,7 @@ function App() {
       return;
 
     if (selectedType === "empty") {
+      if (!isDeletable(x, y) && !debug) return;
       newGrid[x][y] = null;
     } else if (selectedType === "medallion") {
       const cell = newGrid[x][y];
@@ -777,48 +952,63 @@ function App() {
         }
       }
     } else if (selectedType === "room") {
-      // Architect's Chamber: only one allowed
-      if (selectedRoomId === "Architect") {
-        const exists = grid.some((row) =>
-          row.some(
-            (cell) => cell?.type === "room" && cell.roomId === "Architect",
-          ),
-        );
-        if (exists) return;
+      const existingCell = grid[x][y];
+      if (
+        existingCell?.type === "room" &&
+        existingCell.roomId === selectedRoomId
+      ) {
+        if (!isDeletable(x, y) && !debug) return;
+        newGrid[x][y] = null;
+      } else {
+        // Architect's Chamber: only one allowed
+        if (selectedRoomId === "Architect") {
+          const exists = grid.some((row) =>
+            row.some(
+              (cell) => cell?.type === "room" && cell.roomId === "Architect",
+            ),
+          );
+          if (exists) return;
+        }
+
+        newGrid[x][y] = {
+          type: "room",
+          roomId: selectedRoomId,
+          tier: 1, // Will be calculated
+          isPowered: false, // Will be calculated
+          hasMedallion: false,
+        };
       }
-
-      newGrid[x][y] = {
-        type: "room",
-        roomId: selectedRoomId,
-        tier: 1, // Will be calculated
-        isPowered: false, // Will be calculated
-        hasMedallion: false,
-      };
     } else if (selectedType === "path") {
-      // For new paths, use the selectedPathType but also check neighbors
-      // Top/Bottom are mapped to Column +/- 1 (visual Up-Right/Down-Left)
-      // Left/Right are mapped to Row +/- 1 (visual Up-Left/Down-Right)
-      const top = y + 1 < GRID_SIZE && !!newGrid[x][y + 1];
-      const bottom = y - 1 >= 0 && !!newGrid[x][y - 1];
-      const left = x - 1 >= 0 && !!newGrid[x - 1][y];
-      const right = x + 1 < GRID_SIZE && !!newGrid[x + 1][y];
+      const existingCell = grid[x][y];
+      if (existingCell?.type === "path") {
+        if (!isDeletable(x, y) && !debug) return;
+        newGrid[x][y] = null;
+      } else {
+        // For new paths, use the selectedPathType but also check neighbors
+        // Top/Bottom are mapped to Column +/- 1 (visual Up-Right/Down-Left)
+        // Left/Right are mapped to Row +/- 1 (visual Up-Left/Down-Right)
+        const top = y + 1 < GRID_SIZE && !!newGrid[x][y + 1];
+        const bottom = y - 1 >= 0 && !!newGrid[x][y - 1];
+        const left = x - 1 >= 0 && !!newGrid[x - 1][y];
+        const right = x + 1 < GRID_SIZE && !!newGrid[x + 1][y];
 
-      const initialConnections = getConnectionsFromPathType(selectedPathType);
+        const initialConnections = getConnectionsFromPathType(selectedPathType);
 
-      newGrid[x][y] = {
-        type: "path",
-        pathType: getPathTypeFromConnections(
-          initialConnections.top || top,
-          initialConnections.bottom || bottom,
-          initialConnections.left || left,
-          initialConnections.right || right,
-        ),
-        isPowered: false, // Will be calculated
-      };
+        newGrid[x][y] = {
+          type: "path",
+          pathType: getPathTypeFromConnections(
+            initialConnections.top || top,
+            initialConnections.bottom || bottom,
+            initialConnections.left || left,
+            initialConnections.right || right,
+          ),
+          isPowered: false, // Will be calculated
+        };
+      }
     }
 
-    // Update neighbors if they are paths
-    if (selectedType === "path") {
+    if (newGrid[x][y] !== grid[x][y]) {
+      // Something changed, update neighbor paths to re-evaluate their connections
       const neighbors = [
         [x + 1, y],
         [x - 1, y],
@@ -828,7 +1018,7 @@ function App() {
 
       neighbors.forEach(([nr, nc]) => {
         if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
-          updateCellConnections(nr, nc, newGrid, x, y);
+          updateCellConnections(nr, nc, newGrid);
         }
       });
     }
@@ -1172,7 +1362,9 @@ function App() {
                       src={
                         getHighlightType(x, y) === "strong"
                           ? "/ggpk/incursion2tileglowstrong.png"
-                          : "/ggpk/incursion2tileglowregular.png"
+                          : getHighlightType(x, y) === "deletable"
+                            ? "/ggpk/incursion2tileglowred.png"
+                            : "/ggpk/incursion2tileglowregular.png"
                       }
                       className="placement-glow"
                       alt=""

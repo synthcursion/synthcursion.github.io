@@ -25,14 +25,6 @@ describe("Path Placement Restrictions", () => {
     window.location.search = "";
   });
 
-  it("can place the first path anywhere on an empty grid", () => {
-    render(<App />);
-    fireEvent.click(screen.getByTitle("path1"));
-    const cell44 = screen.getByTestId("cell-4-4");
-    fireEvent.click(cell44);
-    expect(cell44.getAttribute("data-cell-type")).toBe("path");
-  });
-
   it("cannot place a path in isolation if the grid is not empty", () => {
     window.location.search = "?debug=true";
     render(<App />);
