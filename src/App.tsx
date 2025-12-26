@@ -159,6 +159,10 @@ function App() {
   const [copyStatus, setCopyStatus] = useState<boolean>(false);
 
   const roomsByType = useMemo(() => {
+    const architectExists = grid.some((row) =>
+      row.some((cell) => cell?.roomId === "Architect"),
+    );
+
     const filtered = roomsData.filter(
       (r) =>
         !r.IsPathway &&
@@ -171,7 +175,8 @@ function App() {
         r.Id !== "Entrance" &&
         r.Id !== "ViperLegionBarracks" &&
         r.Id !== "TranscendentBarracks" &&
-        r.Id !== "DeadSpymaster",
+        r.Id !== "DeadSpymaster" &&
+        !(r.Id === "Architect" && architectExists),
     );
     const past = {
       regular: filtered.filter((r) => !r.IsPresentDay && !r.IsBossReward),
@@ -182,7 +187,7 @@ function App() {
       reward: filtered.filter((r) => r.IsPresentDay && r.IsBossReward),
     };
     return { present, past };
-  }, []);
+  }, [grid]);
 
   const calculatedGrid = useMemo(() => {
     const newGrid = grid.map((row) =>
@@ -1531,7 +1536,7 @@ function App() {
                   data-room-id={cell?.roomId}
                   data-testid={`cell-${x}-${y}`}
                 >
-                  {getHighlightType(x, y) && (
+                  {getHighlightType(x, y) && cell?.roomId !== "Architect" && (
                     <img
                       src={
                         getHighlightType(x, y) === "strong"
