@@ -187,6 +187,55 @@ function App() {
       row.map((cell) => (cell ? { ...cell } : null)),
     );
 
+    // 0. Phase 0: Conversions
+    let changed = true;
+    let iterations = 0;
+    while (changed && iterations < 5) {
+      changed = false;
+      iterations++;
+      newGrid.forEach((row, x) => {
+        row.forEach((cell, y) => {
+          if (cell && cell.type === "room") {
+            const currentRoom = roomsData.find((r) => r.Id === cell.roomId);
+            if (!currentRoom) return;
+
+            const neighbors = [
+              [x - 1, y],
+              [x + 1, y],
+              [x, y - 1],
+              [x, y + 1],
+            ];
+            for (let i = 0; i < currentRoom.ConvertedBy.length; i++) {
+              const converterIndex = currentRoom.ConvertedBy[i];
+              const convertToIndex = currentRoom.ConvertedTo[i];
+              const converterRoom = roomsData[converterIndex];
+              const convertToRoom = roomsData[convertToIndex];
+
+              const isAdjacentToConverter = neighbors.some(([nx, ny]) => {
+                if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                  const neighbor = newGrid[nx][ny];
+                  return (
+                    neighbor &&
+                    neighbor.type === "room" &&
+                    neighbor.roomId === converterRoom.Id
+                  );
+                }
+                return false;
+              });
+
+              if (isAdjacentToConverter) {
+                if (cell.roomId !== convertToRoom.Id) {
+                  cell.roomId = convertToRoom.Id;
+                  changed = true;
+                }
+                break;
+              }
+            }
+          }
+        });
+      });
+    }
+
     // 1. Phase 1: Adjacency and Medallions
     newGrid.forEach((row, x) => {
       row.forEach((cell, y) => {
