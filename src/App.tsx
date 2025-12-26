@@ -167,7 +167,10 @@ function App() {
         r.Id !== "Path" &&
         r.Id !== "PoweredPath" &&
         r.Id !== "Atziri" &&
-        r.Id !== "Entrance",
+        r.Id !== "Entrance" &&
+        r.Id !== "ViperLegionBarracks" &&
+        r.Id !== "TranscendentBarracks" &&
+        r.Id !== "DeadSpymaster",
     );
     const past = {
       regular: filtered.filter((r) => !r.IsPresentDay && !r.IsBossReward),
