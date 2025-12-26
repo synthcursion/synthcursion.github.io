@@ -37,8 +37,6 @@ export interface IncursionMedallion {
 export type PathType =
   | "path1"
   | "path2"
-  | "pathconnect1"
-  | "pathconnect2"
   | "pathcornerbot"
   | "pathcornerleft"
   | "pathcornerright"

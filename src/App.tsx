@@ -21,8 +21,6 @@ type Direction = "left" | "right" | "top" | "bottom";
 const PATH_TYPES: Record<PathType, Direction[]> = {
   path1: ["top", "bottom"],
   path2: ["left", "right"],
-  pathconnect1: ["top", "bottom"],
-  pathconnect2: ["left", "right"],
   pathcornerbot: ["top", "left"],
   pathcornerleft: ["top", "right"],
   pathcornerright: ["bottom", "left"],
@@ -1090,6 +1088,29 @@ function App() {
 
           // Only allow applying if no medallion, or removing existing same medallion
           if (!cell.medallionType || isRemoving) {
+            // Restrictions for Quipolatl's Medallion (Level Up)
+            if (
+              selectedRoomId === "medallion_levelup" &&
+              !isRemoving &&
+              !debug
+            ) {
+              const calcCell = calculatedGrid[x][y];
+              if (calcCell && calcCell.type === "room") {
+                // 1. Prevent if already Tier 3
+                // Use a temporary tier calculation without the medallion to see if it's already T3
+                // Actually, the calculatedGrid already has the current medallion bonus if any.
+                // If it doesn't have a medallion, cell.medallionType is undefined.
+                // If it's already T3 (calculatedGrid[x][y].tier === 3), then Level Up is useless.
+                if (calcCell.tier === 3) return;
+
+                // 2. Prevent if it doesn't have multiple tiers
+                const roomLevelInfo = roomsPerLevelData.filter(
+                  (rl) => roomsData[rl.Room].Id === cell.roomId,
+                );
+                if (roomLevelInfo.length <= 1) return;
+              }
+            }
+
             newGrid[x][y] = {
               ...cell,
               medallionType: isRemoving ? undefined : selectedRoomId,
