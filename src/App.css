@@ -1,12 +1,10 @@
 #root {
     width: 100%;
-    height: 100vh;
     margin: 0;
     padding: 0;
     display: flex;
     background-color: #1a1a1a;
     color: #e0e0e0;
-    font-size: 200%;
 }
 
 .app-container {
@@ -207,6 +205,7 @@ label {
     position: relative;
     overflow: auto;
     background-color: #000;
+    zoom: 66%;
 }
 
 .grid-background {
