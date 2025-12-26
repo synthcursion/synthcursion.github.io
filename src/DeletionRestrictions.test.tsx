@@ -113,4 +113,32 @@ describe("Deletion Restrictions Logic", () => {
     glow = cell41.querySelector(".placement-glow");
     expect(glow?.getAttribute("src")).toContain("incursion2tileglowred.png");
   });
+
+  it("investigate why Garrison at 7,1 is not deletable", () => {
+    const params = new URLSearchParams();
+    params.append("paths[0]", "4,0,pathfourway");
+    params.append("rooms[0]", "Commander@5@0");
+    params.append("rooms[1]", "Garrison@6@0");
+    params.append("rooms[2]", "Armoury@6@1");
+    params.append("rooms[3]", "Commander@7@0");
+    params.append("rooms[4]", "Garrison@7@1");
+    params.append("rooms[5]", "Garrison@8@0");
+    params.append("rooms[6]", "Armoury@8@1");
+
+    window.location.search = "?" + params.toString();
+
+    render(<App />);
+
+    // Select eraser
+    const eraser = screen.getByTitle("Eraser");
+    fireEvent.click(eraser);
+
+    const cell71 = screen.getByTestId("cell-7-1");
+
+    // Click to delete
+    fireEvent.click(cell71);
+
+    // If it's deletable, it should be null
+    expect(cell71.getAttribute("data-cell-type")).toBe(null);
+  });
 });

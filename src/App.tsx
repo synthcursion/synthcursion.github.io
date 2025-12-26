@@ -793,7 +793,10 @@ function App() {
             if (nnx >= 0 && nnx < GRID_SIZE && nny >= 0 && nny < GRID_SIZE) {
               const nn = targetGrid[nnx][nny];
               if (nn && nn.type === "room" && nn.roomId === roomId2) {
-                currentUpgradesByType++;
+                // If checking an existing room, don't count itself against the limit
+                if (nnx !== x || nny !== y) {
+                  currentUpgradesByType++;
+                }
               }
             }
           });
@@ -995,8 +998,6 @@ function App() {
       row: number,
       col: number,
       currentGrid: (GridCell | null)[][],
-      removedX?: number,
-      removedY?: number,
     ) => {
       const cell = currentGrid[row][col];
       if (!cell || cell.type !== "path") return;
@@ -1016,17 +1017,6 @@ function App() {
       if (isNeighbor(row, col - 1)) bottom = true;
       if (isNeighbor(row - 1, col)) left = true;
       if (isNeighbor(row + 1, col)) right = true;
-
-      // Special case: if we just removed a neighbor, we DON'T remove the connection
-      // because of the "permanent logic" requirement in tests.
-      // Actually, the previous code was:
-      /*
-      if (isNeighbor(row, col + 1)) top = true;
-      if (isNeighbor(row, col - 1)) bottom = true;
-      if (isNeighbor(row - 1, col)) left = true;
-      if (isNeighbor(row + 1, col)) right = true;
-      */
-      // This only ADDED connections.
 
       cell.pathType = getPathTypeFromConnections(top, bottom, left, right);
     };
@@ -1296,7 +1286,6 @@ function App() {
       <div className="sidebar">
         <div className="header">
           <h2>Temple Builder</h2>
-          <p className="subtitle">Plan your PoE2 Incursion Temple</p>
         </div>
         <div className="options">
           <div className="room-selector-grid">
