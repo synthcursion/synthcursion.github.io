@@ -315,6 +315,23 @@ label {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+}
+
+.debug-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    color: #aaa;
+    cursor: pointer;
+    user-select: none;
+    padding: 5px 0;
+}
+
+.debug-checkbox input {
+    cursor: pointer;
 }
 
 .hover-info {

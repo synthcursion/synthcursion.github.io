@@ -94,6 +94,9 @@ function App() {
     x: number;
     y: number;
   } | null>(null);
+  const [debugMode, setDebugMode] = useState<boolean>(() => {
+    return new URLSearchParams(window.location.search).get("debug") === "true";
+  });
 
   const roomsByType = useMemo(() => {
     const filtered = roomsData.filter(
@@ -438,8 +441,13 @@ function App() {
     const serialized = btoa(JSON.stringify(grid));
     const url = new URL(window.location.href);
     url.searchParams.set("s", serialized);
+    if (debugMode) {
+      url.searchParams.set("debug", "true");
+    } else {
+      url.searchParams.delete("debug");
+    }
     window.history.replaceState({}, "", url.toString());
-  }, [grid]);
+  }, [grid, debugMode]);
 
   const getHighlightType = (
     x: number,
@@ -452,23 +460,32 @@ function App() {
     if (!selectedRoom) return null;
 
     const neighbors = [
-      [x - 1, y],
-      [x + 1, y],
-      [x, y - 1],
-      [x, y + 1],
+      { nx: x - 1, ny: y, opp: "right" as const },
+      { nx: x + 1, ny: y, opp: "left" as const },
+      { nx: x, ny: y - 1, opp: "top" as const },
+      { nx: x, ny: y + 1, opp: "bottom" as const },
     ];
 
     let canPlaceRegular = false;
     let canPlaceStrong = false;
 
-    neighbors.forEach(([nx, ny]) => {
+    neighbors.forEach(({ nx, ny, opp }) => {
       if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
         const neighbor = grid[nx][ny];
         if (!neighbor) return;
 
         if (neighbor.type === "path") {
-          canPlaceRegular = true;
+          if (selectedRoomId === "Generator") {
+            const conns = getConnectionsFromPathType(neighbor.pathType!);
+            if (conns[opp]) {
+              canPlaceRegular = true;
+            }
+          } else {
+            canPlaceRegular = true;
+          }
         } else if (neighbor.type === "room") {
+          if (selectedRoomId === "Generator") return; // Generators only next to paths
+
           const nBaseRoom = roomsData.find((rd) => rd.Id === neighbor.roomId);
           if (!nBaseRoom) return;
 
@@ -528,11 +545,7 @@ function App() {
 
     // Special rule: if grid is completely empty, allow placing anywhere
     const isEmpty = grid.every((row) => row.every((cell) => !cell));
-    if (isEmpty) return "regular";
-
-    // Special rule for tests or bypass
-    if (new URLSearchParams(window.location.search).get("debug") === "true")
-      return "regular";
+    if (isEmpty && selectedRoomId !== "Generator") return "regular";
 
     return null;
   };
@@ -601,7 +614,7 @@ function App() {
 
     const canPlace = getHighlightType(x, y);
     // Only restrict placement if we are trying to place a ROOM
-    if (selectedType === "room" && !canPlace) return;
+    if (selectedType === "room" && !canPlace && !debugMode) return;
 
     if (selectedType === "empty") {
       newGrid[x][y] = null;
@@ -936,6 +949,14 @@ function App() {
         </div>
 
         <div className="actions">
+          <label className="debug-checkbox">
+            <input
+              type="checkbox"
+              checked={debugMode}
+              onChange={(e) => setDebugMode(e.target.checked)}
+            />
+            ignore placement restrictions
+          </label>
           <button onClick={shareLayout}>Share Link</button>
           <button
             onClick={() =>
