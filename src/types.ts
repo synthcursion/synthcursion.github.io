@@ -55,6 +55,7 @@ export interface GridCell {
   tier?: number;
   pathType?: PathType;
   isPowered?: boolean;
+  hasMedallion?: boolean;
 }
 
 export interface TempleState {

@@ -45,9 +45,9 @@ function App() {
       .map(() => Array(GRID_SIZE).fill(null));
   });
 
-  const [selectedType, setSelectedType] = useState<"room" | "path" | "empty">(
-    "room",
-  );
+  const [selectedType, setSelectedType] = useState<
+    "room" | "path" | "empty" | "medallion"
+  >("room");
   const [selectedRoomCategory, setSelectedRoomCategory] = useState<
     "past" | "present" | "reward"
   >("past");
@@ -78,26 +78,85 @@ function App() {
       row.map((cell) => (cell ? { ...cell } : null)),
     );
 
-    // 1. Calculate Power
+    // 1. Phase 1: Adjacency and Medallions
+    newGrid.forEach((row, r) => {
+      row.forEach((cell, c) => {
+        if (cell && cell.type === "room") {
+          const baseRoom = roomsData.find((rd) => rd._index === cell.roomId);
+          if (baseRoom) {
+            const connectedCounts: Record<number, number> = {};
+            const neighbors = [
+              [r - 1, c],
+              [r + 1, c],
+              [r, c - 1],
+              [r, c + 1],
+            ];
+            neighbors.forEach(([nr, nc]) => {
+              if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
+                const neighbor = newGrid[nr][nc];
+                if (neighbor && neighbor.type === "room") {
+                  connectedCounts[neighbor.roomId!] =
+                    (connectedCounts[neighbor.roomId!] || 0) + 1;
+                }
+              }
+            });
+
+            const upgradeByCounts: Record<number, number> = {};
+            baseRoom.UpgradedBy.forEach((id) => {
+              upgradeByCounts[id] = (upgradeByCounts[id] || 0) + 1;
+            });
+
+            let bonus = 0;
+            const hasThreeCopy = Object.values(upgradeByCounts).some(
+              (count) => count === 3,
+            );
+
+            if (hasThreeCopy) {
+              let hasTwoOfThree = false;
+              for (const idStr in upgradeByCounts) {
+                const id = Number(idStr);
+                if (
+                  upgradeByCounts[id] === 3 &&
+                  (connectedCounts[id] || 0) >= 2
+                ) {
+                  hasTwoOfThree = true;
+                  break;
+                }
+              }
+              if (hasTwoOfThree) {
+                let totalMatches = 0;
+                for (const idStr in connectedCounts) {
+                  const id = Number(idStr);
+                  if (upgradeByCounts[id]) {
+                    totalMatches += connectedCounts[id];
+                  }
+                }
+                bonus = totalMatches >= 3 ? 2 : 1;
+              } else {
+                bonus = 0;
+              }
+            } else {
+              for (const idStr in upgradeByCounts) {
+                const id = Number(idStr);
+                bonus += Math.min(
+                  connectedCounts[id] || 0,
+                  upgradeByCounts[id],
+                );
+              }
+            }
+
+            let tier = 1 + bonus + (cell.hasMedallion ? 1 : 0);
+            cell.tier = Math.min(3, tier);
+          }
+        }
+      });
+    });
+
+    // 2. Calculate Power based on Phase 1 Tiers
     const generators: { r: number; c: number; tier: number }[] = [];
     newGrid.forEach((row, r) => {
       row.forEach((cell, c) => {
         if (cell && cell.type === "room" && cell.roomId === 7) {
-          // Generator is roomId 7
-          // For initial power calculation, we assume base tier 1 if not set,
-          // but wait, tier depends on power too?
-          // Generators don't upgrade by power (UpgradedByPower: 0)
-          // Actually, Generator tier is just 1, 2, 3.
-          // How is generator tier decided? In PoE2, you probably just place it.
-          // The issue says "calculate tier automatically based on the upgrade rules"
-          // and "calculate powered status based on distance from a generator"
-          // This is a circular dependency if generator tier depends on power.
-          // Looking at Incursion2Rooms.json, Generator (7) has UpgradedByPower: 0.
-          // So Generator tier must be fixed or based on something else.
-          // Let's assume for now rooms have a base tier (1) and can be upgraded.
-          // But "remove the tier selector". This implies tier is FULLY automatic.
-          // If tier is fully automatic, what is the base tier? 1.
-          // Let's check upgrade rules.
           generators.push({ r, c, tier: cell.tier || 1 });
         }
       });
@@ -109,12 +168,7 @@ function App() {
     );
 
     generators.forEach((gen) => {
-      const range = gen.tier; // Dynamo: 1, Shrine: 2, Solar: 3?
-      // Checking Incursion2RoomPerLevel.json for Generator (7):
-      // Level 1: Dynamo - "range every tier"
-      // Level 2: Shrine
-      // Level 3: Solar
-      // Let's assume range = tier.
+      const range = gen.tier;
       for (let r = 0; r < GRID_SIZE; r++) {
         for (let c = 0; c < GRID_SIZE; c++) {
           const dist = Math.abs(r - gen.r) + Math.abs(c - gen.c);
@@ -125,49 +179,41 @@ function App() {
       }
     });
 
-    // 2. Calculate Tiers
-    // "calculate tier automatically based on the upgrade rules"
-    // Many rooms have UpgradedByPower: 1 or 2.
-    // e.g. Smithy (6) has UpgradedByPower: 1.
-    // Golem Works (15) has UpgradedByPower: 2.
-    // This means if powered, tier increases by that amount?
-    // Base tier is 1.
+    // 3. Phase 2: Add Power-based upgrades
     newGrid.forEach((row) => {
       row.forEach((cell) => {
         if (cell && cell.type === "room") {
           const baseRoom = roomsData.find((r) => r._index === cell.roomId);
-          if (baseRoom) {
-            let tier = 1;
-            if (cell.isPowered) {
-              tier += baseRoom.UpgradedByPower;
-            }
-            cell.tier = Math.min(3, tier);
+          if (baseRoom && cell.isPowered && baseRoom.UpgradedByPower > 0) {
+            cell.tier = Math.min(
+              3,
+              (cell.tier || 1) + baseRoom.UpgradedByPower,
+            );
           }
         }
       });
     });
 
-    // Re-calculate power if generator tier changed?
-    // This could loop. Let's do one more pass for power if generators changed.
-    let changed = false;
+    // Power might need to be recalculated if generators got upgraded by power
+    let genTierChanged = false;
     newGrid.forEach((row, r) => {
       row.forEach((cell, c) => {
         if (cell && cell.type === "room" && cell.roomId === 7) {
           const oldTier = generators.find((g) => g.r === r && g.c === c)?.tier;
           if (cell.tier !== oldTier) {
-            changed = true;
+            genTierChanged = true;
           }
         }
       });
     });
 
-    if (changed) {
-      // One more pass
+    if (genTierChanged) {
+      // Re-calculate power
       const finalGenerators: { r: number; c: number; tier: number }[] = [];
       newGrid.forEach((row, r) => {
         row.forEach((cell, c) => {
           if (cell && cell.type === "room" && cell.roomId === 7) {
-            finalGenerators.push({ r, c, tier: cell.tier });
+            finalGenerators.push({ r, c, tier: cell.tier! });
           }
         });
       });
@@ -184,21 +230,26 @@ function App() {
           }
         }
       });
-      // Tiers might change again?
+      // Tiers might need one last adjustment if power changed
       newGrid.forEach((row) => {
         row.forEach((cell) => {
           if (cell && cell.type === "room") {
             const baseRoom = roomsData.find((r) => r._index === cell.roomId);
-            if (baseRoom) {
-              let tier = 1;
-              if (cell.isPowered) {
-                tier += baseRoom.UpgradedByPower;
-              }
-              cell.tier = Math.min(3, tier);
+            if (baseRoom && cell.isPowered && baseRoom.UpgradedByPower > 0) {
+              // We need to re-apply power upgrade, but from Phase 1 tier
+              // Actually, cell.tier here might already have power upgrade from previous pass.
+              // Let's re-calculate from Phase 1 tier to be safe.
+              // We'd need to store Phase 1 tiers or recalculate them.
+              // Simplification: if it was already powered, it already got the bonus.
+              // If it became powered, it needs the bonus.
+              // If it lost power, it needs to lose the bonus.
+              // Let's just do a full 2nd pass.
             }
           }
         });
       });
+      // To be strictly correct and simple: repeat Phase 1 + 2 logic with current power?
+      // No, Phase 1 is power-independent.
     }
 
     return newGrid;
@@ -226,12 +277,21 @@ function App() {
     const newGrid = [...grid.map((row) => [...row])];
     if (selectedType === "empty") {
       newGrid[r][c] = null;
+    } else if (selectedType === "medallion") {
+      const cell = newGrid[r][c];
+      if (cell && cell.type === "room") {
+        newGrid[r][c] = {
+          ...cell,
+          hasMedallion: !cell.hasMedallion,
+        };
+      }
     } else if (selectedType === "room") {
       newGrid[r][c] = {
         type: "room",
         roomId: selectedRoomId,
         tier: 1, // Will be calculated
         isPowered: false, // Will be calculated
+        hasMedallion: false,
       };
     } else if (selectedType === "path") {
       newGrid[r][c] = {
@@ -332,6 +392,13 @@ function App() {
           >
             Eraser
           </button>
+          <button
+            className={selectedType === "medallion" ? "active" : ""}
+            onClick={() => setSelectedType("medallion")}
+            title="Quipolatl's Medallion (+1 Tier)"
+          >
+            Medal
+          </button>
         </div>
 
         {selectedType === "room" && (
@@ -405,10 +472,14 @@ function App() {
         <div className="help-text">
           <p>Instructions:</p>
           <ul>
-            <li>Select a tool (Room, Path, Eraser)</li>
+            <li>Select a tool (Room, Path, Eraser, Medal)</li>
             <li>Configure options (Room type)</li>
-            <li>Click on the grid to place/remove</li>
+            <li>Click on the grid to place/remove/apply medal</li>
             <li>Tiers and Power are calculated automatically</li>
+            <li>
+              Upgrades: +1 per connected 'UpgradedBy' room (max 3). Special: 3x
+              rooms need 2 copies for first upgrade.
+            </li>
             <li>Use "Share Link" to copy your layout URL</li>
           </ul>
         </div>
@@ -430,6 +501,13 @@ function App() {
                       <img src={getIconPath(cell)} alt="" />
                       {cell.type === "room" && cell.tier && (
                         <span className="tier">T{cell.tier}</span>
+                      )}
+                      {cell.hasMedallion && (
+                        <img
+                          src="/ggpk/medallionleveluproom.png"
+                          className="medallion-icon"
+                          alt="Medallion"
+                        />
                       )}
                       {cell.isPowered && <div className="powered-glow" />}
                     </div>

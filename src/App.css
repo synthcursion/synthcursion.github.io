@@ -206,6 +206,16 @@ label {
   pointer-events: none;
 }
 
+.medallion-icon {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 25px !important;
+  height: 25px !important;
+  pointer-events: none;
+  z-index: 20;
+}
+
 .actions {
   margin-top: auto;
   display: flex;
