@@ -88,7 +88,7 @@ describe("Path Connection Logic", () => {
     );
   });
 
-  it("connects paths to newly placed rooms", () => {
+  it("does NOT connect paths to newly placed non-path rooms", () => {
     render(<App />);
 
     // Place path1 at (4,4)
@@ -104,8 +104,11 @@ describe("Path Connection Logic", () => {
     // Place room at (5,4) - Right of (4,4)
     fireEvent.click(cells[49]);
 
-    // (4,4) should now connect to the Room at its Right
+    // (4,4) should STILL be path1.png, NOT paththreeway1.png
     expect(cells[40].querySelector("img")?.getAttribute("src")).toContain(
+      "path1.png",
+    );
+    expect(cells[40].querySelector("img")?.getAttribute("src")).not.toContain(
       "paththreeway1.png",
     );
   });

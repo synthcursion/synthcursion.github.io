@@ -447,18 +447,20 @@ function App() {
     }
 
     // Update neighbors if they are paths
-    const neighbors = [
-      [r + 1, c],
-      [r - 1, c],
-      [r, c + 1],
-      [r, c - 1],
-    ];
+    if (selectedType === "path") {
+      const neighbors = [
+        [r + 1, c],
+        [r - 1, c],
+        [r, c + 1],
+        [r, c - 1],
+      ];
 
-    neighbors.forEach(([nr, nc]) => {
-      if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
-        updateCellConnections(nr, nc, newGrid, r, c);
-      }
-    });
+      neighbors.forEach(([nr, nc]) => {
+        if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
+          updateCellConnections(nr, nc, newGrid, r, c);
+        }
+      });
+    }
 
     setGrid(newGrid);
   };
