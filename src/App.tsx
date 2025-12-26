@@ -14,64 +14,30 @@ const roomsPerLevelData = roomsPerLevelDataRaw as IncursionRoomPerLevel[];
 
 const GRID_SIZE = 9;
 
-const PATH_TYPES: PathType[] = [
-  "path1", // top to bottom
-  "path2", // left to right
-  "pathconnect1", // rendered on the top or bottom of a cell to bridge path-to-path connections
-  "pathconnect2", // rendered on the left or right of a cell to bridge path-to-path connections
-  "pathcornerbot", // connects left to top ('bot' refers to the isometric location of the corner)
-  "pathcornerleft", // connects top to right
-  "pathcornerright", // connects left to bottom
-  "pathcornertop", // connects bottom to right
-  "pathfourway",
-  "paththreeway1", // connects all but left
-  "paththreeway2", // connects all but top
-  "paththreeway3", // connects all but bottom
-  "paththreeway4", // connects all but right
-];
+const PATH_TYPES: Record<PathType, ("left" | "right" | "top" | "bottom")[]> = {
+  path1: ["top", "bottom"],
+  path2: ["left", "right"],
+  pathconnect1: ["top", "bottom"],
+  pathconnect2: ["left", "right"],
+  pathcornerbot: ["top", "left"],
+  pathcornerleft: ["top", "right"],
+  pathcornerright: ["bottom", "left"],
+  pathcornertop: ["bottom", "right"],
+  pathfourway: ["top", "bottom", "left", "right"],
+  paththreeway1: ["top", "bottom", "right"],
+  paththreeway2: ["bottom", "left", "right"],
+  paththreeway3: ["top", "left", "right"],
+  paththreeway4: ["bottom", "left", "top"],
+};
 
 const getConnectionsFromPathType = (type: PathType) => {
-  const top = [
-    "path1",
-    "pathcornerbot",
-    "pathcornerright",
-    "pathfourway",
-    "paththreeway1",
-    "paththreeway3",
-    "paththreeway4",
-    "pathconnect1",
-  ].includes(type);
-  const bottom = [
-    "path1",
-    "pathcornerleft",
-    "pathcornertop",
-    "pathfourway",
-    "paththreeway1",
-    "paththreeway2",
-    "paththreeway4",
-    "pathconnect1",
-  ].includes(type);
-  const left = [
-    "path2",
-    "pathcornerbot",
-    "pathcornerleft",
-    "pathfourway",
-    "paththreeway2",
-    "paththreeway3",
-    "paththreeway4",
-    "pathconnect2",
-  ].includes(type);
-  const right = [
-    "path2",
-    "pathcornerright",
-    "pathcornertop",
-    "pathfourway",
-    "paththreeway1",
-    "paththreeway2",
-    "paththreeway3",
-    "pathconnect2",
-  ].includes(type);
-  return { top, bottom, left, right };
+  const connections = PATH_TYPES[type];
+  return {
+    top: connections.includes("top"),
+    bottom: connections.includes("bottom"),
+    left: connections.includes("left"),
+    right: connections.includes("right"),
+  };
 };
 
 const getPathTypeFromConnections = (
@@ -80,25 +46,30 @@ const getPathTypeFromConnections = (
   left: boolean,
   right: boolean,
 ): PathType => {
-  const count = [top, bottom, left, right].filter(Boolean).length;
-  if (count === 4) return "pathfourway";
-  if (count === 3) {
-    if (!left) return "paththreeway1";
-    if (!top) return "paththreeway2";
-    if (!bottom) return "paththreeway3";
-    if (!right) return "paththreeway4";
-  }
-  if (count === 2) {
-    if (top && bottom) return "path1";
-    if (left && right) return "path2";
-    if (left && top) return "pathcornerbot";
-    if (top && right) return "pathcornerright";
-    if (left && bottom) return "pathcornerleft";
-    if (bottom && right) return "pathcornertop";
-  }
+  const entries = Object.entries(PATH_TYPES) as [
+    PathType,
+    ("left" | "right" | "top" | "bottom")[],
+  ][];
+
+  // Try to find an exact match first
+  const exactMatch = entries.find(([_, conns]) => {
+    const connectionsNeeded = [
+      top ? "top" : null,
+      bottom ? "bottom" : null,
+      left ? "left" : null,
+      right ? "right" : null,
+    ].filter(Boolean);
+
+    if (conns.length !== connectionsNeeded.length) return false;
+    return connectionsNeeded.every((c) => conns.includes(c as any));
+  });
+
+  if (exactMatch) return exactMatch[0];
+
+  // If no exact match, fall back to best fit or defaults
   if (top || bottom) return "path1";
   if (left || right) return "path2";
-  return "path1"; // Default
+  return "path1";
 };
 
 function App() {
@@ -397,37 +368,39 @@ function App() {
       };
 
       // Add connection if neighbor exists
+      // Top/Bottom are mapped to Column +/- 1 (visual Up-Right/Down-Left)
+      // Left/Right are mapped to Row +/- 1 (visual Up-Left/Down-Right)
       if (
-        row + 1 === triggeringR &&
-        col === triggeringC &&
+        row === triggeringR &&
+        col + 1 === triggeringC &&
         isNeighbor(triggeringR, triggeringC)
       )
         top = true;
-      if (
-        row - 1 === triggeringR &&
-        col === triggeringC &&
-        isNeighbor(triggeringR, triggeringC)
-      )
-        bottom = true;
       if (
         row === triggeringR &&
         col - 1 === triggeringC &&
         isNeighbor(triggeringR, triggeringC)
       )
+        bottom = true;
+      if (
+        row - 1 === triggeringR &&
+        col === triggeringC &&
+        isNeighbor(triggeringR, triggeringC)
+      )
         left = true;
       if (
-        row === triggeringR &&
-        col + 1 === triggeringC &&
+        row + 1 === triggeringR &&
+        col === triggeringC &&
         isNeighbor(triggeringR, triggeringC)
       )
         right = true;
 
       // Also always check all neighbors during initial placement or whenever triggered
       // to ensure we don't miss existing ones
-      if (isNeighbor(row + 1, col)) top = true;
-      if (isNeighbor(row - 1, col)) bottom = true;
-      if (isNeighbor(row, col - 1)) left = true;
-      if (isNeighbor(row, col + 1)) right = true;
+      if (isNeighbor(row, col + 1)) top = true;
+      if (isNeighbor(row, col - 1)) bottom = true;
+      if (isNeighbor(row - 1, col)) left = true;
+      if (isNeighbor(row + 1, col)) right = true;
 
       cell.pathType = getPathTypeFromConnections(top, bottom, left, right);
     };
@@ -452,10 +425,12 @@ function App() {
       };
     } else if (selectedType === "path") {
       // For new paths, use the selectedPathType but also check neighbors
-      const top = r + 1 < GRID_SIZE && !!newGrid[r + 1][c];
-      const bottom = r - 1 >= 0 && !!newGrid[r - 1][c];
-      const left = c - 1 >= 0 && !!newGrid[r][c - 1];
-      const right = c + 1 < GRID_SIZE && !!newGrid[r][c + 1];
+      // Top/Bottom are mapped to Column +/- 1 (visual Up-Right/Down-Left)
+      // Left/Right are mapped to Row +/- 1 (visual Up-Left/Down-Right)
+      const top = c + 1 < GRID_SIZE && !!newGrid[r][c + 1];
+      const bottom = c - 1 >= 0 && !!newGrid[r][c - 1];
+      const left = r - 1 >= 0 && !!newGrid[r - 1][c];
+      const right = r + 1 < GRID_SIZE && !!newGrid[r + 1][c];
 
       const initialConnections = getConnectionsFromPathType(selectedPathType);
 
@@ -530,8 +505,12 @@ function App() {
   };
 
   const getCellPosition = (r: number, c: number) => {
-    // Row 0 is the bottom row, rendered on the lower left edge
-    // col 0 is the left column, rendered on the upper left edge
+    // Row 0 is the 'bottom' row, Column 0 is the 'left' column.
+    // Based on visual orientation:
+    // r increases -> moves Down-Right (label: Right)
+    // r decreases -> moves Up-Left (label: Left)
+    // c increases -> moves Up-Right (label: Top)
+    // c decreases -> moves Down-Left (label: Bottom)
     const centerX = 1425;
     const centerY = 738;
     const width = 1240;
@@ -686,7 +665,7 @@ function App() {
           <div className="options">
             <label>Select Path:</label>
             <div className="path-grid">
-              {PATH_TYPES.map((pt) => (
+              {Object.keys(PATH_TYPES).map((pt) => (
                 <img
                   key={pt}
                   src={`/ggpk/${pt}.png`}

@@ -54,15 +54,13 @@ describe("Path Connection Logic", () => {
       "path1.png",
     );
 
-    // Place path at (4,5) - Right of (4,4). (r=4, c=5)
-    // Grid is 9x9, index = r*9 + c. 4*9 + 5 = 41.
-    fireEvent.click(cells[41]);
+    // Place path at (5,4) - Right of (4,4). (r=5, c=4)
+    // Grid is 9x9, index = r*9 + c. 5*9 + 4 = 49.
+    fireEvent.click(cells[49]);
 
     // Now (4,4) has a neighbor to the right.
     // It was path1 (Top-Bottom).
-    // Now it should have Top, Bottom AND Right -> paththreeway4 (all but right? No, connects all but right is paththreeway4 in comment, wait)
-    // Actually, if it was path1, it had Top-Bottom. Adding Right makes it Top-Bottom-Right.
-    // Top-Bottom-Right = !left = paththreeway1.
+    // Now it should have Top, Bottom AND Right -> paththreeway1 (connects all but left)
     const img44 = cells[40].querySelector("img");
     expect(img44?.getAttribute("src")).toContain("paththreeway1.png");
   });
@@ -73,7 +71,7 @@ describe("Path Connection Logic", () => {
 
     const cells = document.querySelectorAll(".cell");
     fireEvent.click(cells[40]); // (4,4) - path1 (T-B)
-    fireEvent.click(cells[41]); // (4,5) - Right neighbor
+    fireEvent.click(cells[49]); // (5,4) - Right neighbor
 
     // (4,4) is now paththreeway1 (T-B-R)
     expect(cells[40].querySelector("img")?.getAttribute("src")).toContain(
@@ -82,7 +80,7 @@ describe("Path Connection Logic", () => {
 
     // Select Eraser
     fireEvent.click(screen.getByText("Eraser"));
-    fireEvent.click(cells[41]); // Remove (4,5)
+    fireEvent.click(cells[49]); // Remove (5,4)
 
     // (4,4) should STILL be paththreeway1 because connections are permanent
     expect(cells[40].querySelector("img")?.getAttribute("src")).toContain(
@@ -103,8 +101,8 @@ describe("Path Connection Logic", () => {
 
     // Select Room tool
     fireEvent.click(screen.getByText("Room"));
-    // Place room at (4,5) - Right of (4,4)
-    fireEvent.click(cells[41]);
+    // Place room at (5,4) - Right of (4,4)
+    fireEvent.click(cells[49]);
 
     // (4,4) should now connect to the Room at its Right
     expect(cells[40].querySelector("img")?.getAttribute("src")).toContain(
