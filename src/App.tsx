@@ -569,7 +569,7 @@ function App() {
     });
 
     const search = queryString.stringify(
-      { rooms, paths, medallions, debug },
+      { rooms, paths, medallions, ...(debug ? { debug } : {}) },
       { arrayFormat: "bracket" },
     );
     const url = new URL(window.location.href);
