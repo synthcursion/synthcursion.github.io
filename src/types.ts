@@ -55,7 +55,6 @@ export interface GridCell {
   tier?: number;
   pathType?: PathType;
   isPowered?: boolean;
-  hasMedallion?: boolean;
   medallionType?: string;
   upgradedByRooms?: string[]; // Names of adjacent rooms that contribute to upgrade
   poweredByGenerators?: {

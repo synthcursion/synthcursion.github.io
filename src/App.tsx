@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import queryString from "query-string";
 import "./App.css";
 import roomsDataRaw from "../tables/English/Incursion2Rooms.json";
 import roomsPerLevelDataRaw from "../tables/English/Incursion2RoomPerLevel.json";
@@ -72,14 +73,54 @@ const getPathTypeFromConnections = (
 
 function App() {
   const [grid, setGrid] = useState<(GridCell | null)[][]>(() => {
-    const saved = new URLSearchParams(window.location.search).get("s");
-    if (saved) {
-      try {
-        return JSON.parse(atob(saved));
-      } catch (e) {
-        console.error("Failed to load state from URL", e);
-      }
+    const saved = queryString.parse(window.location.search, {
+      arrayFormat: "index",
+    });
+
+    if (saved.rooms || saved.paths || saved.medallions) {
+      const newGrid: (GridCell | null)[][] = Array(GRID_SIZE)
+        .fill(null)
+        .map(() => Array(GRID_SIZE).fill(null));
+
+      const rooms = (saved.rooms as string[]) || [];
+      const paths = (saved.paths as string[]) || [];
+      const medallions = (saved.medallions as string[]) || [];
+
+      rooms.forEach((val) => {
+        if (!val) return;
+        const [roomId, x, y] = val.split("@");
+        const ix = parseInt(x);
+        const iy = parseInt(y);
+        if (!isNaN(ix) && !isNaN(iy)) {
+          newGrid[ix][iy] = { type: "room", roomId, tier: 1 };
+        }
+      });
+
+      paths.forEach((val) => {
+        if (!val) return;
+        const [x, y, pathType] = val.split(",");
+        const ix = parseInt(x);
+        const iy = parseInt(y);
+        if (!isNaN(ix) && !isNaN(iy)) {
+          newGrid[ix][iy] = { type: "path", pathType: pathType as PathType };
+        }
+      });
+
+      medallions.forEach((val) => {
+        if (!val) return;
+        const [x, y, medallionType] = val.split(",");
+        const ix = parseInt(x);
+        const iy = parseInt(y);
+        if (!isNaN(ix) && !isNaN(iy)) {
+          if (newGrid[ix][iy]?.type === "room") {
+            newGrid[ix][iy]!.medallionType = medallionType;
+          }
+        }
+      });
+
+      return newGrid;
     }
+
     return Array(GRID_SIZE)
       .fill(null)
       .map(() => Array(GRID_SIZE).fill(null));
@@ -94,8 +135,11 @@ function App() {
     x: number;
     y: number;
   } | null>(null);
-  const [debugMode, setDebugMode] = useState<boolean>(() => {
-    return new URLSearchParams(window.location.search).get("debug") === "true";
+  const [debug, setDebug] = useState<boolean>(() => {
+    const parsed = queryString.parse(window.location.search, {
+      parseBooleans: true,
+    });
+    return (parsed.debug as boolean) || false;
   });
 
   const roomsByType = useMemo(() => {
@@ -437,17 +481,32 @@ function App() {
   }, [grid]);
 
   useEffect(() => {
-    // Only serialize raw grid, not calculated
-    const serialized = btoa(JSON.stringify(grid));
+    const rooms: string[] = [];
+    const paths: string[] = [];
+    const medallions: string[] = [];
+
+    grid.forEach((row, x) => {
+      row.forEach((cell, y) => {
+        if (!cell) return;
+        if (cell.type === "room") {
+          rooms.push(`${cell.roomId}-${x}-${y}`);
+          if (cell.medallionType) {
+            medallions.push(`${cell.medallionType}-${x}-${y}`);
+          }
+        } else if (cell.type === "path") {
+          paths.push(`${cell.pathType}-${x}-${y}`);
+        }
+      });
+    });
+
+    const search = queryString.stringify(
+      { rooms, paths, medallions, debug },
+      { arrayFormat: "bracket" },
+    );
     const url = new URL(window.location.href);
-    url.searchParams.set("s", serialized);
-    if (debugMode) {
-      url.searchParams.set("debug", "true");
-    } else {
-      url.searchParams.delete("debug");
-    }
+    url.search = search;
     window.history.replaceState({}, "", url.toString());
-  }, [grid, debugMode]);
+  }, [grid, debug]);
 
   const getHighlightType = (
     x: number,
@@ -645,7 +704,7 @@ function App() {
     if (
       (selectedType === "room" || selectedType === "path") &&
       !canPlace &&
-      !debugMode
+      !debug
     )
       return;
 
@@ -658,11 +717,10 @@ function App() {
           selectedRoomId === "medallion_levelup" ||
           selectedRoomId === "medallion_lock"
         ) {
-          const isRemoving =
-            cell.hasMedallion && cell.medallionType === selectedRoomId;
+          const isRemoving = cell.medallionType === selectedRoomId;
 
           // Only allow applying if no medallion, or removing existing same medallion
-          if (!cell.hasMedallion || isRemoving) {
+          if (!cell.medallionType || isRemoving) {
             newGrid[x][y] = {
               ...cell,
               hasMedallion: !isRemoving,
@@ -804,7 +862,7 @@ function App() {
                   {cell.upgradedByRooms.map((name, i) => (
                     <li key={i}>{name}</li>
                   ))}
-                  {cell.hasMedallion && (
+                  {cell.medallionType && (
                     <li>
                       {cell.medallionType === "medallion_lock"
                         ? "Juatalotli's Medallion (Lock)"
@@ -985,10 +1043,10 @@ function App() {
           <label className="debug-checkbox">
             <input
               type="checkbox"
-              checked={debugMode}
-              onChange={(e) => setDebugMode(e.target.checked)}
+              checked={debug}
+              onChange={(e) => setDebug(e.target.checked)}
             />
-            Ignore placement restrictions
+            ignore placement restrictions
           </label>
           <button onClick={shareLayout}>Share Link</button>
           <button
@@ -1063,7 +1121,7 @@ function App() {
                       alt={`Tier ${cell.tier}`}
                     />
                   )}
-                  {cell?.hasMedallion && (
+                  {cell?.medallionType && (
                     <img
                       src={
                         cell.medallionType === "medallion_lock"
@@ -1074,7 +1132,7 @@ function App() {
                       alt=""
                     />
                   )}
-                  {cell?.hasMedallion && (
+                  {cell?.medallionType && (
                     <img
                       src="/ggpk/medallionleveluproom.png"
                       className="medallion-icon"
