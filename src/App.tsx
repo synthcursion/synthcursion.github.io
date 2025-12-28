@@ -150,6 +150,8 @@ function App() {
     return (parsed.debug as boolean) || false;
   });
   const [copyStatus, setCopyStatus] = useState<boolean>(false);
+  const [showSidebar, setShowSidebar] = useState<boolean>(true);
+  const [showTotalStats, setShowTotalStats] = useState<boolean>(true);
 
   const roomsByType = useMemo(() => {
     const architectExists = grid.some((row) =>
@@ -1659,26 +1661,56 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      {(Object.keys(totalStats.mods).length > 0 ||
-        Object.keys(totalStats.descriptions).length > 0) && (
-        <div className="total-stats">
-          <ul>
-            {Object.entries(totalStats.mods).map(([stat, value]) => (
-              <li key={stat}>
-                <span>{stat}</span>
-                <span>{value > 0 ? `+${value}` : value}%</span>
-              </li>
-            ))}
-            {Object.entries(totalStats.descriptions).map(([desc, count]) => (
-              <li key={desc}>
-                <span>{desc}</span>
-                <span>x{count}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+    <div className={`app-container ${!showSidebar ? "sidebar-hidden" : ""}`}>
+      <button
+        className="toggle-sidebar"
+        onClick={() => setShowSidebar(!showSidebar)}
+        title={showSidebar ? "Hide Sidebar" : "Show Sidebar"}
+      >
+        {showSidebar ? "◀" : "▶"}
+      </button>
+
+      {showTotalStats &&
+        (Object.keys(totalStats.mods).length > 0 ||
+          Object.keys(totalStats.descriptions).length > 0) && (
+          <div className="total-stats">
+            <div className="close-stats-container">
+              <button
+                className="close-stats"
+                onClick={() => setShowTotalStats(false)}
+              >
+                Hide stats
+              </button>
+            </div>
+            <ul>
+              {Object.entries(totalStats.mods).map(([stat, value]) => (
+                <li key={stat}>
+                  <span>{stat}</span>
+                  <span>{value > 0 ? `+${value}` : value}%</span>
+                </li>
+              ))}
+              {Object.entries(totalStats.descriptions).map(([desc, count]) => (
+                <li key={desc}>
+                  <span>{desc}</span>
+                  <span>x{count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+      {!showTotalStats &&
+        (Object.keys(totalStats.mods).length > 0 ||
+          Object.keys(totalStats.descriptions).length > 0) && (
+          <button
+            className="show-stats-btn"
+            onClick={() => setShowTotalStats(true)}
+            title="Show Total Stats"
+          >
+            Show Stats
+          </button>
+        )}
+
       <div className="sidebar">
         <div className="header">
           <h2>Temple Builder</h2>
