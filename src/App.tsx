@@ -98,7 +98,7 @@ function App() {
 
       paths.forEach((val) => {
         if (!val) return;
-        const [x, y, pathType] = val.split("-");
+        const [pathType, x, y] = val.split("-");
         const ix = parseInt(x);
         const iy = parseInt(y);
         if (!isNaN(ix) && !isNaN(iy)) {
@@ -108,7 +108,7 @@ function App() {
 
       medallions.forEach((val) => {
         if (!val) return;
-        const [x, y, medallionType] = val.split("-");
+        const [medallionType, x, y] = val.split("-");
         const ix = parseInt(x);
         const iy = parseInt(y);
         if (!isNaN(ix) && !isNaN(iy)) {
@@ -590,7 +590,7 @@ function App() {
 
     grid.forEach((row, x) => {
       row.forEach((cell, y) => {
-        if (!cell) return;
+        if (!cell || (x === ENTRY.x && y === ENTRY.y)) return;
         if (cell.type === "room") {
           rooms.push(`${cell.roomId}-${x}-${y}`);
           if (cell.medallionType) {
