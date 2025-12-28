@@ -3,7 +3,7 @@ import queryString from "query-string";
 import { Tooltip } from "react-tooltip";
 import "./App.css";
 import data from "./data/generated/English.json";
-import type { IncursionRoom, PathType, GridCell } from "./types";
+import type { IncursionRoom, PathType, GridCell, Direction } from "./types";
 
 const roomsData = data.Incursion2Rooms as Record<string, IncursionRoom>;
 
@@ -11,7 +11,6 @@ const GRID_SIZE = 9;
 
 const ENTRY = { x: 4, y: 0 };
 
-type Direction = "left" | "right" | "top" | "bottom";
 const PATH_TYPES: Record<PathType, Direction[]> = {
   path1: ["top", "bottom"],
   path2: ["left", "right"],
@@ -545,6 +544,81 @@ function App() {
       });
       calculatePower(newGrid, finalGenerators);
     }
+
+    // 4. Calculate Visual Connections
+    newGrid.forEach((row, x) => {
+      row.forEach((cell, y) => {
+        if (!cell || cell.type !== "room") return;
+
+        cell.roomToRoomConnections = [];
+        cell.roomToPathConnections = [];
+
+        const neighbors: { x: number; y: number; dir: Direction }[] = [
+          { x: x, y: y + 1, dir: "bottom" },
+          { x: x, y: y - 1, dir: "top" },
+          { x: x - 1, y: y, dir: "left" },
+          { x: x + 1, y: y, dir: "right" },
+        ];
+
+        neighbors.forEach(({ x: nx, y: ny, dir }) => {
+          if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) {
+            if (nx === 4 && ny === 9) {
+              // Atziri case
+            } else if (nx === 4 && ny === -1) {
+              // Entry point case
+            } else {
+              return;
+            }
+          }
+
+          let neighborCell = newGrid[nx]?.[ny];
+          if (nx === 4 && ny === 9) {
+            neighborCell = { type: "room" as const, roomId: "Atziri" };
+          } else if (nx === 4 && ny === -1) {
+            neighborCell = {
+              type: "path" as const,
+              pathType: "pathfourway" as PathType,
+            };
+          }
+
+          if (neighborCell && neighborCell.type === "room") {
+            const currentRoom = roomsData[cell.roomId!];
+            const otherRoom = roomsData[neighborCell.roomId!];
+
+            const isArchitect =
+              cell.roomId === "Architect" ||
+              neighborCell.roomId === "Architect";
+            const isReward =
+              (currentRoom && currentRoom.IsBossReward) ||
+              (otherRoom && otherRoom.IsBossReward);
+            const isUpgrade =
+              (currentRoom &&
+                currentRoom.UpgradedBy.includes(neighborCell.roomId!)) ||
+              (otherRoom && otherRoom.UpgradedBy.includes(cell.roomId!));
+
+            if (isArchitect || isReward || isUpgrade) {
+              cell.roomToRoomConnections!.push(dir);
+            }
+          } else if (
+            neighborCell &&
+            (neighborCell.type === "path" || (nx === 4 && ny === -1)) &&
+            cell.roomId !== "Generator"
+          ) {
+            const pathType = neighborCell?.pathType || "pathfourway";
+            const pathConns = getConnectionsFromPathType(pathType);
+            const oppositeDir: Record<Direction, Direction> = {
+              top: "bottom",
+              bottom: "top",
+              left: "right",
+              right: "left",
+            };
+            if (!pathConns[oppositeDir[dir]]) {
+              cell.roomToPathConnections!.push(dir);
+            }
+          }
+        });
+      });
+    });
 
     return newGrid;
   }, [grid]);
@@ -1261,8 +1335,6 @@ function App() {
   };
 
   const getCellPosition = (x: number, y: number) => {
-    // Row 0 is the 'bottom' row, Column 0 is the 'left' column.
-    // Based on visual orientation:
     // x increases -> moves Down-Right (label: Right)
     // x decreases -> moves Up-Left (label: Left)
     // y increases -> moves Up-Right (label: Top)
@@ -1350,13 +1422,13 @@ function App() {
               <div className="section-title">Description:</div>
               <div className="hover-description">
                 {processDescription(
-                  roomsData[cell.roomId]?.Levels[cell.tier]?.Description || "",
+                  roomsData[cell.roomId]?.Levels[cell.tier!]?.Description || "",
                 )}
               </div>
-              {roomsData[cell.roomId]?.Levels[cell.tier]?.Description2 && (
+              {roomsData[cell.roomId]?.Levels[cell.tier!]?.Description2 && (
                 <div className="hover-description">
                   {processDescription(
-                    roomsData[cell.roomId]?.Levels[cell.tier]?.Description2 ||
+                    roomsData[cell.roomId]?.Levels[cell.tier!]?.Description2 ||
                       "",
                   )}
                 </div>
@@ -1680,9 +1752,37 @@ function App() {
                     />
                   )}
                   <div className="cell-content">
+                    {cell?.type === "room" && (
+                      <img
+                        src={`/ggpk/roomgeneric${cell.isPowered ? "powered" : ""}.png`}
+                        className="room-generic-bg"
+                        alt=""
+                      />
+                    )}
+                    {cell?.roomToRoomConnections?.map((dir) => {
+                      const isVertical = dir === "top" || dir === "bottom";
+                      const suffix = isVertical ? "vertical" : "horizontal";
+                      return (
+                        <img
+                          key={`r2r-${dir}`}
+                          src={`/ggpk/roomconnectroom${suffix}${cell.isPowered ? "powered" : ""}.png`}
+                          className={`room-connect room-connect-${dir}`}
+                          alt=""
+                        />
+                      );
+                    })}
+                    {cell?.roomToPathConnections?.map((dir) => (
+                      <img
+                        key={`r2p-${dir}`}
+                        src={`/ggpk/roomconnect${dir}${cell.isPowered ? "powered" : ""}.png`}
+                        className={`room-connect room-connect-${dir}`}
+                        alt=""
+                      />
+                    ))}
                     {cell ? (
                       <img
                         src={getIconPath(cell)}
+                        className="main-icon"
                         alt={
                           cell.type === "room" && cell.roomId
                             ? `${roomsData[cell.roomId]?.Name} (T${cell.tier})`
@@ -1690,7 +1790,11 @@ function App() {
                         }
                       />
                     ) : (
-                      <img src="/ggpk/incursion2tileempty.png" alt="" />
+                      <img
+                        src="/ggpk/incursion2tileempty.png"
+                        className="main-icon"
+                        alt=""
+                      />
                     )}
                   </div>
                   {cell?.type === "room" && cell.tier && cell.tier > 1 && (
@@ -1731,7 +1835,36 @@ function App() {
               data-room-id="Atziri"
             >
               <div className="cell-content">
-                <img src="/ggpk/iconatziri.png" alt="Atziri's Chamber" />
+                <img
+                  src={`/ggpk/roomgeneric${calculatedGrid[4][9]?.isPowered ? "powered" : ""}.png`}
+                  className="room-generic-bg"
+                  alt=""
+                />
+                {calculatedGrid[4][9]?.roomToRoomConnections?.map((dir) => {
+                  const isVertical = dir === "top" || dir === "bottom";
+                  const suffix = isVertical ? "vertical" : "horizontal";
+                  return (
+                    <img
+                      key={`r2r-${dir}`}
+                      src={`/ggpk/roomconnectroom${suffix}${calculatedGrid[4][9]?.isPowered ? "powered" : ""}.png`}
+                      className={`room-connect room-connect-${dir}`}
+                      alt=""
+                    />
+                  );
+                })}
+                {calculatedGrid[4][9]?.roomToPathConnections?.map((dir) => (
+                  <img
+                    key={`r2p-${dir}`}
+                    src={`/ggpk/roomconnect${dir}${calculatedGrid[4][9]?.isPowered ? "powered" : ""}.png`}
+                    className={`room-connect room-connect-${dir}`}
+                    alt=""
+                  />
+                ))}
+                <img
+                  src="/ggpk/iconatziri.png"
+                  className="main-icon"
+                  alt="Atziri's Chamber"
+                />
               </div>
             </div>
           </div>

@@ -64,7 +64,11 @@ export interface GridCell {
     tier: number;
     distance: number;
   }[]; // Info about generators providing power
+  roomToRoomConnections?: Direction[];
+  roomToPathConnections?: Direction[];
 }
+
+export type Direction = "top" | "bottom" | "left" | "right";
 
 export interface TempleState {
   grid: (GridCell | null)[][]; // 9x9
