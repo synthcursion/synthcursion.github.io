@@ -938,6 +938,15 @@ function App() {
           const nBaseRoom = roomsData[neighbor.roomId];
           if (!nBaseRoom) return;
 
+          // Check if it's an Architect or Reward room
+          if (
+            roomId2 === "Architect" ||
+            nBaseRoom.IsBossReward ||
+            room2.IsBossReward
+          ) {
+            canPlaceRegular = true;
+          }
+
           // Check if selected room upgrades neighbor
           const nUpgradedByCounts: Record<string, number> = {};
           nBaseRoom.UpgradedBy.forEach((id) => {
@@ -1032,6 +1041,108 @@ function App() {
     return false;
   };
 
+  const getRoomToRoomConnections = (
+    x: number,
+    y: number,
+    currentGrid: (GridCell | null)[][],
+  ): Direction[] => {
+    const cell = currentGrid[x][y];
+    if (!cell || cell.type !== "room" || !cell.roomId) return [];
+
+    const connections: Direction[] = [];
+    const neighbors: { nx: number; ny: number; dir: Direction }[] = [
+      { nx: x, ny: y + 1, dir: "top" },
+      { nx: x, ny: y - 1, dir: "bottom" },
+      { nx: x - 1, ny: y, dir: "left" },
+      { nx: x + 1, ny: y, dir: "right" },
+    ];
+
+    neighbors.forEach(({ nx, ny, dir }) => {
+      let neighborCell: GridCell | null | undefined;
+      if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+        neighborCell = currentGrid[nx][ny];
+      } else if (nx === 4 && ny === 9) {
+        neighborCell = { type: "room", roomId: "Atziri" };
+      } else if (nx === 4 && ny === -1) {
+        neighborCell = {
+          type: "path",
+          pathType: "pathfourway",
+        };
+      }
+
+      if (neighborCell && neighborCell.type === "room" && neighborCell.roomId) {
+        const currentRoom = roomsData[cell.roomId!];
+        const otherRoom = roomsData[neighborCell.roomId!];
+
+        const isArchitect =
+          cell.roomId === "Architect" || neighborCell.roomId === "Architect";
+        const isReward =
+          (currentRoom && currentRoom.IsBossReward) ||
+          (otherRoom && otherRoom.IsBossReward);
+        const isUpgrade =
+          (currentRoom &&
+            currentRoom.UpgradedBy.includes(neighborCell.roomId!)) ||
+          (otherRoom && otherRoom.UpgradedBy.includes(cell.roomId!));
+
+        if (isArchitect || isReward || isUpgrade) {
+          connections.push(dir);
+        }
+      }
+    });
+
+    return connections;
+  };
+
+  const getRoomToPathConnections = (
+    x: number,
+    y: number,
+    currentGrid: (GridCell | null)[][],
+  ): Direction[] => {
+    const cell = currentGrid[x][y];
+    if (!cell || cell.type !== "room" || !cell.roomId) return [];
+    if (cell.roomId === "Generator") return [];
+
+    const connections: Direction[] = [];
+    const neighbors: { nx: number; ny: number; dir: Direction }[] = [
+      { nx: x, ny: y + 1, dir: "top" },
+      { nx: x, ny: y - 1, dir: "bottom" },
+      { nx: x - 1, ny: y, dir: "left" },
+      { nx: x + 1, ny: y, dir: "right" },
+    ];
+
+    const oppositeDir: Record<Direction, Direction> = {
+      top: "bottom",
+      bottom: "top",
+      left: "right",
+      right: "left",
+    };
+
+    neighbors.forEach(({ nx, ny, dir }) => {
+      let neighborCell: GridCell | null | undefined;
+      if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+        neighborCell = currentGrid[nx][ny];
+      } else if (nx === 4 && ny === -1) {
+        neighborCell = {
+          type: "path",
+          pathType: "pathfourway",
+        };
+      }
+
+      if (
+        neighborCell &&
+        neighborCell.type === "path" &&
+        neighborCell.pathType
+      ) {
+        const pathConns = getConnectionsFromPathType(neighborCell.pathType);
+        if (!pathConns[oppositeDir[dir]]) {
+          connections.push(dir);
+        }
+      }
+    });
+
+    return connections;
+  };
+
   const isReachableFromEntry = (
     currentGrid: (GridCell | null)[][],
   ): Set<string> => {
@@ -1060,18 +1171,26 @@ function App() {
 
           let canConnect = false;
           if (currentCell?.type === "room") {
+            const r2r = getRoomToRoomConnections(x, y, currentGrid);
+            const r2p = getRoomToPathConnections(x, y, currentGrid);
+
             if (neighborCell.type === "room") {
-              canConnect = true;
+              if (r2r.includes(side)) canConnect = true;
             } else if (neighborCell.type === "path") {
               const conns = getConnectionsFromPathType(neighborCell.pathType!);
-              if (conns[opp]) canConnect = true;
+              if (r2p.includes(side) || conns[opp]) {
+                canConnect = true;
+              }
             }
           } else if (currentCell?.type === "path") {
             const currentConns = getConnectionsFromPathType(
               currentCell.pathType!,
             );
             if (neighborCell.type === "room") {
-              canConnect = true;
+              const nr2p = getRoomToPathConnections(nr, nc, currentGrid);
+              if (nr2p.includes(opp) || currentConns[side]) {
+                canConnect = true;
+              }
             } else if (neighborCell.type === "path") {
               if (currentConns[side]) {
                 const neighborConns = getConnectionsFromPathType(
@@ -1110,8 +1229,10 @@ function App() {
 
     // Check reachability in the new grid
     const reachable = isReachableFromEntry(nextGrid);
+    const reachableBefore = isReachableFromEntry(grid);
 
     // Any non-boss, non-reward room must still be reachable from ENTRY
+    // IF it was reachable before deleting the cell.
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
         const cell = nextGrid[r][c];
@@ -1122,6 +1243,7 @@ function App() {
             !room.IsBossReward &&
             room.Id !== "Architect" &&
             room.Id !== "Atziri" &&
+            reachableBefore.has(`${r},${c}`) &&
             !reachable.has(`${r},${c}`)
           ) {
             return false;
