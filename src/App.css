@@ -436,8 +436,8 @@ label {
     position: fixed;
     top: 20px;
     right: 20px;
-    background-color: rgba(20, 20, 20, 0.9);
-    border: 1px solid #d4af37;
+    background-color: rgba(20, 20, 20, 0.4);
+    border: 1px solid #444;
     padding: 15px;
     border-radius: 4px;
     z-index: 1001;

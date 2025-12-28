@@ -2,6 +2,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import App from "./App";
 
+// Mock ResizeObserver for react-tooltip
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
 // Mock URL and window.history since the App uses it for persistence
 const mockReplaceState = vi.fn();
 Object.defineProperty(window, "history", {

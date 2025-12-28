@@ -1558,22 +1558,6 @@ function App() {
                   </ul>
                 </div>
               )}
-            <div className="hover-section">
-              <div className="section-title">Description:</div>
-              <div className="hover-description">
-                {processDescription(
-                  roomsData[cell.roomId]?.Levels[cell.tier!]?.Description || "",
-                )}
-              </div>
-              {roomsData[cell.roomId]?.Levels[cell.tier!]?.Description2 && (
-                <div className="hover-description">
-                  {processDescription(
-                    roomsData[cell.roomId]?.Levels[cell.tier!]?.Description2 ||
-                      "",
-                  )}
-                </div>
-              )}
-            </div>
           </>
         )}
         {cell && cell.type === "path" && (
@@ -1645,9 +1629,11 @@ function App() {
         <div className="tooltip-levels">
           {room.Levels.filter(Boolean).map((lvl) => (
             <div key={lvl.Level} className="tooltip-level-info">
-              <div className="tooltip-level-header">
-                Tier {lvl.Level}: {lvl.Name}
-              </div>
+              {room.MaxLevel > 1 && (
+                <div className="tooltip-level-header">
+                  Tier {lvl.Level}: {lvl.Name}
+                </div>
+              )}
               <div className="tooltip-description">
                 {processDescription(lvl.Description)}
               </div>
@@ -1727,6 +1713,8 @@ function App() {
                               setSelectedType("room");
                               setSelectedRoomId(r.Id);
                             }}
+                            data-tooltip-id="room-tooltip"
+                            data-tooltip-content={r.Id}
                             title={r.Name}
                           >
                             <img src={iconUrl} alt={r.Name} />
@@ -1751,6 +1739,8 @@ function App() {
                       setSelectedType("path");
                       setSelectedPathType(pt as PathType);
                     }}
+                    data-tooltip-id="room-tooltip"
+                    data-tooltip-content={pt}
                     title={pt}
                   >
                     <img src={`/ggpk/${pt}.png`} alt={pt} />
@@ -1783,6 +1773,8 @@ function App() {
                       setSelectedType("medallion");
                       setSelectedRoomId(m.id);
                     }}
+                    data-tooltip-id="room-tooltip"
+                    data-tooltip-content={m.title}
                     title={m.title}
                   >
                     <img src={`/ggpk/${m.icon}`} alt={m.title} />
@@ -1797,6 +1789,8 @@ function App() {
                 <div
                   className={`room-item ${selectedType === "empty" ? "selected" : ""}`}
                   onClick={() => setSelectedType("empty")}
+                  data-tooltip-id="room-tooltip"
+                  data-tooltip-content="Eraser"
                   title="Eraser"
                 >
                   <img src="/ggpk/incursion2tileempty.png" alt="Eraser" />
@@ -1846,8 +1840,10 @@ function App() {
         place="right"
         className="custom-tooltip"
         render={({ content }) => {
-          const room = roomsData[content || ""];
-          return room ? renderRoomTooltip(room) : null;
+          if (!content) return null;
+          const room = roomsData[content];
+          if (room) return renderRoomTooltip(room);
+          return <div className="room-tooltip">{content}</div>;
         }}
       />
 
