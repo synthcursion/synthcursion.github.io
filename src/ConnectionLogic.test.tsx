@@ -197,11 +197,10 @@ describe("Connection Logic Visuals", () => {
     expect(r2p_bot).toBeFalsy();
   });
 
-  it("shows connection to Atziri's Chamber (4,9)", () => {
+  it("Does not show connection to Atziri's Chamber (4,9)", () => {
     render(<App />);
 
     // Atziri is at 4,9. Place a room at 4,8.
-    // Atziri is a Reward room, so it should show a room-to-room connection.
     // 4,9 is y+1 relative to 4,8 -> top.
     fireEvent.click(screen.getByTitle("Garrison"));
     fireEvent.click(screen.getByTestId("cell-4-8"));
@@ -210,7 +209,6 @@ describe("Connection Logic Visuals", () => {
     const r2r_top = garrisonCell.querySelector(
       'img[src*="roomconnectroomvertical"]',
     );
-    expect(r2r_top).toBeTruthy();
-    expect(r2r_top?.className).toContain("room-connect-top");
+    expect(r2r_top).toBeFalsy();
   });
 });

@@ -589,9 +589,7 @@ function App() {
               neighborCell.roomId === "Architect";
             const isReward =
               (currentRoom && currentRoom.IsBossReward) ||
-              (otherRoom && otherRoom.IsBossReward) ||
-              cell.roomId === "Atziri" ||
-              neighborCell.roomId === "Atziri";
+              (otherRoom && otherRoom.IsBossReward);
             const isUpgrade =
               (currentRoom &&
                 currentRoom.UpgradedBy.includes(neighborCell.roomId!)) ||
