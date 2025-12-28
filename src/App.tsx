@@ -1208,19 +1208,10 @@ function App() {
       if (!room) return "/ggpk/roomgeneric.png";
 
       // Try to find the specific tier first
-      let roomInfo = room.Levels.find((r) => r.Level === cell.tier);
-
-      // If specific tier not found, find the closest available tier
-      if (!roomInfo && room.Levels.length > 0) {
-        const availableLevels = room.Levels.map((rl) => rl.Level);
-        const closestLevel = availableLevels.reduce((prev, curr) => {
-          return Math.abs(curr - (cell.tier || 1)) <
-            Math.abs(prev - (cell.tier || 1))
-            ? curr
-            : prev;
-        });
-        roomInfo = room.Levels.find((rl) => rl.Level === closestLevel);
-      }
+      const roomInfo =
+        cell.tier && cell.tier in room.Levels
+          ? room.Levels[cell.tier!]
+          : room.Levels.find(Boolean);
 
       if (roomInfo && roomInfo.Icon_DDSFile) {
         const fileName = roomInfo.Icon_DDSFile.split("/")
@@ -1375,13 +1366,7 @@ function App() {
                   <div key={subCategory} className="room-subcategory">
                     <div className="room-grid">
                       {rooms.map((r) => {
-                        const minLevel =
-                          r.Levels.length > 0
-                            ? Math.min(...r.Levels.map((rl) => rl.Level))
-                            : null;
-                        const roomInfo = r.Levels.find(
-                          (rl) => rl.Level === minLevel,
-                        );
+                        const roomInfo = r.Levels.find(Boolean);
 
                         const iconDDS =
                           roomInfo?.Icon_DDSFile || r.Icon_DDSFile;
