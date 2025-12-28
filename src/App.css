@@ -283,6 +283,10 @@ label {
     z-index: 5;
 }
 
+.invalid-glow {
+    filter: hue-rotate(200deg) brightness(1.2) saturate(1.5);
+}
+
 .hover-glow {
     position: absolute;
     top: 0;

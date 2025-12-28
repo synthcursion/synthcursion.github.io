@@ -152,6 +152,8 @@ function App() {
   const [copyStatus, setCopyStatus] = useState<boolean>(false);
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
   const [showTotalStats, setShowTotalStats] = useState<boolean>(true);
+  const [showRemovableGlow, setShowRemovableGlow] = useState<boolean>(true);
+  const [showInvalidGlow, setShowInvalidGlow] = useState<boolean>(true);
 
   const roomsByType = useMemo(() => {
     const architectExists = grid.some((row) =>
@@ -689,12 +691,17 @@ function App() {
   const getHighlightType = (
     x: number,
     y: number,
-  ): "regular" | "strong" | "deletable" | null => {
+  ): "regular" | "strong" | "deletable" | "invalid" | null => {
     if (grid[x][y]) {
-      // If we're hovering a tile that could be deleted
+      const cell = grid[x][y]!;
+      if (!isPlaceableAt(x, y, grid, cell)) {
+        return "invalid";
+      }
+
       if (isDeletable(x, y)) {
         return "deletable";
       }
+
       return null;
     }
 
@@ -1782,7 +1789,7 @@ function App() {
             </div>
 
             <div className="room-category">
-              <h4>Medallions</h4>
+              <h4>Other</h4>
               <div className="room-grid">
                 {[
                   {
@@ -1812,12 +1819,6 @@ function App() {
                     <img src={`/ggpk/${m.icon}`} alt={m.title} />
                   </div>
                 ))}
-              </div>
-            </div>
-
-            <div className="room-category">
-              <h4>Eraser</h4>
-              <div className="room-grid">
                 <div
                   className={`room-item ${selectedType === "empty" ? "selected" : ""}`}
                   onClick={() => setSelectedType("empty")}
@@ -1840,6 +1841,22 @@ function App() {
               onChange={(e) => setDebug(e.target.checked)}
             />
             ignore placement restrictions
+          </label>
+          <label className="debug-checkbox">
+            <input
+              type="checkbox"
+              checked={showRemovableGlow}
+              onChange={(e) => setShowRemovableGlow(e.target.checked)}
+            />
+            highlight removable rooms
+          </label>
+          <label className="debug-checkbox">
+            <input
+              type="checkbox"
+              checked={showInvalidGlow}
+              onChange={(e) => setShowInvalidGlow(e.target.checked)}
+            />
+            highlight invalid rooms
           </label>
           <button onClick={shareLayout}>
             {copyStatus ? "Link copied" : "Share Link"}
@@ -1898,19 +1915,27 @@ function App() {
                   data-room-id={cell?.roomId}
                   data-testid={`cell-${x}-${y}`}
                 >
-                  {getHighlightType(x, y) && cell?.roomId !== "Architect" && (
-                    <img
-                      src={
-                        getHighlightType(x, y) === "strong"
-                          ? "/ggpk/incursion2tileglowstrong.png"
-                          : getHighlightType(x, y) === "deletable"
-                            ? "/ggpk/incursion2tileglowred.png"
-                            : "/ggpk/incursion2tileglowregular.png"
-                      }
-                      className="placement-glow"
-                      alt=""
-                    />
-                  )}
+                  {getHighlightType(x, y) &&
+                    cell?.roomId !== "Architect" &&
+                    (getHighlightType(x, y) === "regular" ||
+                      getHighlightType(x, y) === "strong" ||
+                      (getHighlightType(x, y) === "deletable" &&
+                        showRemovableGlow) ||
+                      (getHighlightType(x, y) === "invalid" &&
+                        showInvalidGlow)) && (
+                      <img
+                        src={
+                          getHighlightType(x, y) === "strong"
+                            ? "/ggpk/incursion2tileglowstrong.png"
+                            : getHighlightType(x, y) === "deletable" ||
+                                getHighlightType(x, y) === "invalid"
+                              ? "/ggpk/incursion2tileglowred.png"
+                              : "/ggpk/incursion2tileglowregular.png"
+                        }
+                        className={`placement-glow ${getHighlightType(x, y) === "invalid" ? "invalid-glow" : ""}`}
+                        alt=""
+                      />
+                    )}
                   {hoveredCell?.x === x && hoveredCell?.y === y && (
                     <img
                       src="/ggpk/incursion2tileglowframe.png"
