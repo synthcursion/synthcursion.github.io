@@ -207,14 +207,10 @@ function App() {
               [x, y + 1],
             ];
             for (let i = 0; i < currentRoom.ConvertedBy.length; i++) {
-              const converterIndex = currentRoom.ConvertedBy[i];
-              const convertToIndex = currentRoom.ConvertedTo[i];
-              const converterRoom = roomsArray.find(
-                (r) => r._index === converterIndex,
-              );
-              const convertToRoom = roomsArray.find(
-                (r) => r._index === convertToIndex,
-              );
+              const converterId = currentRoom.ConvertedBy[i];
+              const convertToId = currentRoom.ConvertedTo[i];
+              const converterRoom = roomsData[converterId];
+              const convertToRoom = roomsData[convertToId];
 
               if (!converterRoom || !convertToRoom) continue;
 
@@ -273,10 +269,9 @@ function App() {
             });
 
             const upgradeByCounts: Record<string, number> = {};
-            baseRoom.UpgradedBy.forEach((i) => {
-              const upgradeRoom = roomsArray.find((r) => r._index === i);
+            baseRoom.UpgradedBy.forEach((id) => {
+              const upgradeRoom = roomsData[id];
               if (upgradeRoom) {
-                const id = upgradeRoom.Id;
                 upgradeByCounts[id] = (upgradeByCounts[id] || 0) + 1;
               }
             });
@@ -299,8 +294,7 @@ function App() {
               }
               if (hasTwoOfThree) {
                 let totalMatches = 0;
-                for (const idStr in connectedCounts) {
-                  const id = Number(idStr);
+                for (const id in connectedCounts) {
                   if (upgradeByCounts[id]) {
                     totalMatches += connectedCounts[id];
                     if (cell.medallionType !== "medallion_lock") {
@@ -663,10 +657,9 @@ function App() {
 
           // Check if selected room upgrades neighbor
           const nUpgradedByCounts: Record<string, number> = {};
-          nBaseRoom.UpgradedBy.forEach((i) => {
-            const upgradeRoom = roomsArray.find((r) => r._index === i);
+          nBaseRoom.UpgradedBy.forEach((id) => {
+            const upgradeRoom = roomsData[id];
             if (upgradeRoom) {
-              const id = upgradeRoom.Id;
               nUpgradedByCounts[id] = (nUpgradedByCounts[id] || 0) + 1;
             }
           });
@@ -697,10 +690,9 @@ function App() {
 
           // Check if neighbor upgrades selected room
           const selectedUpgradedByCounts: Record<string, number> = {};
-          selectedRoom.UpgradedBy.forEach((i) => {
-            const upgradeRoom = roomsArray.find((r) => r._index === i);
+          selectedRoom.UpgradedBy.forEach((id) => {
+            const upgradeRoom = roomsData[id];
             if (upgradeRoom) {
-              const id = upgradeRoom.Id;
               selectedUpgradedByCounts[id] =
                 (selectedUpgradedByCounts[id] || 0) + 1;
             }
@@ -841,10 +833,9 @@ function App() {
 
           // Check if selected room upgrades neighbor
           const nUpgradedByCounts: Record<string, number> = {};
-          nBaseRoom.UpgradedBy.forEach((i) => {
-            const upgradeRoom = roomsArray.find((r) => r._index === i);
+          nBaseRoom.UpgradedBy.forEach((id) => {
+            const upgradeRoom = roomsData[id];
             if (upgradeRoom) {
-              const id = upgradeRoom.Id;
               nUpgradedByCounts[id] = (nUpgradedByCounts[id] || 0) + 1;
             }
           });
@@ -878,10 +869,9 @@ function App() {
 
           // Check if neighbor upgrades selected room
           const selectedUpgradedByCounts: Record<string, number> = {};
-          room2.UpgradedBy.forEach((i) => {
-            const upgradeRoom = roomsArray.find((r) => r._index === i);
+          room2.UpgradedBy.forEach((id) => {
+            const upgradeRoom = roomsData[id];
             if (upgradeRoom) {
-              const id = upgradeRoom.Id;
               selectedUpgradedByCounts[id] =
                 (selectedUpgradedByCounts[id] || 0) + 1;
             }

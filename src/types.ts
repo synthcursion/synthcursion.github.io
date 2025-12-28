@@ -2,9 +2,9 @@ export interface IncursionRoom {
   _index: number;
   Id: string;
   IsPathway: boolean;
-  UpgradedBy: number[];
-  ConvertedBy: number[];
-  ConvertedTo: number[];
+  UpgradedBy: string[];
+  ConvertedBy: string[];
+  ConvertedTo: string[];
   UpgradedByPower: number;
   IsPresentDay: boolean;
   IsBossReward: boolean;

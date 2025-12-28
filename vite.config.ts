@@ -123,6 +123,11 @@ const datExport = (
         const combined: Record<string, unknown> = {};
         const rooms = await load(lang, "Incursion2Rooms");
         const levels = await load(lang, "Incursion2RoomPerLevel");
+
+        const indexToId = Object.fromEntries(
+          rooms.map((room) => [room._index, room.Id]),
+        );
+
         combined.Incursion2Medallions = await load(
           lang,
           "Incursion2Medallions",
@@ -132,10 +137,19 @@ const datExport = (
             const Levels: unknown[] = [];
             for (const level of levels) {
               if (level.Room === room._index) {
-                levels[level.Level] = level;
+                Levels[level.Level] = level;
               }
             }
-            return [room.Id, { ...room, Levels }];
+            return [
+              room.Id,
+              {
+                ...room,
+                Levels: Levels.filter(Boolean),
+                UpgradedBy: room.UpgradedBy.map((idx) => indexToId[idx]),
+                ConvertedBy: room.ConvertedBy.map((idx) => indexToId[idx]),
+                ConvertedTo: room.ConvertedTo.map((idx) => indexToId[idx]),
+              },
+            ];
           }),
         );
 
