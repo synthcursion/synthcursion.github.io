@@ -11,6 +11,7 @@ export interface IncursionRoom {
   Name: string;
   Icon_DDSFile: string;
   Levels: IncursionRoomPerLevel[];
+  MaxLevel: number;
 }
 
 export interface IncursionRoomPerLevel {
@@ -22,6 +23,7 @@ export interface IncursionRoomPerLevel {
   Name: string;
   Icon_DDSFile: string;
   Mod: number | null;
+  Stats: string[];
   ModValues: number[];
   Description2: string;
 }

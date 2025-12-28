@@ -35,21 +35,6 @@ interface IncursionRoomPerLevel {
   Description2: string;
 }
 
-interface IncursionMedallion {
-  _index: number;
-  Id: string;
-  Name: string;
-  FlavourText: string;
-  Icon_DDSFile: string;
-  Description: string;
-}
-
-type Types = {
-  Incursion2Rooms: IncursionRoom;
-  Incursion2RoomPerLevel: IncursionRoomPerLevel;
-  Incursion2Medallions: IncursionMedallion;
-};
-
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -61,10 +46,14 @@ export default defineConfig({
         "Incursion2Rooms",
         "Incursion2RoomPerLevel",
         "Incursion2Medallions",
+        "Mods",
+        "Stats",
       ],
       async onProcessLang(lang, load) {
         const combined: Record<string, unknown> = {};
         const rooms = (await load("Incursion2Rooms")) as IncursionRoom[];
+        const mods = (await load("Mods")) as Record<string, number>[];
+        const stats = (await load("Stats")) as Record<string, string>[];
         const levels = (await load(
           "Incursion2RoomPerLevel",
         )) as IncursionRoomPerLevel[];
@@ -76,17 +65,26 @@ export default defineConfig({
         combined.Incursion2Medallions = await load("Incursion2Medallions");
         combined.Incursion2Rooms = Object.fromEntries(
           rooms.map((room) => {
-            const Levels: unknown[] = [];
+            const Levels: Record<string, unknown>[] = [];
             for (const level of levels) {
               if (level.Room === room._index) {
-                Levels[level.Level] = level;
+                Levels[level.Level] = {
+                  ...level,
+                  Room: room.Id,
+                  Stats: !level.Mod
+                    ? []
+                    : [1, 2, 3, 4]
+                        .map((i) => stats[mods[level.Mod!][`Stat${i}`]]?.Id)
+                        .filter(Boolean),
+                };
               }
             }
             return [
               room.Id,
               {
                 ...room,
-                Levels: Levels.filter(Boolean),
+                Levels,
+                MaxLevel: Levels.filter(Boolean).at(-1)?.Level ?? 0,
                 UpgradedBy: room.UpgradedBy.map((idx) => indexToId[idx]),
                 ConvertedBy: room.ConvertedBy.map((idx) => indexToId[idx]),
                 ConvertedTo: room.ConvertedTo.map((idx) => indexToId[idx]),

@@ -5,7 +5,6 @@ import data from "./data/generated/English.json";
 import type { IncursionRoom, PathType, GridCell } from "./types";
 
 const roomsData = data.Incursion2Rooms as Record<string, IncursionRoom>;
-const roomsArray = Object.values(roomsData);
 
 const GRID_SIZE = 9;
 
@@ -157,7 +156,7 @@ function App() {
       row.some((cell) => cell?.roomId === "Architect"),
     );
 
-    const filtered = roomsArray.filter(
+    const filtered = Object.values(roomsData).filter(
       (r) =>
         !r.IsPathway &&
         r.Name !== "" &&
@@ -1107,17 +1106,9 @@ function App() {
               !debug
             ) {
               const calcCell = calculatedGrid[x][y];
-              if (calcCell && calcCell.type === "room") {
-                // 1. Prevent if already Tier 3
-                // Use a temporary tier calculation without the medallion to see if it's already T3
-                // Actually, the calculatedGrid already has the current medallion bonus if any.
-                // If it doesn't have a medallion, cell.medallionType is undefined.
-                // If it's already T3 (calculatedGrid[x][y].tier === 3), then Level Up is useless.
-                if (calcCell.tier === 3) return;
-
-                // 2. Prevent if it doesn't have multiple tiers
-                const room = roomsData[cell.roomId!];
-                if (!room || room.Levels.length <= 1) return;
+              if (calcCell?.tier && calcCell.roomId) {
+                if (calcCell.tier >= roomsData[calcCell.roomId].MaxLevel)
+                  return;
               }
             }
 
@@ -1208,10 +1199,7 @@ function App() {
       if (!room) return "/ggpk/roomgeneric.png";
 
       // Try to find the specific tier first
-      const roomInfo =
-        cell.tier && cell.tier in room.Levels
-          ? room.Levels[cell.tier!]
-          : room.Levels.find(Boolean);
+      const roomInfo = room.Levels[cell.tier!] ?? room.MaxLevel;
 
       if (roomInfo && roomInfo.Icon_DDSFile) {
         const fileName = roomInfo.Icon_DDSFile.split("/")
