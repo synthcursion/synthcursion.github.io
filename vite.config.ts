@@ -8,6 +8,7 @@ import {
 import { exportTables } from "./node_modules/pathofexile-dat/dist/cli/export-tables";
 import * as path from "node:path";
 import fs from "fs/promises";
+import { F } from "vitest/dist/chunks/config.d.D2ROskhv";
 
 const LANGS = [
   "English",
@@ -24,6 +25,55 @@ const LANGS = [
 
 const includeAll = [] as string[];
 includeAll.includes = () => true;
+
+interface IncursionRoom {
+  _index: number;
+  Id: string;
+  IsPathway: boolean;
+  UpgradedBy: number[];
+  ConvertedBy: number[];
+  ConvertedTo: number[];
+  UpgradedByPower: number;
+  IsPresentDay: boolean;
+  IsBossReward: boolean;
+  Name: string;
+  Icon_DDSFile: string;
+  Levels: IncursionRoomPerLevel[];
+}
+
+interface IncursionRoomPerLevel {
+  _index: number;
+  Room: number;
+  Level: number;
+  Id: string;
+  Description: string;
+  Name: string;
+  Icon_DDSFile: string;
+  Mod: number | null;
+  ModValues: number[];
+  Description2: string;
+}
+
+interface IncursionMedallion {
+  _index: number;
+  Id: string;
+  Name: string;
+  FlavourText: string;
+  Icon_DDSFile: string;
+  Description: string;
+}
+
+type Types = {
+  Incursion2Rooms: IncursionRoom;
+  Incursion2RoomPerLevel: IncursionRoomPerLevel;
+  Incursion2Medallions: IncursionMedallion;
+};
+
+async function load<F extends keyof Types>(lang: string, file: F) {
+  const tablePath = path.join("tables", lang, `${file}.json`);
+  const content = await fs.readFile(tablePath, "utf-8");
+  return JSON.parse(content) as Types[F][];
+}
 
 const datExport = (
   tables: (string | { name: string; columns: string[] })[],
@@ -48,6 +98,7 @@ const datExport = (
 
       const loader = await FileLoader.create(cdnBundleLoader);
       const exportedFiles = path.join(cacheDir, "exported");
+      const outputRoot = path.join("src", "data", "generated");
 
       console.log(`Exporting data for version`, patch, "to", exportedFiles);
       for (const tr of LANGS) {
@@ -69,45 +120,32 @@ const datExport = (
       );
 
       for (const lang of LANGS) {
-        const combined: Record<string, any> = {};
-        const langDir = path.join("tables", lang);
-        for (const table of tables) {
-          const tableName = typeof table === "string" ? table : table.name;
-          const tablePath = path.join(langDir, `${tableName}.json`);
-          try {
-            const content = await fs.readFile(tablePath, "utf-8");
-            combined[tableName] = JSON.parse(content);
-          } catch (e) {
-            console.warn(`Could not read ${tablePath}`, e);
-          }
-        }
-
-        // Nest Incursion2RoomPerLevel into Incursion2Rooms
-        if (combined.Incursion2Rooms && combined.Incursion2RoomPerLevel) {
-          const rooms = combined.Incursion2Rooms;
-          const levels = combined.Incursion2RoomPerLevel;
-          for (const room of rooms) {
-            room.Levels = levels.filter((l: any) => l.Room === room._index);
-          }
-          delete combined.Incursion2RoomPerLevel;
-        }
+        const combined: Record<string, unknown> = {};
+        const rooms = await load(lang, "Incursion2Rooms");
+        const levels = await load(lang, "Incursion2RoomPerLevel");
+        combined.Incursion2Medallions = await load(
+          lang,
+          "Incursion2Medallions",
+        );
+        combined.Incursion2Rooms = Object.fromEntries(
+          rooms.map((room) => {
+            const Levels: unknown[] = [];
+            for (const level of levels) {
+              if (level.Room === room._index) {
+                levels[level.Level] = level;
+              }
+            }
+            return [room.Id, { ...room, Levels }];
+          }),
+        );
 
         await fs.writeFile(
-          path.join("tables", `${lang}.json`),
+          path.join(outputRoot, `${lang}.json`),
           JSON.stringify(combined, null, 2),
         );
-        await fs.rm(langDir, { recursive: true, force: true });
       }
 
-      // // exportTables doesn't export the specified path so no point copying for now
-      // for (const fileName of await readdir(exportedFiles)) {
-      //   const source = await readFile(path.join(exportedFiles, fileName));
-      //   this.emitFile({
-      //     type: "asset",
-      //     fileName,
-      //     source,
-      //   });
-      // }
+      await fs.rm("./tables", { recursive: true });
     },
   };
 };

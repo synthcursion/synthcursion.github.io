@@ -15,7 +15,7 @@ export interface IncursionRoom {
 
 export interface IncursionRoomPerLevel {
   _index: number;
-  Room: number;
+  Room: string;
   Level: number;
   Id: string;
   Description: string;

@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import queryString from "query-string";
 import "./App.css";
-import data from "../tables/English.json";
+import data from "./data/generated/English.json";
 import type { IncursionRoom, PathType, GridCell } from "./types";
 
-const roomsData = data.Incursion2Rooms as IncursionRoom[];
+const roomsData = data.Incursion2Rooms as Record<string, IncursionRoom>;
+const roomsArray = Object.values(roomsData);
 
 const GRID_SIZE = 9;
 
@@ -156,7 +157,7 @@ function App() {
       row.some((cell) => cell?.roomId === "Architect"),
     );
 
-    const filtered = roomsData.filter(
+    const filtered = roomsArray.filter(
       (r) =>
         !r.IsPathway &&
         r.Name !== "" &&
@@ -195,8 +196,8 @@ function App() {
       iterations++;
       newGrid.forEach((row, x) => {
         row.forEach((cell, y) => {
-          if (cell && cell.type === "room") {
-            const currentRoom = roomsData.find((r) => r.Id === cell.roomId);
+          if (cell && cell.type === "room" && cell.roomId) {
+            const currentRoom = roomsData[cell.roomId];
             if (!currentRoom) return;
 
             const neighbors = [
@@ -208,8 +209,14 @@ function App() {
             for (let i = 0; i < currentRoom.ConvertedBy.length; i++) {
               const converterIndex = currentRoom.ConvertedBy[i];
               const convertToIndex = currentRoom.ConvertedTo[i];
-              const converterRoom = roomsData[converterIndex];
-              const convertToRoom = roomsData[convertToIndex];
+              const converterRoom = roomsArray.find(
+                (r) => r._index === converterIndex,
+              );
+              const convertToRoom = roomsArray.find(
+                (r) => r._index === convertToIndex,
+              );
+
+              if (!converterRoom || !convertToRoom) continue;
 
               const isAdjacentToConverter = neighbors.some(([nx, ny]) => {
                 if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
@@ -239,9 +246,9 @@ function App() {
     // 1. Phase 1: Adjacency and Medallions
     newGrid.forEach((row, x) => {
       row.forEach((cell, y) => {
-        if (cell && cell.type === "room") {
+        if (cell && cell.type === "room" && cell.roomId) {
           cell.upgradedByRooms = [];
-          const baseRoom = roomsData.find((rd) => rd.Id === cell.roomId);
+          const baseRoom = roomsData[cell.roomId];
           if (baseRoom) {
             const connectedCounts: Record<string, number> = {};
             const connectedRoomNames: Record<string, string> = {};
@@ -254,10 +261,8 @@ function App() {
             neighbors.forEach(([nr, nc]) => {
               if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
                 const neighbor = newGrid[nr][nc];
-                if (neighbor && neighbor.type === "room") {
-                  const nBaseRoom = roomsData.find(
-                    (rd) => rd.Id === neighbor.roomId,
-                  );
+                if (neighbor && neighbor.type === "room" && neighbor.roomId) {
+                  const nBaseRoom = roomsData[neighbor.roomId];
                   if (nBaseRoom) {
                     connectedCounts[nBaseRoom.Id] =
                       (connectedCounts[nBaseRoom.Id] || 0) + 1;
@@ -269,8 +274,11 @@ function App() {
 
             const upgradeByCounts: Record<string, number> = {};
             baseRoom.UpgradedBy.forEach((i) => {
-              const id = roomsData[i].Id;
-              upgradeByCounts[id] = (upgradeByCounts[id] || 0) + 1;
+              const upgradeRoom = roomsArray.find((r) => r._index === i);
+              if (upgradeRoom) {
+                const id = upgradeRoom.Id;
+                upgradeByCounts[id] = (upgradeByCounts[id] || 0) + 1;
+              }
             });
 
             let bonus = 0;
@@ -502,8 +510,8 @@ function App() {
     // 3. Phase 2: Add Power-based upgrades
     newGrid.forEach((row) => {
       row.forEach((cell) => {
-        if (cell && cell.type === "room") {
-          const baseRoom = roomsData.find((r) => r.Id === cell.roomId);
+        if (cell && cell.type === "room" && cell.roomId) {
+          const baseRoom = roomsData[cell.roomId];
           if (
             baseRoom &&
             cell.isPowered &&
@@ -620,7 +628,7 @@ function App() {
 
     if (selectedType !== "room" || !selectedRoomId) return null;
 
-    const selectedRoom = roomsData.find((r) => r.Id === selectedRoomId);
+    const selectedRoom = roomsData[selectedRoomId];
     if (!selectedRoom) return null;
 
     const neighbors = [
@@ -647,17 +655,20 @@ function App() {
           } else {
             canPlaceRegular = true;
           }
-        } else if (neighbor.type === "room") {
+        } else if (neighbor.type === "room" && neighbor.roomId) {
           if (selectedRoomId === "Generator") return; // Generators only next to paths
 
-          const nBaseRoom = roomsData.find((rd) => rd.Id === neighbor.roomId);
+          const nBaseRoom = roomsData[neighbor.roomId];
           if (!nBaseRoom) return;
 
           // Check if selected room upgrades neighbor
           const nUpgradedByCounts: Record<string, number> = {};
           nBaseRoom.UpgradedBy.forEach((i) => {
-            const id = roomsData[i].Id;
-            nUpgradedByCounts[id] = (nUpgradedByCounts[id] || 0) + 1;
+            const upgradeRoom = roomsArray.find((r) => r._index === i);
+            if (upgradeRoom) {
+              const id = upgradeRoom.Id;
+              nUpgradedByCounts[id] = (nUpgradedByCounts[id] || 0) + 1;
+            }
           });
 
           // Check if neighbor already upgraded by this type of room
@@ -687,15 +698,18 @@ function App() {
           // Check if neighbor upgrades selected room
           const selectedUpgradedByCounts: Record<string, number> = {};
           selectedRoom.UpgradedBy.forEach((i) => {
-            const id = roomsData[i].Id;
-            selectedUpgradedByCounts[id] =
-              (selectedUpgradedByCounts[id] || 0) + 1;
+            const upgradeRoom = roomsArray.find((r) => r._index === i);
+            if (upgradeRoom) {
+              const id = upgradeRoom.Id;
+              selectedUpgradedByCounts[id] =
+                (selectedUpgradedByCounts[id] || 0) + 1;
+            }
           });
 
           // For the selected room, it has NO current neighbors yet (it's being placed)
           // except the one we are checking now.
           // So we only need to check if the neighbor we are looking at CAN upgrade the selected room.
-          if (selectedUpgradedByCounts[neighbor.roomId!]) {
+          if (selectedUpgradedByCounts[neighbor.roomId]) {
             // Note: we don't need to check currentUpgradesByType for the selected room
             // because it's not placed yet, so it has 0 upgrades.
             canPlaceStrong = true;
@@ -748,9 +762,9 @@ function App() {
     if (x === ENTRY.x && y === ENTRY.y) return true;
 
     // Boss/reward rooms are always placeable (but need to be reachable, checked elsewhere)
-    if (cellToPlace.type === "room") {
+    if (cellToPlace.type === "room" && cellToPlace.roomId) {
       const roomId = cellToPlace.roomId;
-      const room = roomsData.find((r) => r.Id === roomId);
+      const room = roomsData[roomId];
       if (room?.IsBossReward) return true;
     }
 
@@ -786,7 +800,7 @@ function App() {
     if (cellToPlace.type !== "room" || !cellToPlace.roomId) return false;
 
     const roomId2 = cellToPlace.roomId;
-    const room2 = roomsData.find((r) => r.Id === roomId2);
+    const room2 = roomsData[roomId2];
     if (!room2) return false;
 
     const neighbors = [
@@ -819,17 +833,20 @@ function App() {
           } else {
             canPlaceRegular = true;
           }
-        } else if (neighbor.type === "room") {
+        } else if (neighbor.type === "room" && neighbor.roomId) {
           if (roomId2 === "Generator") return; // Generators only next to paths
 
-          const nBaseRoom = roomsData.find((rd) => rd.Id === neighbor.roomId);
+          const nBaseRoom = roomsData[neighbor.roomId];
           if (!nBaseRoom) return;
 
           // Check if selected room upgrades neighbor
           const nUpgradedByCounts: Record<string, number> = {};
           nBaseRoom.UpgradedBy.forEach((i) => {
-            const id = roomsData[i].Id;
-            nUpgradedByCounts[id] = (nUpgradedByCounts[id] || 0) + 1;
+            const upgradeRoom = roomsArray.find((r) => r._index === i);
+            if (upgradeRoom) {
+              const id = upgradeRoom.Id;
+              nUpgradedByCounts[id] = (nUpgradedByCounts[id] || 0) + 1;
+            }
           });
 
           // Check if neighbor already upgraded by this type of room
@@ -862,12 +879,15 @@ function App() {
           // Check if neighbor upgrades selected room
           const selectedUpgradedByCounts: Record<string, number> = {};
           room2.UpgradedBy.forEach((i) => {
-            const id = roomsData[i].Id;
-            selectedUpgradedByCounts[id] =
-              (selectedUpgradedByCounts[id] || 0) + 1;
+            const upgradeRoom = roomsArray.find((r) => r._index === i);
+            if (upgradeRoom) {
+              const id = upgradeRoom.Id;
+              selectedUpgradedByCounts[id] =
+                (selectedUpgradedByCounts[id] || 0) + 1;
+            }
           });
 
-          if (selectedUpgradedByCounts[neighbor.roomId!]) {
+          if (selectedUpgradedByCounts[neighbor.roomId]) {
             canPlaceStrong = true;
           }
         }
@@ -982,8 +1002,8 @@ function App() {
     if (!cellToDelete) return false;
 
     // Boss and reward rooms are always deletable
-    if (cellToDelete.type === "room") {
-      const room = roomsData.find((rd) => rd.Id === cellToDelete.roomId);
+    if (cellToDelete.type === "room" && cellToDelete.roomId) {
+      const room = roomsData[cellToDelete.roomId];
       if (room?.IsBossReward) return true;
     }
 
@@ -998,8 +1018,8 @@ function App() {
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
         const cell = nextGrid[r][c];
-        if (cell && cell.type === "room") {
-          const room = roomsData.find((rd) => rd.Id === cell.roomId);
+        if (cell && cell.type === "room" && cell.roomId) {
+          const room = roomsData[cell.roomId];
           if (
             room &&
             !room.IsBossReward &&
@@ -1106,7 +1126,7 @@ function App() {
                 if (calcCell.tier === 3) return;
 
                 // 2. Prevent if it doesn't have multiple tiers
-                const room = roomsData.find((r) => r.Id === cell.roomId);
+                const room = roomsData[cell.roomId!];
                 if (!room || room.Levels.length <= 1) return;
               }
             }
@@ -1194,7 +1214,7 @@ function App() {
 
   const getIconPath = (cell: GridCell) => {
     if (cell.type === "room") {
-      const room = roomsData.find((r) => r.Id === cell.roomId);
+      const room = roomsData[cell.roomId!];
       if (!room) return "/ggpk/roomgeneric.png";
 
       // Try to find the specific tier first
@@ -1261,7 +1281,7 @@ function App() {
     const { x, y } = hoveredCell;
 
     if (x === 4 && y === 9) {
-      const atziriRoom = roomsData.find((r) => r.Id === "Atziri");
+      const atziriRoom = roomsData["Atziri"];
       return (
         <div className="hover-info">
           <div className="hover-header">Cell (4, 9)</div>
@@ -1284,10 +1304,10 @@ function App() {
         <div className="hover-header">
           Cell ({x}, {y})
         </div>
-        {cell && cell.type === "room" && (
+        {cell && cell.type === "room" && cell.roomId && (
           <>
             <div className="hover-room-name">
-              {roomsData.find((rd) => rd.Id === cell.roomId)?.Name} (T
+              {roomsData[cell.roomId]?.Name} (T
               {cell.tier})
             </div>
             {cell.upgradedByRooms && cell.upgradedByRooms.length > 0 && (
@@ -1549,8 +1569,8 @@ function App() {
                       <img
                         src={getIconPath(cell)}
                         alt={
-                          cell.type === "room"
-                            ? `${roomsData.find((r) => r.Id === cell.roomId)?.Name} (T${cell.tier})`
+                          cell.type === "room" && cell.roomId
+                            ? `${roomsData[cell.roomId]?.Name} (T${cell.tier})`
                             : cell.pathType
                         }
                       />
