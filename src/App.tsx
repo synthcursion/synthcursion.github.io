@@ -550,7 +550,8 @@ function App() {
   }, [grid]);
 
   const totalStats = useMemo(() => {
-    const stats: Record<string, number> = {};
+    const mods: Record<string, number> = {};
+    const descriptions: Record<string, number> = {};
     calculatedGrid.forEach((row) => {
       row.forEach((cell) => {
         if (cell && cell.type === "room" && cell.roomId && cell.tier) {
@@ -560,14 +561,26 @@ function App() {
             levelData.ModStats.forEach((stat, idx) => {
               const value = levelData.ModValues[idx] || 0;
               if (value !== 0) {
-                stats[stat] = (stats[stat] || 0) + value;
+                mods[stat] = (mods[stat] || 0) + value;
               }
             });
+            if (levelData.Description) {
+              const desc = levelData.Description.split("\n")[0].trim();
+              if (desc) {
+                descriptions[desc] = (descriptions[desc] || 0) + 1;
+              }
+            }
+            if (levelData.Description2) {
+              const desc2 = levelData.Description2.trim();
+              if (desc2 && desc2 !== levelData.Description?.trim()) {
+                descriptions[desc2] = (descriptions[desc2] || 0) + 1;
+              }
+            }
           }
         }
       });
     });
-    return stats;
+    return { mods, descriptions };
   }, [calculatedGrid]);
 
   useEffect(() => {
@@ -1376,19 +1389,6 @@ function App() {
     );
   };
 
-  const formatStatName = (stat: string) => {
-    return stat
-      .replace(/map_monster_tre_\+%/g, "Item Quantity")
-      .replace(/map_normal_monster_potency_\+%/g, "Monster Pack Size")
-      .replace(/_/g, " ")
-      .replace(/\+/g, "")
-      .replace(/%/g, "")
-      .trim()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
-
   const processDescription = (text: string) => {
     if (!text) return text;
     return text.replace(/\[[^|\]]+\|([^\]]+)\]/g, "$1");
@@ -1448,7 +1448,7 @@ function App() {
                 <ul className="tooltip-stats">
                   {lvl.ModStats.map((stat, i) => (
                     <li key={stat}>
-                      {formatStatName(stat)}: +{lvl.ModValues[i]}%
+                      {stat}: +{lvl.ModValues[i]}%
                     </li>
                   ))}
                 </ul>
@@ -1462,14 +1462,21 @@ function App() {
 
   return (
     <div className="app-container">
-      {Object.keys(totalStats).length > 0 && (
+      {(Object.keys(totalStats.mods).length > 0 ||
+        Object.keys(totalStats.descriptions).length > 0) && (
         <div className="total-stats">
           <h3>Temple Stats</h3>
           <ul>
-            {Object.entries(totalStats).map(([stat, value]) => (
+            {Object.entries(totalStats.mods).map(([stat, value]) => (
               <li key={stat}>
-                <span>{formatStatName(stat)}</span>
+                <span>{stat}</span>
                 <span>{value > 0 ? `+${value}` : value}%</span>
+              </li>
+            ))}
+            {Object.entries(totalStats.descriptions).map(([desc, count]) => (
+              <li key={desc}>
+                <span>{desc}</span>
+                <span>x{count}</span>
               </li>
             ))}
           </ul>
@@ -1509,8 +1516,7 @@ function App() {
                               setSelectedType("room");
                               setSelectedRoomId(r.Id);
                             }}
-                            data-tooltip-id="room-tooltip"
-                            data-tooltip-content={r.Id}
+                            title={r.Name}
                           >
                             <img src={iconUrl} alt={r.Name} />
                           </div>

@@ -428,6 +428,16 @@ label {
     gap: 20px;
 }
 
+.total-stats li span:first-child {
+    white-space: pre-line;
+    text-align: left;
+}
+
+.total-stats li span:last-child {
+    white-space: nowrap;
+    align-self: flex-start;
+}
+
 /* Tooltip Styling */
 .custom-tooltip {
     background-color: rgba(10, 10, 10, 0.95) !important;
