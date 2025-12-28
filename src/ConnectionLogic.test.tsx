@@ -211,4 +211,97 @@ describe("Connection Logic Visuals", () => {
     );
     expect(r2r_top).toBeFalsy();
   });
+
+  it("shows path-to-path connection", () => {
+    render(<App />);
+
+    // Place path1 (top-bottom) at 4,4
+    fireEvent.click(screen.getByTitle("path1"));
+    fireEvent.click(screen.getByTestId("cell-4-4"));
+
+    // Place path1 (top-bottom) at 4,5 (y+1 -> Top of 4,4)
+    fireEvent.click(screen.getByTestId("cell-4-5"));
+
+    const pathCell44 = screen.getByTestId("cell-4-4");
+    const pathCell45 = screen.getByTestId("cell-4-5");
+
+    // Both should have pathconnect1 (vertical)
+    const p2p_44 = pathCell44.querySelector('img[src*="pathconnect1"]');
+    const p2p_45 = pathCell45.querySelector('img[src*="pathconnect1"]');
+
+    expect(p2p_44).toBeTruthy();
+    expect(p2p_45).toBeTruthy();
+    expect(p2p_44?.className).toContain("room-connect-top");
+    expect(p2p_45?.className).toContain("room-connect-bottom");
+  });
+
+  it("shows path-to-room connection", () => {
+    render(<App />);
+
+    // Place Garrison at 4,4
+    fireEvent.click(screen.getByTitle("Garrison"));
+    fireEvent.click(screen.getByTestId("cell-4-4"));
+
+    // Place path1 (top-bottom) at 4,5 (y+1 -> Top of 4,4)
+    fireEvent.click(screen.getByTitle("path1"));
+    fireEvent.click(screen.getByTestId("cell-4-5"));
+
+    const pathCell = screen.getByTestId("cell-4-5");
+    // Path at 4,5 has a permanent connection to 4,4 (bottom)
+    const p2r_bot = pathCell.querySelector(".p2r-conn.room-connect-bottom");
+    expect(p2r_bot).toBeTruthy();
+
+    // Place path1 (top-bottom) at 5,4 (x+1 -> Right of 4,4)
+    // path1 at 5,4 does NOT have a permanent connection to 4,4 (left).
+    fireEvent.click(screen.getByTitle("path1"));
+    fireEvent.click(screen.getByTestId("cell-5-4"));
+
+    const pathCell54 = screen.getByTestId("cell-5-4");
+    // path1 at 5,4 does NOT have a permanent connection to 4,4 (left).
+    // BUT Garrison at 4,4 SHOULD have a room-to-path connection to 5,4 (right)
+    // and path1 at 5,4 SHOULD have a path-to-room connection to 4,4 (left).
+
+    const p2r_left = pathCell54.querySelector(".p2r-conn.room-connect-left");
+    expect(p2r_left).toBeTruthy();
+
+    const garrisonCell = screen.getByTestId("cell-4-4");
+    const r2p_right = garrisonCell.querySelector(
+      ".r2p-conn.room-connect-right",
+    );
+    expect(r2p_right).toBeTruthy();
+  });
+
+  it("shows pathconnect for permanent path-to-room connection", () => {
+    render(<App />);
+
+    // Entry point (4,0) is a pathfourway.
+    // Place Garrison at (3,0) (x-1 -> Left)
+    fireEvent.click(screen.getByTitle("Garrison"));
+    fireEvent.click(screen.getByTestId("cell-3-0"));
+
+    const entryCell = screen.getByTestId("cell-4-0");
+    // Entry path should show pathconnect2 (horizontal) for the connection to Garrison
+    const p2r_conn = entryCell.querySelector(".p2r-conn.room-connect-left");
+    expect(p2r_conn).toBeTruthy();
+    // According to the issue, it should be pathconnect, not roomconnect
+    expect(p2r_conn?.getAttribute("src")).toContain("pathconnect2");
+  });
+
+  it("shows pathconnect for permanent room-to-path connection", () => {
+    render(<App />);
+
+    // Place Garrison at (3,0)
+    fireEvent.click(screen.getByTitle("Garrison"));
+    fireEvent.click(screen.getByTestId("cell-3-0"));
+
+    // Entry point (4,0) is a pathfourway.
+    // 4,0 is Right relative to 3,0.
+    // Garrison at (3,0) is permanently connected to (4,0) because (4,0) is a 4-way path.
+
+    const garrisonCell = screen.getByTestId("cell-3-0");
+    // Garrison should show pathconnect2 (horizontal) for the connection to Entry path
+    const r2p_conn = garrisonCell.querySelector(".r2p-conn.room-connect-right");
+    expect(r2p_conn).toBeTruthy();
+    expect(r2p_conn?.getAttribute("src")).toContain("pathconnect2");
+  });
 });

@@ -556,10 +556,24 @@ function App() {
 
     extendedGrid.forEach((row, x) => {
       row.forEach((cell, y) => {
-        if (!cell || cell.type !== "room") return;
+        if (!cell) return;
 
-        cell.roomToRoomConnections = [];
-        cell.roomToPathConnections = [];
+        if (cell.type === "room") {
+          cell.roomToRoomConnections = [];
+          cell.roomToPathConnections = [];
+          cell.roomToPathPermanentConnections = [];
+        } else if (cell.type === "path") {
+          cell.pathToPathConnections = [];
+          cell.pathToRoomConnections = [];
+          cell.pathToRoomPermanentConnections = [];
+        }
+      });
+    });
+
+    extendedGrid.forEach((row, x) => {
+      row.forEach((cell, y) => {
+        if (!cell) return;
+        if (cell.type !== "room" && cell.type !== "path") return;
 
         const neighbors: { x: number; y: number; dir: Direction }[] = [
           { x: x, y: y + 1, dir: "top" },
@@ -584,39 +598,97 @@ function App() {
             return;
           }
 
-          if (neighborCell && neighborCell.type === "room") {
-            const currentRoom = roomsData[cell.roomId!];
-            const otherRoom = roomsData[neighborCell.roomId!];
+          if (!neighborCell) return;
 
-            const isArchitect =
-              cell.roomId === "Architect" ||
-              neighborCell.roomId === "Architect";
-            const isReward =
-              (currentRoom && currentRoom.IsBossReward) ||
-              (otherRoom && otherRoom.IsBossReward);
-            const isUpgrade =
-              (currentRoom &&
-                currentRoom.UpgradedBy.includes(neighborCell.roomId!)) ||
-              (otherRoom && otherRoom.UpgradedBy.includes(cell.roomId!));
+          const oppositeDir: Record<Direction, Direction> = {
+            top: "bottom",
+            bottom: "top",
+            left: "right",
+            right: "left",
+          };
 
-            if (isArchitect || isReward || isUpgrade) {
-              cell.roomToRoomConnections!.push(dir);
+          if (cell.type === "room") {
+            if (neighborCell.type === "room") {
+              const currentRoom = roomsData[cell.roomId!];
+              const otherRoom = roomsData[neighborCell.roomId!];
+
+              const isArchitect =
+                cell.roomId === "Architect" ||
+                neighborCell.roomId === "Architect";
+              const isReward =
+                (currentRoom && currentRoom.IsBossReward) ||
+                (otherRoom && otherRoom.IsBossReward);
+              const isUpgrade =
+                (currentRoom &&
+                  currentRoom.UpgradedBy.includes(neighborCell.roomId!)) ||
+                (otherRoom && otherRoom.UpgradedBy.includes(cell.roomId!));
+
+              if (isArchitect || isReward || isUpgrade) {
+                if (!cell.roomToRoomConnections!.includes(dir)) {
+                  cell.roomToRoomConnections!.push(dir);
+                }
+              }
+            } else if (
+              (neighborCell.type === "path" || (nx === 4 && ny === -1)) &&
+              cell.roomId !== "Generator"
+            ) {
+              const pathType = neighborCell?.pathType || "pathfourway";
+              const pathConns = getConnectionsFromPathType(pathType);
+              if (pathConns[oppositeDir[dir]]) {
+                if (!cell.roomToPathPermanentConnections!.includes(dir)) {
+                  cell.roomToPathPermanentConnections!.push(dir);
+                }
+              } else {
+                if (!cell.roomToPathConnections!.includes(dir)) {
+                  cell.roomToPathConnections!.push(dir);
+                }
+                // Mark the neighbor path as having an impermanent connection back to this room
+                if (neighborCell.type === "path") {
+                  neighborCell.pathToRoomConnections =
+                    neighborCell.pathToRoomConnections || [];
+                  if (
+                    !neighborCell.pathToRoomConnections.includes(
+                      oppositeDir[dir],
+                    )
+                  ) {
+                    neighborCell.pathToRoomConnections.push(oppositeDir[dir]);
+                  }
+                }
+              }
             }
-          } else if (
-            neighborCell &&
-            (neighborCell.type === "path" || (nx === 4 && ny === -1)) &&
-            cell.roomId !== "Generator"
-          ) {
-            const pathType = neighborCell?.pathType || "pathfourway";
-            const pathConns = getConnectionsFromPathType(pathType);
-            const oppositeDir: Record<Direction, Direction> = {
-              top: "bottom",
-              bottom: "top",
-              left: "right",
-              right: "left",
-            };
-            if (!pathConns[oppositeDir[dir]]) {
-              cell.roomToPathConnections!.push(dir);
+          } else if (cell.type === "path") {
+            const currentPathConns = getConnectionsFromPathType(
+              cell.pathType || "path1",
+            );
+
+            if (neighborCell.type === "path" || (nx === 4 && ny === -1)) {
+              const neighborPathType = neighborCell?.pathType || "pathfourway";
+              const neighborPathConns =
+                getConnectionsFromPathType(neighborPathType);
+
+              // If either path has a connection in that direction, draw it
+              if (
+                currentPathConns[dir] ||
+                neighborPathConns[oppositeDir[dir]]
+              ) {
+                if (!cell.pathToPathConnections!.includes(dir)) {
+                  cell.pathToPathConnections!.push(dir);
+                }
+              }
+            } else if (neighborCell.type === "room") {
+              const neighborRoomId = neighborCell.roomId;
+              if (neighborRoomId !== "Generator") {
+                // Connection from path to room is permanent if the path goes in that direction
+                if (currentPathConns[dir]) {
+                  if (!cell.pathToRoomPermanentConnections!.includes(dir)) {
+                    cell.pathToRoomPermanentConnections!.push(dir);
+                  }
+                } else {
+                  if (!cell.pathToRoomConnections!.includes(dir)) {
+                    cell.pathToRoomConnections!.push(dir);
+                  }
+                }
+              }
             }
           }
         });
@@ -1951,6 +2023,23 @@ function App() {
                         alt=""
                       />
                     )}
+                    {cell ? (
+                      <img
+                        src={getIconPath(cell)}
+                        className="main-icon"
+                        alt={
+                          cell.type === "room" && cell.roomId
+                            ? `${roomsData[cell.roomId]?.Name} (T${cell.tier})`
+                            : cell.pathType
+                        }
+                      />
+                    ) : (
+                      <img
+                        src="/ggpk/incursion2tileempty.png"
+                        className="main-icon"
+                        alt=""
+                      />
+                    )}
                     {cell?.roomToRoomConnections?.map((dir) => {
                       const isVertical = dir === "top" || dir === "bottom";
                       const suffix = isVertical ? "vertical" : "horizontal";
@@ -1970,28 +2059,59 @@ function App() {
                         <img
                           key={`r2p-${dir}`}
                           src={`/ggpk/roomconnect${fileDir}${cell.isPowered ? "powered" : ""}.png`}
-                          className={`room-connect room-connect-${dir}`}
+                          className={`room-connect room-connect-${dir} r2p-conn`}
                           alt=""
                         />
                       );
                     })}
-                    {cell ? (
-                      <img
-                        src={getIconPath(cell)}
-                        className="main-icon"
-                        alt={
-                          cell.type === "room" && cell.roomId
-                            ? `${roomsData[cell.roomId]?.Name} (T${cell.tier})`
-                            : cell.pathType
-                        }
-                      />
-                    ) : (
-                      <img
-                        src="/ggpk/incursion2tileempty.png"
-                        className="main-icon"
-                        alt=""
-                      />
-                    )}
+                    {cell?.roomToPathPermanentConnections?.map((dir) => {
+                      const isVertical = dir === "top" || dir === "bottom";
+                      const suffix = isVertical ? "1" : "2";
+                      return (
+                        <img
+                          key={`r2p-perm-${dir}`}
+                          src={`/ggpk/pathconnect${suffix}${cell.isPowered ? "powered" : ""}.png`}
+                          className={`room-connect room-connect-${dir} r2p-conn`}
+                          alt=""
+                        />
+                      );
+                    })}
+                    {cell?.pathToPathConnections?.map((dir) => {
+                      const isVertical = dir === "top" || dir === "bottom";
+                      const suffix = isVertical ? "1" : "2";
+                      return (
+                        <img
+                          key={`p2p-${dir}`}
+                          src={`/ggpk/pathconnect${suffix}${cell.isPowered ? "powered" : ""}.png`}
+                          className={`room-connect room-connect-${dir} p2p-conn`}
+                          alt=""
+                        />
+                      );
+                    })}
+                    {cell?.pathToRoomConnections?.map((dir) => {
+                      const fileDir =
+                        dir === "top" ? "up" : dir === "bottom" ? "down" : dir;
+                      return (
+                        <img
+                          key={`p2r-${dir}`}
+                          src={`/ggpk/roomconnect${fileDir}${cell.isPowered ? "powered" : ""}.png`}
+                          className={`room-connect room-connect-${dir} p2r-conn`}
+                          alt=""
+                        />
+                      );
+                    })}
+                    {cell?.pathToRoomPermanentConnections?.map((dir) => {
+                      const isVertical = dir === "top" || dir === "bottom";
+                      const suffix = isVertical ? "1" : "2";
+                      return (
+                        <img
+                          key={`p2r-perm-${dir}`}
+                          src={`/ggpk/pathconnect${suffix}${cell.isPowered ? "powered" : ""}.png`}
+                          className={`room-connect room-connect-${dir} p2r-conn`}
+                          alt=""
+                        />
+                      );
+                    })}
                   </div>
                   {cell?.type === "room" && cell.tier && cell.tier > 1 && (
                     <img
@@ -2055,11 +2175,25 @@ function App() {
                     <img
                       key={`r2p-${dir}`}
                       src={`/ggpk/roomconnect${fileDir}${calculatedGrid[4][9]?.isPowered ? "powered" : ""}.png`}
-                      className={`room-connect room-connect-${dir}`}
+                      className={`room-connect room-connect-${dir} r2p-conn`}
                       alt=""
                     />
                   );
                 })}
+                {calculatedGrid[4][9]?.roomToPathPermanentConnections?.map(
+                  (dir) => {
+                    const isVertical = dir === "top" || dir === "bottom";
+                    const suffix = isVertical ? "1" : "2";
+                    return (
+                      <img
+                        key={`r2p-perm-${dir}`}
+                        src={`/ggpk/pathconnect${suffix}${calculatedGrid[4][9]?.isPowered ? "powered" : ""}.png`}
+                        className={`room-connect room-connect-${dir} r2p-conn`}
+                        alt=""
+                      />
+                    );
+                  },
+                )}
                 <img
                   src="/ggpk/iconatziri.png"
                   className="main-icon"

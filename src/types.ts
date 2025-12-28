@@ -66,6 +66,10 @@ export interface GridCell {
   }[]; // Info about generators providing power
   roomToRoomConnections?: Direction[];
   roomToPathConnections?: Direction[];
+  roomToPathPermanentConnections?: Direction[];
+  pathToPathConnections?: Direction[];
+  pathToRoomConnections?: Direction[];
+  pathToRoomPermanentConnections?: Direction[];
 }
 
 export type Direction = "top" | "bottom" | "left" | "right";
