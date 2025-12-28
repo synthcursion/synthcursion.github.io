@@ -546,7 +546,11 @@ function App() {
     }
 
     // 4. Calculate Visual Connections
-    newGrid.forEach((row, x) => {
+    // Create a special entry for Atziri in the newGrid temporarily to calculate her connections
+    const extendedGrid = [...newGrid.map((row) => [...row])];
+    extendedGrid[4][9] = { type: "room", roomId: "Atziri" };
+
+    extendedGrid.forEach((row, x) => {
       row.forEach((cell, y) => {
         if (!cell || cell.type !== "room") return;
 
@@ -554,31 +558,26 @@ function App() {
         cell.roomToPathConnections = [];
 
         const neighbors: { x: number; y: number; dir: Direction }[] = [
-          { x: x, y: y + 1, dir: "bottom" },
-          { x: x, y: y - 1, dir: "top" },
+          { x: x, y: y + 1, dir: "top" },
+          { x: x, y: y - 1, dir: "bottom" },
           { x: x - 1, y: y, dir: "left" },
           { x: x + 1, y: y, dir: "right" },
         ];
 
         neighbors.forEach(({ x: nx, y: ny, dir }) => {
-          if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE) {
-            if (nx === 4 && ny === 9) {
-              // Atziri case
-            } else if (nx === 4 && ny === -1) {
-              // Entry point case
-            } else {
-              return;
-            }
-          }
+          let neighborCell: GridCell | null | undefined;
 
-          let neighborCell = newGrid[nx]?.[ny];
-          if (nx === 4 && ny === 9) {
+          if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+            neighborCell = extendedGrid[nx][ny];
+          } else if (nx === 4 && ny === 9) {
             neighborCell = { type: "room" as const, roomId: "Atziri" };
           } else if (nx === 4 && ny === -1) {
             neighborCell = {
               type: "path" as const,
               pathType: "pathfourway" as PathType,
             };
+          } else {
+            return;
           }
 
           if (neighborCell && neighborCell.type === "room") {
@@ -590,7 +589,9 @@ function App() {
               neighborCell.roomId === "Architect";
             const isReward =
               (currentRoom && currentRoom.IsBossReward) ||
-              (otherRoom && otherRoom.IsBossReward);
+              (otherRoom && otherRoom.IsBossReward) ||
+              cell.roomId === "Atziri" ||
+              neighborCell.roomId === "Atziri";
             const isUpgrade =
               (currentRoom &&
                 currentRoom.UpgradedBy.includes(neighborCell.roomId!)) ||
@@ -620,7 +621,7 @@ function App() {
       });
     });
 
-    return newGrid;
+    return extendedGrid;
   }, [grid]);
 
   const totalStats = useMemo(() => {
@@ -1177,10 +1178,23 @@ function App() {
         return !!currentGrid[nx][ny];
       };
 
-      if (isNeighbor(row, col + 1)) top = true;
-      if (isNeighbor(row, col - 1)) bottom = true;
-      if (isNeighbor(row - 1, col)) left = true;
-      if (isNeighbor(row + 1, col)) right = true;
+      if (isNeighbor(row, col + 1)) {
+        // Only auto-connect if the neighbor is a path, OR if we are in debug mode
+        const neighbor = currentGrid[row][col + 1];
+        if (neighbor?.type === "path" || debug) top = true;
+      }
+      if (isNeighbor(row, col - 1)) {
+        const neighbor = currentGrid[row][col - 1];
+        if (neighbor?.type === "path" || debug) bottom = true;
+      }
+      if (isNeighbor(row - 1, col)) {
+        const neighbor = currentGrid[row - 1][col];
+        if (neighbor?.type === "path" || debug) left = true;
+      }
+      if (isNeighbor(row + 1, col)) {
+        const neighbor = currentGrid[row + 1][col];
+        if (neighbor?.type === "path" || debug) right = true;
+      }
 
       cell.pathType = getPathTypeFromConnections(top, bottom, left, right);
     };
@@ -1263,10 +1277,16 @@ function App() {
         // For new paths, use the selectedPathType but also check neighbors
         // Top/Bottom are mapped to Column +/- 1 (visual Up-Right/Down-Left)
         // Left/Right are mapped to Row +/- 1 (visual Up-Left/Down-Right)
-        const top = y + 1 < GRID_SIZE && !!newGrid[x][y + 1];
-        const bottom = y - 1 >= 0 && !!newGrid[x][y - 1];
-        const left = x - 1 >= 0 && !!newGrid[x - 1][y];
-        const right = x + 1 < GRID_SIZE && !!newGrid[x + 1][y];
+        const isPath = (nx: number, ny: number) => {
+          if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE)
+            return false;
+          return newGrid[nx][ny]?.type === "path";
+        };
+
+        const top = isPath(x, y + 1);
+        const bottom = isPath(x, y - 1);
+        const left = isPath(x - 1, y);
+        const right = isPath(x + 1, y);
 
         const initialConnections = getConnectionsFromPathType(selectedPathType);
 
@@ -1537,7 +1557,6 @@ function App() {
       {(Object.keys(totalStats.mods).length > 0 ||
         Object.keys(totalStats.descriptions).length > 0) && (
         <div className="total-stats">
-          <h3>Temple Stats</h3>
           <ul>
             {Object.entries(totalStats.mods).map(([stat, value]) => (
               <li key={stat}>
@@ -1771,14 +1790,18 @@ function App() {
                         />
                       );
                     })}
-                    {cell?.roomToPathConnections?.map((dir) => (
-                      <img
-                        key={`r2p-${dir}`}
-                        src={`/ggpk/roomconnect${dir}${cell.isPowered ? "powered" : ""}.png`}
-                        className={`room-connect room-connect-${dir}`}
-                        alt=""
-                      />
-                    ))}
+                    {cell?.roomToPathConnections?.map((dir) => {
+                      const fileDir =
+                        dir === "top" ? "up" : dir === "bottom" ? "down" : dir;
+                      return (
+                        <img
+                          key={`r2p-${dir}`}
+                          src={`/ggpk/roomconnect${fileDir}${cell.isPowered ? "powered" : ""}.png`}
+                          className={`room-connect room-connect-${dir}`}
+                          alt=""
+                        />
+                      );
+                    })}
                     {cell ? (
                       <img
                         src={getIconPath(cell)}
@@ -1852,14 +1875,18 @@ function App() {
                     />
                   );
                 })}
-                {calculatedGrid[4][9]?.roomToPathConnections?.map((dir) => (
-                  <img
-                    key={`r2p-${dir}`}
-                    src={`/ggpk/roomconnect${dir}${calculatedGrid[4][9]?.isPowered ? "powered" : ""}.png`}
-                    className={`room-connect room-connect-${dir}`}
-                    alt=""
-                  />
-                ))}
+                {calculatedGrid[4][9]?.roomToPathConnections?.map((dir) => {
+                  const fileDir =
+                    dir === "top" ? "up" : dir === "bottom" ? "down" : dir;
+                  return (
+                    <img
+                      key={`r2p-${dir}`}
+                      src={`/ggpk/roomconnect${fileDir}${calculatedGrid[4][9]?.isPowered ? "powered" : ""}.png`}
+                      className={`room-connect room-connect-${dir}`}
+                      alt=""
+                    />
+                  );
+                })}
                 <img
                   src="/ggpk/iconatziri.png"
                   className="main-icon"
