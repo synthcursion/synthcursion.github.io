@@ -554,8 +554,8 @@ function App() {
     const extendedGrid = [...newGrid.map((row) => [...row])];
     extendedGrid[4][9] = { type: "room", roomId: "Atziri" };
 
-    extendedGrid.forEach((row, x) => {
-      row.forEach((cell, y) => {
+    extendedGrid.forEach((row) => {
+      row.forEach((cell) => {
         if (!cell) return;
 
         if (cell.type === "room") {
@@ -1575,6 +1575,10 @@ function App() {
     };
   };
 
+  const hoveredRoom =
+    hoveredCell &&
+    roomsData[calculatedGrid[hoveredCell.x][hoveredCell.y]?.roomId || ""];
+
   const getHoverInfo = () => {
     if (!hoveredCell) return null;
     const { x, y } = hoveredCell;
@@ -1670,7 +1674,7 @@ function App() {
 
   const processDescription = (text: string) => {
     if (!text) return text;
-    return text.replace(/\[[^|\]]+\|([^\]]+)\]/g, "$1");
+    return text.replace(/\[[^|\]]+\|([^\]]+)]/g, "$1");
   };
 
   const renderRoomTooltip = (room: IncursionRoom) => {
@@ -1698,14 +1702,16 @@ function App() {
         )}
         {room.ConvertedBy.length > 0 && (
           <div className="tooltip-section">
-            <span className="tooltip-label">Converted By:</span>{" "}
+            <span className="tooltip-label">
+              Converted to ${room.ConvertedTo} By:
+            </span>{" "}
             {room.ConvertedBy.map((id) => roomsData[id]?.Name || id).join(", ")}
           </div>
         )}
-        {room.ConvertedTo.length > 0 && (
+        {convertsRooms.length > 0 && (
           <div className="tooltip-section">
             <span className="tooltip-label">Converts:</span>{" "}
-            {room.ConvertedTo.map((id) => roomsData[id]?.Name || id).join(", ")}
+            {convertsRooms.map((id) => roomsData[id]?.Name || id).join(", ")}
           </div>
         )}
 
@@ -1821,7 +1827,19 @@ function App() {
                         return (
                           <div
                             key={r.Id}
-                            className={`room-item ${selectedType === "room" && selectedRoomId === r.Id ? "selected" : ""}`}
+                            className={`room-item ${
+                              selectedType === "room" && selectedRoomId === r.Id
+                                ? "selected"
+                                : ""
+                            } ${
+                              hoveredRoom &&
+                              (r.UpgradedBy.includes(hoveredRoom.Id) ||
+                                hoveredRoom.UpgradedBy.includes(r.Id) ||
+                                r.ConvertedBy.includes(hoveredRoom.Id) ||
+                                hoveredRoom.ConvertedBy.includes(r.Id))
+                                ? "affects-hovered"
+                                : ""
+                            }`}
                             onClick={() => {
                               setSelectedType("room");
                               setSelectedRoomId(r.Id);
