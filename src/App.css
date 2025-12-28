@@ -427,3 +427,78 @@ label {
     justify-content: space-between;
     gap: 20px;
 }
+
+/* Tooltip Styling */
+.custom-tooltip {
+    background-color: rgba(10, 10, 10, 0.95) !important;
+    border: 1px solid #d4af37 !important;
+    border-radius: 4px !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9) !important;
+    max-width: 400px;
+    z-index: 2000 !important;
+}
+
+.room-tooltip {
+    padding: 12px;
+    font-family: sans-serif;
+    color: #e0e0e0;
+}
+
+.tooltip-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #d4af37;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 4px;
+}
+
+.tooltip-section {
+    margin-bottom: 6px;
+    font-size: 0.9em;
+}
+
+.tooltip-label {
+    color: #888;
+    font-weight: bold;
+}
+
+.tooltip-levels {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tooltip-level-info {
+    border-top: 1px solid #333;
+    padding-top: 8px;
+}
+
+.tooltip-level-header {
+    font-weight: bold;
+    color: #aaa;
+    margin-bottom: 4px;
+    font-size: 0.95em;
+}
+
+.tooltip-description {
+    font-style: italic;
+    font-size: 0.85em;
+    color: #bbb;
+    margin-bottom: 4px;
+    white-space: pre-line;
+}
+
+.tooltip-stats {
+    margin: 4px 0 0 0;
+    padding-left: 18px;
+    font-size: 0.85em;
+    color: #eee;
+}
+
+.tooltip-stats li {
+    margin-bottom: 2px;
+}

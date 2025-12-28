@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import queryString from "query-string";
+import { Tooltip } from "react-tooltip";
 import "./App.css";
 import data from "./data/generated/English.json";
 import type { IncursionRoom, PathType, GridCell } from "./types";
@@ -1332,6 +1333,22 @@ function App() {
                   </ul>
                 </div>
               )}
+            <div className="hover-section">
+              <div className="section-title">Description:</div>
+              <div className="hover-description">
+                {processDescription(
+                  roomsData[cell.roomId]?.Levels[cell.tier]?.Description || "",
+                )}
+              </div>
+              {roomsData[cell.roomId]?.Levels[cell.tier]?.Description2 && (
+                <div className="hover-description">
+                  {processDescription(
+                    roomsData[cell.roomId]?.Levels[cell.tier]?.Description2 ||
+                      "",
+                  )}
+                </div>
+              )}
+            </div>
           </>
         )}
         {cell && cell.type === "path" && (
@@ -1370,6 +1387,77 @@ function App() {
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
+  };
+
+  const processDescription = (text: string) => {
+    if (!text) return text;
+    return text.replace(/\[[^|\]]+\|([^\]]+)\]/g, "$1");
+  };
+
+  const renderRoomTooltip = (room: IncursionRoom) => {
+    const upgradesRooms = Object.values(roomsData).filter((r) =>
+      r.UpgradedBy.includes(room.Id),
+    );
+    const convertsRooms = Object.values(roomsData).filter((r) =>
+      r.ConvertedBy.includes(room.Id),
+    );
+
+    return (
+      <div className="room-tooltip">
+        <div className="tooltip-title">{room.Name}</div>
+        {room.UpgradedBy.length > 0 && (
+          <div className="tooltip-section">
+            <span className="tooltip-label">Upgraded By:</span>{" "}
+            {room.UpgradedBy.map((id) => roomsData[id]?.Name || id).join(", ")}
+          </div>
+        )}
+        {upgradesRooms.length > 0 && (
+          <div className="tooltip-section">
+            <span className="tooltip-label">Upgrades:</span>{" "}
+            {upgradesRooms.map((r) => r.Name).join(", ")}
+          </div>
+        )}
+        {room.ConvertedBy.length > 0 && (
+          <div className="tooltip-section">
+            <span className="tooltip-label">Converted By:</span>{" "}
+            {room.ConvertedBy.map((id) => roomsData[id]?.Name || id).join(", ")}
+          </div>
+        )}
+        {room.ConvertedTo.length > 0 && (
+          <div className="tooltip-section">
+            <span className="tooltip-label">Converts:</span>{" "}
+            {room.ConvertedTo.map((id) => roomsData[id]?.Name || id).join(", ")}
+          </div>
+        )}
+
+        <div className="tooltip-levels">
+          {room.Levels.filter(Boolean).map((lvl) => (
+            <div key={lvl.Level} className="tooltip-level-info">
+              <div className="tooltip-level-header">
+                Tier {lvl.Level}: {lvl.Name}
+              </div>
+              <div className="tooltip-description">
+                {processDescription(lvl.Description)}
+              </div>
+              {lvl.Description2 && (
+                <div className="tooltip-description">
+                  {processDescription(lvl.Description2)}
+                </div>
+              )}
+              {lvl.ModStats && lvl.ModStats.length > 0 && (
+                <ul className="tooltip-stats">
+                  {lvl.ModStats.map((stat, i) => (
+                    <li key={stat}>
+                      {formatStatName(stat)}: +{lvl.ModValues[i]}%
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -1421,7 +1509,8 @@ function App() {
                               setSelectedType("room");
                               setSelectedRoomId(r.Id);
                             }}
-                            title={r.Name}
+                            data-tooltip-id="room-tooltip"
+                            data-tooltip-content={r.Id}
                           >
                             <img src={iconUrl} alt={r.Name} />
                           </div>
@@ -1534,6 +1623,16 @@ function App() {
           </button>
         </div>
       </div>
+
+      <Tooltip
+        id="room-tooltip"
+        place="right"
+        className="custom-tooltip"
+        render={({ content }) => {
+          const room = roomsData[content || ""];
+          return room ? renderRoomTooltip(room) : null;
+        }}
+      />
 
       <div className="grid-container">
         {getHoverInfo()}
