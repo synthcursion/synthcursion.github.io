@@ -390,3 +390,40 @@ label {
     color: #666;
     font-style: italic;
 }
+
+.total-stats {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(20, 20, 20, 0.9);
+    border: 1px solid #d4af37;
+    padding: 15px;
+    border-radius: 4px;
+    z-index: 1001;
+    min-width: 250px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    font-size: 0.9em;
+}
+
+.total-stats h3 {
+    margin: 0 0 10px 0;
+    color: #d4af37;
+    font-size: 1.1em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.total-stats ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.total-stats li {
+    color: #ddd;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}

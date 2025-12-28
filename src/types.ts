@@ -23,8 +23,8 @@ export interface IncursionRoomPerLevel {
   Name: string;
   Icon_DDSFile: string;
   Mod: number | null;
-  Stats: string[];
   ModValues: number[];
+  ModStats: string[];
   Description2: string;
 }
 

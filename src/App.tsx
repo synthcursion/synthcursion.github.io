@@ -548,6 +548,27 @@ function App() {
     return newGrid;
   }, [grid]);
 
+  const totalStats = useMemo(() => {
+    const stats: Record<string, number> = {};
+    calculatedGrid.forEach((row) => {
+      row.forEach((cell) => {
+        if (cell && cell.type === "room" && cell.roomId && cell.tier) {
+          const roomData = roomsData[cell.roomId];
+          if (roomData && roomData.Levels[cell.tier]) {
+            const levelData = roomData.Levels[cell.tier];
+            levelData.ModStats.forEach((stat, idx) => {
+              const value = levelData.ModValues[idx] || 0;
+              if (value !== 0) {
+                stats[stat] = (stats[stat] || 0) + value;
+              }
+            });
+          }
+        }
+      });
+    });
+    return stats;
+  }, [calculatedGrid]);
+
   useEffect(() => {
     const rooms: string[] = [];
     const paths: string[] = [];
@@ -1338,8 +1359,34 @@ function App() {
     );
   };
 
+  const formatStatName = (stat: string) => {
+    return stat
+      .replace(/map_monster_tre_\+%/g, "Item Quantity")
+      .replace(/map_normal_monster_potency_\+%/g, "Monster Pack Size")
+      .replace(/_/g, " ")
+      .replace(/\+/g, "")
+      .replace(/%/g, "")
+      .trim()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
   return (
     <div className="app-container">
+      {Object.keys(totalStats).length > 0 && (
+        <div className="total-stats">
+          <h3>Temple Stats</h3>
+          <ul>
+            {Object.entries(totalStats).map(([stat, value]) => (
+              <li key={stat}>
+                <span>{formatStatName(stat)}</span>
+                <span>{value > 0 ? `+${value}` : value}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="sidebar">
         <div className="header">
           <h2>Temple Builder</h2>

@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, type UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { datExport } from "./vite-plugin-poe-dat-export";
 import {
@@ -71,7 +71,7 @@ export default defineConfig({
                 Levels[level.Level] = {
                   ...level,
                   Room: room.Id,
-                  Stats: !level.Mod
+                  ModStats: !level.Mod
                     ? []
                     : [1, 2, 3, 4]
                         .map((i) => stats[mods[level.Mod!][`Stat${i}`]]?.Id)
@@ -101,4 +101,4 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
-});
+} as UserConfig);
