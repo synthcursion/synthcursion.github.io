@@ -1,17 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import queryString from "query-string";
 import "./App.css";
-import roomsDataRaw from "../tables/English/Incursion2Rooms.json";
-import roomsPerLevelDataRaw from "../tables/English/Incursion2RoomPerLevel.json";
-import type {
-  IncursionRoom,
-  IncursionRoomPerLevel,
-  PathType,
-  GridCell,
-} from "./types";
+import data from "../tables/English.json";
+import type { IncursionRoom, PathType, GridCell } from "./types";
 
-const roomsData = roomsDataRaw as IncursionRoom[];
-const roomsPerLevelData = roomsPerLevelDataRaw as IncursionRoomPerLevel[];
+const roomsData = data.Incursion2Rooms as IncursionRoom[];
 
 const GRID_SIZE = 9;
 
@@ -1113,10 +1106,8 @@ function App() {
                 if (calcCell.tier === 3) return;
 
                 // 2. Prevent if it doesn't have multiple tiers
-                const roomLevelInfo = roomsPerLevelData.filter(
-                  (rl) => roomsData[rl.Room].Id === cell.roomId,
-                );
-                if (roomLevelInfo.length <= 1) return;
+                const room = roomsData.find((r) => r.Id === cell.roomId);
+                if (!room || room.Levels.length <= 1) return;
               }
             }
 
@@ -1203,22 +1194,22 @@ function App() {
 
   const getIconPath = (cell: GridCell) => {
     if (cell.type === "room") {
-      const roomLevelInfo = roomsPerLevelData.filter(
-        (rl) => roomsData[rl.Room].Id === cell.roomId,
-      );
+      const room = roomsData.find((r) => r.Id === cell.roomId);
+      if (!room) return "/ggpk/roomgeneric.png";
+
       // Try to find the specific tier first
-      let roomInfo = roomLevelInfo.find((r) => r.Level === cell.tier);
+      let roomInfo = room.Levels.find((r) => r.Level === cell.tier);
 
       // If specific tier not found, find the closest available tier
-      if (!roomInfo && roomLevelInfo.length > 0) {
-        const availableLevels = roomLevelInfo.map((rl) => rl.Level);
+      if (!roomInfo && room.Levels.length > 0) {
+        const availableLevels = room.Levels.map((rl) => rl.Level);
         const closestLevel = availableLevels.reduce((prev, curr) => {
           return Math.abs(curr - (cell.tier || 1)) <
             Math.abs(prev - (cell.tier || 1))
             ? curr
             : prev;
         });
-        roomInfo = roomLevelInfo.find((rl) => rl.Level === closestLevel);
+        roomInfo = room.Levels.find((rl) => rl.Level === closestLevel);
       }
 
       if (roomInfo && roomInfo.Icon_DDSFile) {
@@ -1374,14 +1365,11 @@ function App() {
                   <div key={subCategory} className="room-subcategory">
                     <div className="room-grid">
                       {rooms.map((r) => {
-                        const roomLevelInfo = roomsPerLevelData.filter(
-                          (rl) => roomsData[rl.Room].Id === r.Id,
-                        );
                         const minLevel =
-                          roomLevelInfo.length > 0
-                            ? Math.min(...roomLevelInfo.map((rl) => rl.Level))
+                          r.Levels.length > 0
+                            ? Math.min(...r.Levels.map((rl) => rl.Level))
                             : null;
-                        const roomInfo = roomLevelInfo.find(
+                        const roomInfo = r.Levels.find(
                           (rl) => rl.Level === minLevel,
                         );
 

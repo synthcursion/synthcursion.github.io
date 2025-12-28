@@ -68,6 +68,37 @@ const datExport = (
         loader,
       );
 
+      for (const lang of LANGS) {
+        const combined: Record<string, any> = {};
+        const langDir = path.join("tables", lang);
+        for (const table of tables) {
+          const tableName = typeof table === "string" ? table : table.name;
+          const tablePath = path.join(langDir, `${tableName}.json`);
+          try {
+            const content = await fs.readFile(tablePath, "utf-8");
+            combined[tableName] = JSON.parse(content);
+          } catch (e) {
+            console.warn(`Could not read ${tablePath}`, e);
+          }
+        }
+
+        // Nest Incursion2RoomPerLevel into Incursion2Rooms
+        if (combined.Incursion2Rooms && combined.Incursion2RoomPerLevel) {
+          const rooms = combined.Incursion2Rooms;
+          const levels = combined.Incursion2RoomPerLevel;
+          for (const room of rooms) {
+            room.Levels = levels.filter((l: any) => l.Room === room._index);
+          }
+          delete combined.Incursion2RoomPerLevel;
+        }
+
+        await fs.writeFile(
+          path.join("tables", `${lang}.json`),
+          JSON.stringify(combined, null, 2),
+        );
+        await fs.rm(langDir, { recursive: true, force: true });
+      }
+
       // // exportTables doesn't export the specified path so no point copying for now
       // for (const fileName of await readdir(exportedFiles)) {
       //   const source = await readFile(path.join(exportedFiles, fileName));

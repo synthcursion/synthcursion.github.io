@@ -10,6 +10,7 @@ export interface IncursionRoom {
   IsBossReward: boolean;
   Name: string;
   Icon_DDSFile: string;
+  Levels: IncursionRoomPerLevel[];
 }
 
 export interface IncursionRoomPerLevel {
