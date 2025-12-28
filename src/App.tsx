@@ -1049,9 +1049,11 @@ function App() {
             if (nnx >= 0 && nnx < GRID_SIZE && nny >= 0 && nny < GRID_SIZE) {
               const nn = targetGrid[nnx][nny];
               if (nn && nn.type === "room" && nn.roomId === roomId2) {
-                // If checking an existing room, don't count itself against the limit
                 if (nnx !== x || nny !== y) {
                   currentUpgradesByType++;
+                } else {
+                  // If checking an existing room, don't count itself against the limit
+                  canPlaceStrong = true;
                 }
               }
             }
