@@ -1,9 +1,26 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import queryString from "query-string";
 import { Tooltip } from "react-tooltip";
 import "./App.css";
 import data from "./data/generated/English.json";
 import type { IncursionRoom, PathType, GridCell, Direction } from "./types";
+import { useAppDispatch, useAppSelector } from "./hooks/store";
+import {
+  setGrid,
+  setSelectedType,
+  setSelectedRoomId,
+  setSelectedPathType,
+  setHoveredCell,
+  setDebug,
+  setCopyStatus,
+  setShowSidebar,
+  setShowTotalStats,
+  setShowRemovableGlow,
+  setShowInvalidGlow,
+} from "./store/gameSlice";
+import { Provider } from "react-redux";
+import { store } from "./store";
+import "./index.css";
 
 const roomsData = data.Incursion2Rooms as Record<string, IncursionRoom>;
 
@@ -65,95 +82,22 @@ const getPathTypeFromConnections = (
 };
 
 function App() {
-  const [grid, setGrid] = useState<(GridCell | null)[][]>(() => {
-    const saved = queryString.parse(window.location.search, {
-      arrayFormat: "bracket",
-    });
-
-    if (saved.rooms || saved.paths || saved.medallions) {
-      const newGrid: (GridCell | null)[][] = Array(GRID_SIZE)
-        .fill(null)
-        .map(() => Array(GRID_SIZE).fill(null));
-
-      // Unremovable four-way path at ENTRY
-      newGrid[ENTRY.x][ENTRY.y] = { type: "path", pathType: "pathfourway" };
-
-      let rooms = (saved.rooms as string | string[]) || [];
-      if (typeof rooms === "string") rooms = [rooms];
-      let paths = (saved.paths as string | string[]) || [];
-      if (typeof paths === "string") paths = [paths];
-      let medallions = (saved.medallions as string | string[]) || [];
-      if (typeof medallions === "string") medallions = [medallions];
-
-      rooms.forEach((val) => {
-        if (!val) return;
-        const [roomId, x, y] = val.split("-");
-        const ix = parseInt(x);
-        const iy = parseInt(y);
-        if (!isNaN(ix) && !isNaN(iy)) {
-          newGrid[ix][iy] = { type: "room", roomId, tier: 1 };
-        }
-      });
-
-      paths.forEach((val) => {
-        if (!val) return;
-        const [pathType, x, y] = val.split("-");
-        const ix = parseInt(x);
-        const iy = parseInt(y);
-        if (!isNaN(ix) && !isNaN(iy)) {
-          newGrid[ix][iy] = { type: "path", pathType: pathType as PathType };
-        }
-      });
-
-      medallions.forEach((val) => {
-        if (!val) return;
-        const [medallionType, x, y] = val.split("-");
-        const ix = parseInt(x);
-        const iy = parseInt(y);
-        if (!isNaN(ix) && !isNaN(iy)) {
-          if (newGrid[ix][iy]?.type === "room") {
-            newGrid[ix][iy]!.medallionType = medallionType;
-          }
-        }
-      });
-
-      return newGrid;
-    }
-
-    return Array(GRID_SIZE)
-      .fill(null)
-      .map((_, x) =>
-        Array(GRID_SIZE)
-          .fill(null)
-          .map((_, y) => {
-            if (x === ENTRY.x && y === ENTRY.y) {
-              return { type: "path", pathType: "pathfourway" };
-            }
-            return null;
-          }),
-      );
-  });
-
-  const [selectedType, setSelectedType] = useState<
-    "room" | "path" | "empty" | "medallion"
-  >("room");
-  const [selectedRoomId, setSelectedRoomId] = useState<string>("Garrison"); // Default to Garrison
-  const [selectedPathType, setSelectedPathType] = useState<PathType>("path1");
-  const [hoveredCell, setHoveredCell] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-  const [debug, setDebug] = useState<boolean>(() => {
-    const parsed = queryString.parse(window.location.search, {
-      parseBooleans: true,
-    });
-    return (parsed.debug as boolean) || false;
-  });
-  const [copyStatus, setCopyStatus] = useState<boolean>(false);
-  const [showSidebar, setShowSidebar] = useState<boolean>(true);
-  const [showTotalStats, setShowTotalStats] = useState<boolean>(true);
-  const [showRemovableGlow, setShowRemovableGlow] = useState<boolean>(true);
-  const [showInvalidGlow, setShowInvalidGlow] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const grid = useAppSelector((state) => state.game.grid);
+  const selectedType = useAppSelector((state) => state.game.selectedType);
+  const selectedRoomId = useAppSelector((state) => state.game.selectedRoomId);
+  const selectedPathType = useAppSelector(
+    (state) => state.game.selectedPathType,
+  );
+  const hoveredCell = useAppSelector((state) => state.game.hoveredCell);
+  const debug = useAppSelector((state) => state.game.debug);
+  const copyStatus = useAppSelector((state) => state.game.copyStatus);
+  const showSidebar = useAppSelector((state) => state.game.showSidebar);
+  const showTotalStats = useAppSelector((state) => state.game.showTotalStats);
+  const showRemovableGlow = useAppSelector(
+    (state) => state.game.showRemovableGlow,
+  );
+  const showInvalidGlow = useAppSelector((state) => state.game.showInvalidGlow);
 
   const roomsByType = useMemo(() => {
     const architectExists = grid.some((row) =>
@@ -1399,7 +1343,10 @@ function App() {
         if (neighbor?.type === "path" || debug) right = true;
       }
 
-      cell.pathType = getPathTypeFromConnections(top, bottom, left, right);
+      currentGrid[row][col] = {
+        ...cell,
+        pathType: getPathTypeFromConnections(top, bottom, left, right),
+      };
     };
 
     const canPlace = getHighlightType(x, y);
@@ -1522,7 +1469,7 @@ function App() {
       });
     }
 
-    setGrid(newGrid);
+    dispatch(setGrid(newGrid));
   };
 
   const getIconPath = (cell: GridCell) => {
@@ -1550,9 +1497,9 @@ function App() {
   const shareLayout = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url).then(() => {
-      setCopyStatus(true);
+      dispatch(setCopyStatus(true));
       setTimeout(() => {
-        setCopyStatus(false);
+        dispatch(setCopyStatus(false));
       }, 5000);
     });
   };
@@ -1711,7 +1658,7 @@ function App() {
         {convertsRooms.length > 0 && (
           <div className="tooltip-section">
             <span className="tooltip-label">Converts:</span>{" "}
-            {convertsRooms.map((id) => roomsData[id]?.Name || id).join(", ")}
+            {convertsRooms.map(({ Name }) => Name).join(", ")}
           </div>
         )}
 
@@ -1751,7 +1698,7 @@ function App() {
     <div className={`app-container ${!showSidebar ? "sidebar-hidden" : ""}`}>
       <button
         className="toggle-sidebar"
-        onClick={() => setShowSidebar(!showSidebar)}
+        onClick={() => dispatch(setShowSidebar(!showSidebar))}
         title={showSidebar ? "Hide Sidebar" : "Show Sidebar"}
       >
         {showSidebar ? "◀" : "▶"}
@@ -1764,7 +1711,7 @@ function App() {
             <div className="close-stats-container">
               <button
                 className="close-stats"
-                onClick={() => setShowTotalStats(false)}
+                onClick={() => dispatch(setShowTotalStats(false))}
               >
                 Hide stats
               </button>
@@ -1791,7 +1738,7 @@ function App() {
           Object.keys(totalStats.descriptions).length > 0) && (
           <button
             className="show-stats-btn"
-            onClick={() => setShowTotalStats(true)}
+            onClick={() => dispatch(setShowTotalStats(true))}
             title="Show Total Stats"
           >
             Show Stats
@@ -1841,8 +1788,8 @@ function App() {
                                 : ""
                             }`}
                             onClick={() => {
-                              setSelectedType("room");
-                              setSelectedRoomId(r.Id);
+                              dispatch(setSelectedType("room"));
+                              dispatch(setSelectedRoomId(r.Id));
                             }}
                             data-tooltip-id="room-tooltip"
                             data-tooltip-content={r.Id}
@@ -1867,8 +1814,8 @@ function App() {
                     key={pt}
                     className={`room-item ${selectedType === "path" && selectedPathType === pt ? "selected" : ""}`}
                     onClick={() => {
-                      setSelectedType("path");
-                      setSelectedPathType(pt as PathType);
+                      dispatch(setSelectedType("path"));
+                      dispatch(setSelectedPathType(pt as PathType));
                     }}
                     data-tooltip-id="room-tooltip"
                     data-tooltip-content={pt}
@@ -1901,8 +1848,8 @@ function App() {
                     key={m.id}
                     className={`room-item ${selectedType === "medallion" && selectedRoomId === m.id ? "selected" : ""}`}
                     onClick={() => {
-                      setSelectedType("medallion");
-                      setSelectedRoomId(m.id);
+                      dispatch(setSelectedType("medallion"));
+                      dispatch(setSelectedRoomId(m.id));
                     }}
                     data-tooltip-id="room-tooltip"
                     data-tooltip-content={m.title}
@@ -1913,7 +1860,7 @@ function App() {
                 ))}
                 <div
                   className={`room-item ${selectedType === "empty" ? "selected" : ""}`}
-                  onClick={() => setSelectedType("empty")}
+                  onClick={() => dispatch(setSelectedType("empty"))}
                   data-tooltip-id="room-tooltip"
                   data-tooltip-content="Eraser"
                   title="Eraser"
@@ -1930,7 +1877,7 @@ function App() {
             <input
               type="checkbox"
               checked={debug}
-              onChange={(e) => setDebug(e.target.checked)}
+              onChange={(e) => dispatch(setDebug(e.target.checked))}
             />
             ignore placement restrictions
           </label>
@@ -1938,7 +1885,7 @@ function App() {
             <input
               type="checkbox"
               checked={showRemovableGlow}
-              onChange={(e) => setShowRemovableGlow(e.target.checked)}
+              onChange={(e) => dispatch(setShowRemovableGlow(e.target.checked))}
             />
             highlight removable rooms
           </label>
@@ -1946,7 +1893,7 @@ function App() {
             <input
               type="checkbox"
               checked={showInvalidGlow}
-              onChange={(e) => setShowInvalidGlow(e.target.checked)}
+              onChange={(e) => dispatch(setShowInvalidGlow(e.target.checked))}
             />
             highlight invalid rooms
           </label>
@@ -1955,19 +1902,21 @@ function App() {
           </button>
           <button
             onClick={() =>
-              setGrid(
-                Array(GRID_SIZE)
-                  .fill(null)
-                  .map((_, x) =>
-                    Array(GRID_SIZE)
-                      .fill(null)
-                      .map((_, y) => {
-                        if (x === ENTRY.x && y === ENTRY.y) {
-                          return { type: "path", pathType: "pathfourway" };
-                        }
-                        return null;
-                      }),
-                  ),
+              dispatch(
+                setGrid(
+                  Array(GRID_SIZE)
+                    .fill(null)
+                    .map((_, x) =>
+                      Array(GRID_SIZE)
+                        .fill(null)
+                        .map((_, y) => {
+                          if (x === ENTRY.x && y === ENTRY.y) {
+                            return { type: "path", pathType: "pathfourway" };
+                          }
+                          return null;
+                        }),
+                    ),
+                ),
               )
             }
           >
@@ -1999,8 +1948,8 @@ function App() {
                   className={`cell ${cell ? cell.type : "empty"}`}
                   style={getCellPosition(x, y)}
                   onClick={() => handleCellClick(x, y)}
-                  onMouseEnter={() => setHoveredCell({ x, y })}
-                  onMouseLeave={() => setHoveredCell(null)}
+                  onMouseEnter={() => dispatch(setHoveredCell({ x, y }))}
+                  onMouseLeave={() => dispatch(setHoveredCell(null))}
                   data-powered={cell?.isPowered}
                   data-tier={cell?.tier}
                   data-cell-type={cell?.type}
@@ -2165,8 +2114,8 @@ function App() {
             <div
               className="cell room"
               style={getCellPosition(4, 9)}
-              onMouseEnter={() => setHoveredCell({ x: 4, y: 9 })}
-              onMouseLeave={() => setHoveredCell(null)}
+              onMouseEnter={() => dispatch(setHoveredCell({ x: 4, y: 9 }))}
+              onMouseLeave={() => dispatch(setHoveredCell(null))}
               data-cell-type="room"
               data-room-id="Atziri"
             >
@@ -2228,4 +2177,12 @@ function App() {
   );
 }
 
-export default App;
+function Wrapped() {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+}
+
+export default Wrapped;
