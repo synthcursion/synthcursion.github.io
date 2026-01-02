@@ -1,31 +1,13 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import App from "./App";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search
-Object.defineProperty(window, "location", {
-  value: {
-    search: "?debug=true",
-    href: "http://localhost/?debug=true",
-  },
-  writable: true,
-});
+import { App } from "./App";
+import { renderWithProviders } from "./test-utils";
 
 describe("Path Connection Logic", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("places the selected path tile when clicking in completely empty space", () => {
-    render(<App />);
+    renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
     const pathButton = screen.getByTitle("path1");
     fireEvent.click(pathButton);
 
@@ -36,7 +18,7 @@ describe("Path Connection Logic", () => {
   });
 
   it("upgrades existing paths with new connections without losing existing ones", () => {
-    render(<App />);
+    renderWithProviders(<App />);
     const pathButton = screen.getByTitle("path1");
     fireEvent.click(pathButton);
 
@@ -55,7 +37,7 @@ describe("Path Connection Logic", () => {
   });
 
   it("preserves connections even after the neighbor is removed (permanent logic)", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     const pathButton = screen.getByTitle("path1");
     fireEvent.click(pathButton);
 
@@ -73,7 +55,7 @@ describe("Path Connection Logic", () => {
   });
 
   it("does NOT connect paths to newly placed non-path rooms", () => {
-    render(<App />);
+    renderWithProviders(<App />);
     // Place a room first
     fireEvent.click(screen.getByTitle("Garrison"));
     fireEvent.click(screen.getByTestId("cell-4-5"));
@@ -96,7 +78,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("only powers connected paths and rooms", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     // Click on Generator icon in the grid (assuming title matches)
     const generatorIcon = screen.getByTitle("Generator");
     fireEvent.click(generatorIcon);
@@ -117,7 +99,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("powers cells up to range 3 when generator is Tier 1", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     fireEvent.click(screen.getByTitle("Generator"));
     fireEvent.click(screen.getByTestId("cell-4-4"));
 
@@ -140,7 +122,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("powers a room adjacent to a path even if the path is not connected to it", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     // Generator at 4,4
     fireEvent.click(screen.getByTitle("Generator"));
     fireEvent.click(screen.getByTestId("cell-4-4"));
@@ -159,7 +141,7 @@ describe("Generator Power Calculation", () => {
 
   describe("Golem Works UpgradedByPower", () => {
     it("reaches T2 with 1 generator and T3 with 2 generators for Golem Works", () => {
-      render(<App />);
+      renderWithProviders(<App />, { queryString: "debug=true" });
       // Generator 1
       fireEvent.click(screen.getByTitle("Generator"));
       fireEvent.click(screen.getByTestId("cell-4-4"));
@@ -182,7 +164,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("does not propagate power from a non-generator room to another room or path", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     // Generator at 4,4
     fireEvent.click(screen.getByTitle("Generator"));
     fireEvent.click(screen.getByTestId("cell-4-4"));
@@ -203,8 +185,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("powers cells up to range 4 when generator is Tier 2", () => {
-    render(<App />);
-    // Generator at 4,4
+    renderWithProviders(<App />, { queryString: "debug=true" });
     fireEvent.click(screen.getByTitle("Generator"));
     fireEvent.click(screen.getByTestId("cell-4-4"));
 
@@ -229,8 +210,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("powers cells up to range 5 when generator is Tier 3", () => {
-    render(<App />);
-    // Generator at 4,4
+    renderWithProviders(<App />, { queryString: "debug=true" });
     fireEvent.click(screen.getByTitle("Generator"));
     fireEvent.click(screen.getByTestId("cell-4-4"));
 
@@ -258,7 +238,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("powers cells around a corner to distance 2", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     fireEvent.click(screen.getByTitle("Generator"));
     fireEvent.click(screen.getByTestId("cell-4-4"));
 
@@ -273,7 +253,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("renders medallion glow when a room has a medallion", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     // Place a room
     fireEvent.click(screen.getByTitle("Garrison"));
     const cell = screen.getByTestId("cell-4-4");
@@ -293,7 +273,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("renders medallion glow for lock medallion", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     // Place a room
     fireEvent.click(screen.getByTitle("Garrison"));
     const cell = screen.getByTestId("cell-4-4");
@@ -313,7 +293,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("does not upgrade room tier if lock medallion is applied", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     // Place Golem Works (which upgrades by power)
     fireEvent.click(screen.getByTitle("Golem Works"));
     const cell = screen.getByTestId("cell-4-4");
@@ -333,7 +313,7 @@ describe("Generator Power Calculation", () => {
   });
 
   it("prevents applying a medallion to a room that has a different medallion applied", () => {
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
     fireEvent.click(screen.getByTitle("Garrison"));
     const cell = screen.getByTestId("cell-4-4");
     fireEvent.click(cell);

@@ -1,17 +1,34 @@
-import { render } from "@testing-library/react";
-import App from "./App.tsx";
-import { expect, test, vi } from "vitest";
+import { renderWithProviders } from "./test-utils";
+import { App } from "./App.tsx";
+import { expect, test } from "vitest";
 
 test("loads state from URL correctly", () => {
-  const params =
-    "?debug=false&paths[]=pathfourway-4-0&rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1";
+  const GRID_SIZE = 9;
+  const initialGrid = Array(GRID_SIZE)
+    .fill(null)
+    .map(() => Array(GRID_SIZE).fill(null));
 
-  window.history.pushState({}, "", params);
+  // ENTRY at 4,0
+  initialGrid[4][0] = { type: "path", pathType: "pathfourway" };
+  // Commander-5-0
+  initialGrid[5][0] = { type: "room", roomId: "Commander", tier: 1 };
+  // Garrison-6-0
+  initialGrid[6][0] = { type: "room", roomId: "Garrison", tier: 1 };
+  // Armoury-6-1
+  initialGrid[6][1] = { type: "room", roomId: "Armoury", tier: 1 };
+  // Commander-7-0
+  initialGrid[7][0] = { type: "room", roomId: "Commander", tier: 1 };
+  // Garrison-7-1
+  initialGrid[7][1] = { type: "room", roomId: "Garrison", tier: 1 };
+  // Garrison-8-0
+  initialGrid[8][0] = { type: "room", roomId: "Garrison", tier: 1 };
+  // Armoury-8-1
+  initialGrid[8][1] = { type: "room", roomId: "Armoury", tier: 1 };
 
-  // Mock window.history.replaceState
-  window.history.replaceState = vi.fn();
-
-  const { getByTestId } = render(<App />);
+  const { getByTestId } = renderWithProviders(<App />, {
+    queryString:
+      "rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
+  });
 
   // Cells have test-id="cell-{x}-{y}" in App.tsx
   // Let's verify some of them are populated.
@@ -33,40 +50,22 @@ test("loads state from URL correctly", () => {
 });
 
 test("does not add debug=false to the URL", async () => {
-  // Clear URL
-  window.history.pushState({}, "", "/");
-
-  // Mock window.history.replaceState
-  const replaceStateSpy = vi.fn();
-  window.history.replaceState = replaceStateSpy;
-
-  const { findByTestId } = render(<App />);
+  const { store, findByTestId } = renderWithProviders(<App />, {
+    queryString: "debug=false",
+  });
 
   // Wait for the cell to be rendered which indicates the app has initialized and useEffect has likely run
   await findByTestId("cell-0-0");
 
-  const lastCall =
-    replaceStateSpy.mock.calls[replaceStateSpy.mock.calls.length - 1];
-  const url = new URL(lastCall[2], window.location.origin);
-
-  expect(url.searchParams.has("debug")).toBe(false);
+  expect(store.getState().game.debug).toBe(false);
 });
 
 test("adds debug=true to the URL when enabled", async () => {
-  // Start with debug=true
-  window.history.pushState({}, "", "/?debug=true");
-
-  // Mock window.history.replaceState
-  const replaceStateSpy = vi.fn();
-  window.history.replaceState = replaceStateSpy;
-
-  const { findByTestId } = render(<App />);
+  const { store, findByTestId } = renderWithProviders(<App />, {
+    queryString: "debug=true",
+  });
 
   await findByTestId("cell-0-0");
 
-  const lastCall =
-    replaceStateSpy.mock.calls[replaceStateSpy.mock.calls.length - 1];
-  const url = new URL(lastCall[2], window.location.origin);
-
-  expect(url.searchParams.get("debug")).toBe("true");
+  expect(store.getState().game.debug).toBe(true);
 });

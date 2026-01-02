@@ -19,27 +19,29 @@ export interface GameState {
   showInvalidGlow: boolean;
 }
 
-const getInitialGrid = (): (GridCell | null)[][] => {
-  const saved = queryString.parse(window.location.search, {
+const getInitialGrid = (query: string): (GridCell | null)[][] => {
+  const saved = queryString.parse(query, {
     arrayFormat: "bracket",
   });
 
-  if (saved.rooms || saved.paths || saved.medallions) {
+  const rooms = (saved.rooms as string | string[]) || [];
+  const paths = (saved.paths as string | string[]) || [];
+  const medallions = (saved.medallions as string | string[]) || [];
+
+  if (rooms.length > 0 || paths.length > 0 || medallions.length > 0) {
     const newGrid: (GridCell | null)[][] = Array(GRID_SIZE)
       .fill(null)
       .map(() => Array(GRID_SIZE).fill(null));
 
-    // Unremovable four-way path at ENTRY
     newGrid[ENTRY.x][ENTRY.y] = { type: "path", pathType: "pathfourway" };
 
-    let rooms = (saved.rooms as string | string[]) || [];
-    if (typeof rooms === "string") rooms = [rooms];
-    let paths = (saved.paths as string | string[]) || [];
-    if (typeof paths === "string") paths = [paths];
-    let medallions = (saved.medallions as string | string[]) || [];
-    if (typeof medallions === "string") medallions = [medallions];
+    const roomsList = Array.isArray(rooms) ? rooms : [rooms];
+    const pathsList = Array.isArray(paths) ? paths : [paths];
+    const medallionsList = Array.isArray(medallions)
+      ? medallions
+      : [medallions];
 
-    rooms.forEach((val) => {
+    roomsList.forEach((val) => {
       if (!val) return;
       const [roomId, x, y] = val.split("-");
       const ix = parseInt(x);
@@ -49,7 +51,7 @@ const getInitialGrid = (): (GridCell | null)[][] => {
       }
     });
 
-    paths.forEach((val) => {
+    pathsList.forEach((val) => {
       if (!val) return;
       const [pathType, x, y] = val.split("-");
       const ix = parseInt(x);
@@ -59,7 +61,7 @@ const getInitialGrid = (): (GridCell | null)[][] => {
       }
     });
 
-    medallions.forEach((val) => {
+    medallionsList.forEach((val) => {
       if (!val) return;
       const [medallionType, x, y] = val.split("-");
       const ix = parseInt(x);
@@ -88,24 +90,31 @@ const getInitialGrid = (): (GridCell | null)[][] => {
     );
 };
 
-const initialState: GameState = {
-  grid: getInitialGrid(),
-  selectedType: "room",
-  selectedRoomId: "Garrison",
-  selectedPathType: "path1",
-  hoveredCell: null,
-  debug: (() => {
-    const parsed = queryString.parse(window.location.search, {
-      parseBooleans: true,
-    });
-    return (parsed.debug as boolean) || false;
-  })(),
-  copyStatus: false,
-  showSidebar: true,
-  showTotalStats: true,
-  showRemovableGlow: true,
-  showInvalidGlow: true,
-};
+export function getInitialState(
+  query: string = window.location.search,
+): GameState {
+  return {
+    grid: getInitialGrid(query),
+    selectedType: "room",
+    selectedRoomId: "Garrison",
+    selectedPathType: "path1",
+    hoveredCell: null,
+    debug: (() => {
+      const parsed = queryString.parse(query, {
+        parseBooleans: true,
+        arrayFormat: "bracket",
+      });
+      return (parsed.debug as boolean) || false;
+    })(),
+    copyStatus: false,
+    showSidebar: true,
+    showTotalStats: true,
+    showRemovableGlow: true,
+    showInvalidGlow: true,
+  };
+}
+
+const initialState = getInitialState();
 
 export const gameSlice = createSlice({
   name: "game",

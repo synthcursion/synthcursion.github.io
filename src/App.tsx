@@ -81,7 +81,7 @@ const getPathTypeFromConnections = (
   return "path1";
 };
 
-function App() {
+export function App() {
   const dispatch = useAppDispatch();
   const grid = useAppSelector((state) => state.game.grid);
   const selectedType = useAppSelector((state) => state.game.selectedType);

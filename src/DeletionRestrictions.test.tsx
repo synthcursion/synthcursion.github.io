@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import App from "./App";
+import { App } from "./App";
+import { renderWithProviders } from "./test-utils";
 
 // Mock ResizeObserver for react-tooltip
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -9,30 +10,9 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search without debug=true by default to test restrictions
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
-
 describe("Deletion Restrictions Logic", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("does not allow deleting a tile if it leaves a neighbor unplaceable", () => {
-    render(<App />);
+    renderWithProviders(<App />);
 
     // Select path1 (top-bottom)
     const path1Button = screen.getByTitle("path1");
@@ -65,7 +45,7 @@ describe("Deletion Restrictions Logic", () => {
   });
 
   it("allows deleting a tile if neighbors have other connections", () => {
-    render(<App />);
+    renderWithProviders(<App />);
 
     // Select path1 (top-bottom)
     const path1Button = screen.getByTitle("path1");
@@ -98,13 +78,11 @@ describe("Deletion Restrictions Logic", () => {
   });
 
   it("shows red glow for deletable tiles regardless of selection", () => {
-    render(<App />);
-
-    const path1Button = screen.getByTitle("path1");
-    fireEvent.click(path1Button);
+    renderWithProviders(<App />, {
+      queryString: "paths[]=path1-4-1",
+    });
 
     const cell41 = screen.getByTestId("cell-4-1");
-    fireEvent.click(cell41);
 
     // Hover (4,1) with path1 selected
     fireEvent.mouseEnter(cell41);
@@ -122,25 +100,38 @@ describe("Deletion Restrictions Logic", () => {
   });
 
   it("investigate why Garrison at 7,1 is not deletable", () => {
-    const params = new URLSearchParams();
-    params.append("paths[0]", "4,0,pathfourway");
-    params.append("rooms[0]", "Commander@5@0");
-    params.append("rooms[1]", "Garrison@6@0");
-    params.append("rooms[2]", "Armoury@6@1");
-    params.append("rooms[3]", "Commander@7@0");
-    params.append("rooms[4]", "Garrison@7@1");
-    params.append("rooms[5]", "Garrison@8@0");
-    params.append("rooms[6]", "Armoury@8@1");
+    const GRID_SIZE = 9;
+    const initialGrid = Array(GRID_SIZE)
+      .fill(null)
+      .map(() => Array(GRID_SIZE).fill(null));
 
-    window.location.search = "?" + params.toString();
+    // ENTRY at 4,0
+    initialGrid[4][0] = { type: "path", pathType: "pathfourway" };
+    // Commander-5-0
+    initialGrid[5][0] = { type: "room", roomId: "Commander", tier: 1 };
+    // Garrison-6-0
+    initialGrid[6][0] = { type: "room", roomId: "Garrison", tier: 1 };
+    // Armoury-6-1
+    initialGrid[6][1] = { type: "room", roomId: "Armoury", tier: 1 };
+    // Commander-7-0
+    initialGrid[7][0] = { type: "room", roomId: "Commander", tier: 1 };
+    // Garrison-7-1
+    initialGrid[7][1] = { type: "room", roomId: "Garrison", tier: 1 };
+    // Garrison-8-0
+    initialGrid[8][0] = { type: "room", roomId: "Garrison", tier: 1 };
+    // Armoury-8-1
+    initialGrid[8][1] = { type: "room", roomId: "Armoury", tier: 1 };
 
-    render(<App />);
-
-    // Select eraser
-    const eraser = screen.getByTitle("Eraser");
-    fireEvent.click(eraser);
+    renderWithProviders(<App />, {
+      queryString:
+        "rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
+    });
 
     const cell71 = screen.getByTestId("cell-7-1");
+
+    // Select Eraser
+    const eraserButton = screen.getByTitle("Eraser");
+    fireEvent.click(eraserButton);
 
     // Click to delete
     fireEvent.click(cell71);
