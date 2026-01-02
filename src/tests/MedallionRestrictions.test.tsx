@@ -4,17 +4,17 @@ import App from "src/App.tsx";
 import { renderWithProviders } from "src/utils/test-utils.tsx";
 
 describe("Medallion Restrictions", () => {
-  it("prevents placing Quipolatl's Medallion on rooms without multiple tiers", () => {
+  it("prevents placing upgrade medallion on rooms without multiple tiers", () => {
     const { screen } = renderWithProviders(<App />);
 
-    // Select Architect's Chamber (only 1 tier)
-    const architectRoom = screen.getByTitle("Architect's Chamber");
+    // Select Treasure Vault (only 1 tier)
+    const architectRoom = screen.getByTitle("Treasure Vault");
     fireEvent.click(architectRoom);
 
     // Place it at (4,1)
     const cell41 = screen.getByTestId("cell-4-1");
     fireEvent.click(cell41);
-    expect(cell41.getAttribute("data-room-id")).toBe("Architect");
+    expect(cell41.getAttribute("data-room-id")).toBe("Vault");
 
     // Select Quipolatl's Medallion
     const medallion = screen.getByTitle(/Quipolatl's Medallion/);
@@ -28,7 +28,7 @@ describe("Medallion Restrictions", () => {
     expect(medallionGlow).toBeNull();
   });
 
-  it("allows placing Quipolatl's Medallion on rooms with multiple tiers", () => {
+  it("allows placing upgrade medallion on rooms with multiple tiers", () => {
     const { screen } = renderWithProviders(<App />);
 
     // Select Garrison (multiple tiers)
@@ -48,12 +48,12 @@ describe("Medallion Restrictions", () => {
     fireEvent.click(cell41);
 
     // It SHOULD have the medallion
-    // TODO: uncomment when this is fixed
-    // const medallionIcon = cell41.querySelector(".medallion-icon");
-    // expect(medallionIcon).not.toBeNull();
+
+    const medallionIcon = cell41.querySelector(".medallion-icon");
+    expect(medallionIcon).not.toBeNull();
   });
 
-  it("prevents placing Quipolatl's Medallion on a room that is already Tier 3", () => {
+  it("prevents placing upgrade medallion on a room that is already Tier 3", () => {
     const { screen } = renderWithProviders(<App />);
 
     // We need to make a room T3.
@@ -91,11 +91,13 @@ describe("Medallion Restrictions", () => {
     expect(medallionIcon).toBeNull();
   });
 
-  it("allows placing Juatalotli's Medallion even on T3 rooms or single tier rooms", () => {
-    const { screen } = renderWithProviders(<App />);
+  it("allows placing lock medallion even on T3 rooms or single tier rooms", () => {
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
-    // Architect's Chamber (single tier)
-    const architectRoom = screen.getByTitle("Architect's Chamber");
+    // Treasure Vault (single tier)
+    const architectRoom = screen.getByTitle("Treasure Vault");
     fireEvent.click(architectRoom);
     const cell41 = screen.getByTestId("cell-4-1");
     fireEvent.click(cell41);

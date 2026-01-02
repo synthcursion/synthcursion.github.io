@@ -1,5 +1,5 @@
 import { createAppSelector } from "src/store";
-import { roomsData } from "src/data/constants.ts/gameUtils.ts";
+import { roomsData } from "src/data/constants.ts";
 
 export const selectRoomsByType = createAppSelector(
   [

@@ -1,9 +1,5 @@
 import { createAppSelector } from "src/store";
-import {
-  GRID_SIZE,
-  roomsData,
-  ENTRY,
-} from "src/data/constants.ts/gameUtils.ts";
+import { GRID_SIZE, roomsData, ENTRY } from "src/data/constants.ts";
 
 import { isPlaceableAt } from "src/utils/isPlaceableAt.ts";
 import { isReachableFromEntry } from "src/utils/isReachable.ts";

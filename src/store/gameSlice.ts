@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { GridCell, PathType } from "../types";
 import queryString from "query-string";
-import { ENTRY, GRID_SIZE } from "src/data/constants.ts/gameUtils.ts";
+import { ENTRY, GRID_SIZE } from "src/data/constants.ts";
 
 export interface GameState {
   grid: (GridCell | null)[][];

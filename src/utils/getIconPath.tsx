@@ -1,5 +1,5 @@
 import type { GridCell } from "src/types.ts";
-import { roomsData } from "src/data/constants.ts/gameUtils.ts";
+import { roomsData } from "src/data/constants.ts";
 
 export function getIconPath(cell: GridCell) {
   if (cell.type === "room") {

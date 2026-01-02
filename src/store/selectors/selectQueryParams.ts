@@ -1,6 +1,6 @@
 import { createAppSelector } from "src/store";
 import queryString from "query-string";
-import { ENTRY } from "src/data/constants.ts/gameUtils.ts";
+import { ENTRY } from "src/data/constants.ts";
 
 export const selectQueryParams = createAppSelector(
   [(state) => state.game.grid, (state) => state.game.debug],

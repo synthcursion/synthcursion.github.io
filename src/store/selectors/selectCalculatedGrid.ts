@@ -1,5 +1,5 @@
 import { createAppSelector } from "src/store";
-import { GRID_SIZE, roomsData } from "src/data/constants.ts/gameUtils.ts";
+import { GRID_SIZE, roomsData } from "src/data/constants.ts";
 import type { Direction, GridCell } from "src/types.ts";
 import { getConnectionsFromPathType } from "src/utils/getConnections.ts";
 
@@ -323,7 +323,23 @@ export const selectCalculatedGrid = createAppSelector(
 
           if (cell.type === "room") {
             if (neighborCell.type === "room") {
-              cell.roomToRoomConnections!.push(dir);
+              const room = roomsData[cell.roomId!];
+              const neighborRoom = roomsData[neighborCell.roomId!];
+              if (room && neighborRoom) {
+                const interacts =
+                  room.UpgradedBy.includes(neighborRoom.Id) ||
+                  neighborRoom.UpgradedBy.includes(room.Id) ||
+                  room.ConvertedBy.includes(neighborRoom.Id) ||
+                  neighborRoom.ConvertedBy.includes(room.Id) ||
+                  room.Id === "Architect" ||
+                  neighborRoom.Id === "Architect" ||
+                  room.IsBossReward ||
+                  neighborRoom.IsBossReward;
+
+                if (interacts) {
+                  cell.roomToRoomConnections!.push(dir);
+                }
+              }
             } else if (
               neighborCell.type === "path" ||
               (nx === 4 && ny === -1)

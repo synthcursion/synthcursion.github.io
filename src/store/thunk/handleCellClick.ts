@@ -1,10 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "src/store";
-import {
-  ENTRY,
-  GRID_SIZE,
-  roomsData,
-} from "src/data/constants.ts/gameUtils.ts";
+import { ENTRY, GRID_SIZE, roomsData } from "src/data/constants.ts";
 import type { GridCell } from "src/types.ts";
 import { getHighlightType, isDeletable } from "src/utils/gridLogic.ts";
 import { setGrid } from "src/store/gameSlice.ts";

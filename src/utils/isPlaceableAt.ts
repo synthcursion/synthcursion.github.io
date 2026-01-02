@@ -1,9 +1,5 @@
 import type { GridCell } from "src/types.ts";
-import {
-  ENTRY,
-  GRID_SIZE,
-  roomsData,
-} from "src/data/constants.ts/gameUtils.ts";
+import { ENTRY, GRID_SIZE, roomsData } from "src/data/constants.ts";
 import { getConnectionsFromPathType } from "src/utils/getConnections.ts";
 
 export const isPlaceableAt = (

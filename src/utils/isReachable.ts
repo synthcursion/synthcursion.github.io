@@ -1,5 +1,5 @@
 import type { GridCell } from "src/types.ts";
-import { ENTRY, GRID_SIZE } from "src/data/constants.ts/gameUtils.ts";
+import { ENTRY, GRID_SIZE } from "src/data/constants.ts";
 import {
   getConnectionsFromPathType,
   getRoomToPathConnections,

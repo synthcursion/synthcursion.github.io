@@ -3,7 +3,7 @@ import "./App.css";
 import { useAppSelector } from "./hooks/store";
 import { Sidebar } from "./components/Sidebar";
 import "./index.css";
-import { RANGE } from "src/data/constants.ts/gameUtils.ts";
+import { RANGE } from "src/data/constants.ts";
 import { HoverInfo } from "src/components/HoverInfo.tsx";
 import { AtziriRoom } from "src/components/cell/AtziriRoom.tsx";
 import { Cell } from "src/components/cell/Cell.tsx";

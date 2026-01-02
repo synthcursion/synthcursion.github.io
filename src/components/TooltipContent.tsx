@@ -1,8 +1,5 @@
 import type { FC } from "react";
-import {
-  processDescription,
-  roomsData,
-} from "src/data/constants.ts/gameUtils.ts";
+import { processDescription, roomsData } from "src/data/constants.ts";
 
 export const TooltipContent: FC<{ content: string | null }> = ({ content }) => {
   if (!content) return null;

@@ -1,5 +1,5 @@
 import { useAppSelector } from "src/hooks/store.ts";
-import { roomsData } from "src/data/constants.ts/gameUtils.ts";
+import { roomsData } from "src/data/constants.ts";
 import { selectHoveredCell } from "src/store/selectors/selectHoveredCell.ts";
 
 export function HoverInfo() {

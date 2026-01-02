@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppSelector } from "src/hooks/store.ts";
 import { getIconPath } from "src/utils/getIconPath.tsx";
-import { roomsData } from "src/data/constants.ts/gameUtils.ts";
+import { roomsData } from "src/data/constants.ts";
 import { selectCell } from "src/store/selectors/selectCell.ts";
 
 export const Content: React.FC<{ x: number; y: number }> = ({ x, y }) => {

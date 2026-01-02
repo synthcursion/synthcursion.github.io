@@ -1,9 +1,5 @@
 import type { Direction, GridCell, PathType } from "src/types.ts";
-import {
-  GRID_SIZE,
-  PATH_TYPES,
-  roomsData,
-} from "src/data/constants.ts/gameUtils.ts";
+import { GRID_SIZE, PATH_TYPES, roomsData } from "src/data/constants.ts";
 
 export const getConnectionsFromPathType = (
   type: PathType,

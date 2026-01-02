@@ -328,14 +328,12 @@ describe("Connection Logic Visuals", () => {
     // Neighbors: (5,0) - Legion, (5,2) - Garrison, (6,1) - Legion, (4,1) - Empty
 
     // legion barracks is not upgraded by nor upgrades commander so it should not be connected to commander
+    const connectionTo52 = cell51.querySelector(".room-connect-top");
+    const connectionTo50 = cell51.querySelector(".room-connect-bottom");
+    const connectionTo61 = cell51.querySelector(".room-connect-right");
 
-    // currently failing - uncomment after refactoring code
-    // const connectionTo52 = cell51.querySelector(".room-connect-top");
-    // const connectionTo50 = cell51.querySelector(".room-connect-bottom");
-    // const connectionTo61 = cell51.querySelector(".room-connect-right");
-    //
-    // expect(connectionTo52).toBeTruthy();
-    // expect(connectionTo50).toBeNull();
-    // expect(connectionTo61).toBeNull();
+    expect(connectionTo52).toBeTruthy();
+    expect(connectionTo50).toBeNull();
+    expect(connectionTo61).toBeNull();
   });
 });
