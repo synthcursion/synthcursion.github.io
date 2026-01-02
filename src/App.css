@@ -398,6 +398,11 @@ label {
     --connection-offset-h: -42%;
 }
 
+.room-connect.p2r-conn {
+    --connection-offset-v: -37%;
+    --connection-offset-h: -33.5%;
+}
+
 .room-connect-top {
     top: var(--connection-offset-v);
     right: var(--connection-offset-h);
