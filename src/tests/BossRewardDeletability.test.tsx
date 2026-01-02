@@ -1,7 +1,7 @@
 import { fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import App from "./App";
-import { renderWithProviders } from "src/test-utils.tsx";
+import App from "src/App.tsx";
+import { renderWithProviders } from "src/utils/test-utils.tsx";
 
 describe("Boss and Reward Room Deletability and Placement", () => {
   it("Boss rooms skip placement restrictions (can be placed in isolation)", () => {

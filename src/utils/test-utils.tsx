@@ -4,8 +4,8 @@ import { render } from "@testing-library/react";
 import { configureStore, type Store } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
-import gameReducer, { getInitialState } from "./store/gameSlice";
-import type { RootState } from "./store";
+import gameReducer, { getInitialState } from "src/store/gameSlice.ts";
+import type { RootState } from "src/store";
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
   queryString?: string;

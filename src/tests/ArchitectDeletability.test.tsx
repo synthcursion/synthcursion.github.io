@@ -1,7 +1,7 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import App from "./App";
-import { renderWithProviders } from "src/test-utils";
+import App from "src/App.tsx";
+import { renderWithProviders } from "src/utils/test-utils.tsx";
 
 // Mock URL and window.history since the App uses it for persistence
 const mockReplaceState = vi.fn();

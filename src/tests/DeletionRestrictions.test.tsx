@@ -1,7 +1,7 @@
-import { screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import App from "./App";
-import { renderWithProviders } from "./test-utils";
+import { fireEvent } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import App from "src/App.tsx";
+import { renderWithProviders } from "src/utils/test-utils.tsx";
 
 // Mock ResizeObserver for react-tooltip
 global.ResizeObserver = vi.fn().mockImplementation(() => ({

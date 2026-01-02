@@ -1,7 +1,7 @@
 import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import App from "./App";
-import { renderWithProviders } from "./test-utils";
+import App from "src/App.tsx";
+import { renderWithProviders } from "src/utils/test-utils.tsx";
 
 describe("Path Placement Restrictions", () => {
   beforeEach(() => {

@@ -1,8 +1,8 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import App from "./App";
-import data from "./data/generated/English.json";
-import { renderWithProviders } from "./test-utils";
+import App from "src/App.tsx";
+import data from "src/data/generated/English.json";
+import { renderWithProviders } from "src/utils/test-utils.tsx";
 
 const roomsData = data.Incursion2Rooms as any;
 

@@ -1,7 +1,7 @@
 import { fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import App from "./App";
-import { renderWithProviders } from "./test-utils";
+import App from "src/App.tsx";
+import { renderWithProviders } from "src/utils/test-utils.tsx";
 
 describe("Toggle to Remove Logic", () => {
   it("removes a room when clicking it with the same room selected", () => {

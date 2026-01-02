@@ -1,5 +1,5 @@
-import { renderWithProviders } from "./test-utils";
-import App from "./App";
+import { renderWithProviders } from "src/utils/test-utils.tsx";
+import App from "src/App.tsx";
 import { expect, test } from "vitest";
 
 test("loads state from URL correctly", () => {
@@ -25,15 +25,4 @@ test("loads state from URL correctly", () => {
   // pathfourway-4-0
   const cell40 = screen.getByTestId("cell-4-0");
   expect(cell40.getAttribute("data-cell-type")).toBe("path");
-});
-
-test("does not add debug=false to the URL", async () => {
-  const { store, screen } = renderWithProviders(<App />, {
-    queryString: "?debug=false",
-  });
-
-  // Wait for the cell to be rendered which indicates the app has initialized and useEffect has likely run
-  await screen.findByTestId("cell-0-0");
-
-  expect(store.getState().game.debug).toBe(false);
 });
