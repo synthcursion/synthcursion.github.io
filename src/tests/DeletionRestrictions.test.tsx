@@ -96,7 +96,7 @@ describe("Deletion Restrictions Logic", () => {
     expect(glow?.getAttribute("src")).toContain("incursion2tileglowred.png");
   });
 
-  it("investigate why Garrison at 7,1 is not deletable", () => {
+  it("checks this one particular case", () => {
     const GRID_SIZE = 9;
     const initialGrid = Array(GRID_SIZE)
       .fill(null)
@@ -134,5 +134,29 @@ describe("Deletion Restrictions Logic", () => {
 
     // If it's deletable, it should be null
     expect(cell71.getAttribute("data-cell-type")).toBe(null);
+  });
+
+  it("implements the same deletability logic for paths", () => {
+    const { screen } = renderApp(
+      "?paths[]=path1-4-1&paths[]=path1-4-2&paths[]=path1-4-3",
+    );
+
+    const cell41 = screen.getByTestId("cell-4-1");
+    const cell42 = screen.getByTestId("cell-4-2");
+    const cell43 = screen.getByTestId("cell-4-3");
+
+    expect(cell41.getAttribute("data-cell-type")).toBe("path");
+    expect(cell42.getAttribute("data-cell-type")).toBe("path");
+    expect(cell43.getAttribute("data-cell-type")).toBe("path");
+
+    // Select Eraser
+    const eraserButton = screen.getByTitle("Eraser");
+    fireEvent.click(eraserButton);
+
+    // Try to delete (4,1)
+    fireEvent.click(cell41);
+
+    // It should NOT be deletable because it would leave (4,2) and (4,3) stranded
+    expect(cell41.getAttribute("data-cell-type")).toBe("path");
   });
 });

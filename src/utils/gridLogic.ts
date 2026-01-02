@@ -356,25 +356,31 @@ export const isDeletable = (
   const reachable = isReachableFromEntry(nextGrid);
   const reachableBefore = isReachableFromEntry(grid);
 
-  // Any non-boss, non-reward room must still be reachable from ENTRY
+  // Any non-boss, non-reward room OR path must still be reachable from ENTRY
   // IF it was reachable before deleting the cell.
   for (let r = 0; r < GRID_SIZE; r++) {
     for (let c = 0; c < GRID_SIZE; c++) {
       const cell = nextGrid[r][c];
-      if (cell && cell.type === "room" && cell.roomId) {
-        const room = roomsData[cell.roomId];
-        const isArchitect = cell.roomId === "Architect";
-        const isAtziri = cell.roomId === "Atziri";
+      if (cell) {
+        if (cell.type === "room" && cell.roomId) {
+          const room = roomsData[cell.roomId];
+          const isArchitect = cell.roomId === "Architect";
+          const isAtziri = cell.roomId === "Atziri";
 
-        if (
-          room &&
-          !room.IsBossReward &&
-          !isArchitect &&
-          !isAtziri &&
-          reachableBefore.has(`${r},${c}`) &&
-          !reachable.has(`${r},${c}`)
-        ) {
-          return false;
+          if (
+            room &&
+            !room.IsBossReward &&
+            !isArchitect &&
+            !isAtziri &&
+            reachableBefore.has(`${r},${c}`) &&
+            !reachable.has(`${r},${c}`)
+          ) {
+            return false;
+          }
+        } else if (cell.type === "path") {
+          if (reachableBefore.has(`${r},${c}`) && !reachable.has(`${r},${c}`)) {
+            return false;
+          }
         }
       }
     }
