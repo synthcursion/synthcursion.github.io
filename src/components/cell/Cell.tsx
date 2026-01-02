@@ -1,18 +1,16 @@
 import { useAppDispatch, useAppSelector } from "src/hooks/store.ts";
-import { selectCalculatedGrid } from "src/store/selectors/selectCalculatedGrid.ts";
 import { getCellPosition } from "src/utils/getCellPosition.tsx";
 import { handleCellClick } from "src/store/thunk/handleCellClick.ts";
 import { setHoveredCell } from "src/store/gameSlice.ts";
 import { Highlight } from "src/components/cell/Highlight.tsx";
 import React from "react";
 import { Content } from "src/components/cell/Content.tsx";
+import { selectCell } from "src/store/selectors/selectCell.ts";
 
 export const Cell: React.FC<{ x: number; y: number }> = ({ x, y }) => {
   const dispatch = useAppDispatch();
-  const calculatedGrid = useAppSelector(selectCalculatedGrid);
   const hoveredCell = useAppSelector((state) => state.game.hoveredCell);
-
-  const cell = calculatedGrid[x]?.[y];
+  const cell = useAppSelector((state) => selectCell(state, x, y));
 
   return (
     <div

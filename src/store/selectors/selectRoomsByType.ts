@@ -2,12 +2,13 @@ import { createAppSelector } from "src/store";
 import { roomsData } from "src/data/constants.ts/gameUtils.ts";
 
 export const selectRoomsByType = createAppSelector(
-  [(state) => state.game.grid],
-  (grid) => {
-    const architectExists = grid.some((row) =>
-      row.some((cell) => cell?.roomId === "Architect"),
-    );
-
+  [
+    (state) =>
+      state.game.grid.some((row) =>
+        row.some((cell) => cell?.roomId === "Architect"),
+      ),
+  ],
+  (architectExists) => {
     const filtered = Object.values(roomsData).filter(
       (r) =>
         !r.IsPathway &&

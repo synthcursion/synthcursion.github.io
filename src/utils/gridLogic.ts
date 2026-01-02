@@ -4,7 +4,7 @@ import {
   GRID_SIZE,
   roomsData,
 } from "src/data/constants.ts/gameUtils.ts";
-import { getConnectionsFromPathType } from "src/utils/pathConnections.ts";
+import { getConnectionsFromPathType } from "src/utils/getConnections.ts";
 
 export const getRoomToRoomConnections = (
   x: number,

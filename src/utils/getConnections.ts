@@ -1,12 +1,49 @@
-import { createAppSelector } from "src/store";
-import { Direction, GridCell } from "src/types";
+import type { Direction, GridCell, PathType } from "src/types.ts";
 import {
-  ENTRY,
   GRID_SIZE,
+  PATH_TYPES,
   roomsData,
 } from "src/data/constants.ts/gameUtils.ts";
-import { getConnectionsFromPathType } from "src/utils/pathConnections.ts";
 
+export const getConnectionsFromPathType = (
+  type: PathType,
+): Record<Direction, boolean> => {
+  const connections = PATH_TYPES[type];
+  return {
+    top: connections.includes("top"),
+    bottom: connections.includes("bottom"),
+    left: connections.includes("left"),
+    right: connections.includes("right"),
+  };
+};
+export const getPathTypeFromConnections = (
+  top: boolean,
+  bottom: boolean,
+  left: boolean,
+  right: boolean,
+): PathType => {
+  const entries = Object.entries(PATH_TYPES) as [PathType, Direction[]][];
+
+  // Try to find an exact match first
+  const exactMatch = entries.find(([, conns]) => {
+    const connectionsNeeded = [
+      top ? "top" : null,
+      bottom ? "bottom" : null,
+      left ? "left" : null,
+      right ? "right" : null,
+    ].filter(Boolean);
+
+    if (conns.length !== connectionsNeeded.length) return false;
+    return connectionsNeeded.every((c) => conns.includes(c as Direction));
+  });
+
+  if (exactMatch) return exactMatch[0];
+
+  // If no exact match, fall back to best fit or defaults
+  if (top || bottom) return "path1";
+  if (left || right) return "path2";
+  return "path1";
+};
 export const getRoomToRoomConnections = (
   x: number,
   y: number,
@@ -61,7 +98,6 @@ export const getRoomToRoomConnections = (
 
   return connections;
 };
-
 export const getRoomToPathConnections = (
   x: number,
   y: number,
@@ -107,77 +143,3 @@ export const getRoomToPathConnections = (
 
   return connections;
 };
-
-export const isReachableFromEntry = (
-  currentGrid: (GridCell | null)[][],
-): Set<string> => {
-  const reachable = new Set<string>();
-  const queue: { x: number; y: number }[] = [{ x: ENTRY.x, y: ENTRY.y }];
-  reachable.add(`${ENTRY.x},${ENTRY.y}`);
-
-  while (queue.length > 0) {
-    const { x, y } = queue.shift()!;
-
-    const neighbors = [
-      { nr: x, nc: y + 1, side: "top" as const, opp: "bottom" as const },
-      { nr: x, nc: y - 1, side: "bottom" as const, opp: "top" as const },
-      { nr: x - 1, nc: y, side: "left" as const, opp: "right" as const },
-      { nr: x + 1, nc: y, side: "right" as const, opp: "left" as const },
-    ];
-
-    neighbors.forEach(({ nr, nc, side, opp }) => {
-      if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
-        if (reachable.has(`${nr},${nc}`)) return;
-
-        const currentCell = currentGrid[x][y];
-        const neighborCell = currentGrid[nr][nc];
-
-        if (!neighborCell) return;
-
-        let canConnect = false;
-        if (currentCell?.type === "room") {
-          const r2r = getRoomToRoomConnections(x, y, currentGrid);
-          const r2p = getRoomToPathConnections(x, y, currentGrid);
-
-          if (neighborCell.type === "room") {
-            if (r2r.includes(side)) canConnect = true;
-          } else if (neighborCell.type === "path") {
-            const conns = getConnectionsFromPathType(neighborCell.pathType!);
-            if (r2p.includes(side) || conns[opp]) {
-              canConnect = true;
-            }
-          }
-        } else if (currentCell?.type === "path") {
-          const currentConns = getConnectionsFromPathType(
-            currentCell.pathType!,
-          );
-          if (neighborCell.type === "room") {
-            const nr2p = getRoomToPathConnections(nr, nc, currentGrid);
-            if (nr2p.includes(opp) || currentConns[side]) {
-              canConnect = true;
-            }
-          } else if (neighborCell.type === "path") {
-            if (currentConns[side]) {
-              const neighborConns = getConnectionsFromPathType(
-                neighborCell.pathType!,
-              );
-              if (neighborConns[opp]) canConnect = true;
-            }
-          }
-        }
-
-        if (canConnect) {
-          reachable.add(`${nr},${nc}`);
-          queue.push({ x: nr, y: nc });
-        }
-      }
-    });
-  }
-
-  return reachable;
-};
-
-export const selectReachableCells = createAppSelector(
-  [(state) => state.game.grid],
-  (grid) => isReachableFromEntry(grid),
-);

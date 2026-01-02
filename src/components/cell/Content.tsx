@@ -1,11 +1,11 @@
 import React from "react";
 import { useAppSelector } from "src/hooks/store.ts";
-import { selectCalculatedGrid } from "src/store/selectors/selectCalculatedGrid.ts";
 import { getIconPath } from "src/utils/getIconPath.tsx";
 import { roomsData } from "src/data/constants.ts/gameUtils.ts";
+import { selectCell } from "src/store/selectors/selectCell.ts";
 
 export const Content: React.FC<{ x: number; y: number }> = ({ x, y }) => {
-  const cell = useAppSelector((state) => selectCalculatedGrid(state)?.[x]?.[y]);
+  const cell = useAppSelector((state) => selectCell(state, x, y));
 
   return (
     <div className="cell-content">

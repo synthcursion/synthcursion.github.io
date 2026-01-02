@@ -12,8 +12,8 @@ import {
 } from "../store/gameSlice";
 import type { IncursionRoom, PathType } from "../types";
 import data from "../data/generated/English.json";
-import { selectCalculatedGrid } from "src/store/selectors/selectCalculatedGrid.ts";
 import { selectRoomsByType } from "src/store/selectors/selectRoomsByType.ts";
+import { selectHoveredCell } from "src/store/selectors/selectHoveredCell.ts";
 
 const roomsData = data.Incursion2Rooms as Record<string, IncursionRoom>;
 
@@ -41,7 +41,7 @@ export const Sidebar = () => {
   const selectedPathType = useAppSelector(
     (state) => state.game.selectedPathType,
   );
-  const hoveredCell = useAppSelector((state) => state.game.hoveredCell);
+  const hoveredCell = useAppSelector(selectHoveredCell);
   const debug = useAppSelector((state) => state.game.debug);
   const showRemovableGlow = useAppSelector(
     (state) => state.game.showRemovableGlow,
@@ -49,12 +49,9 @@ export const Sidebar = () => {
   const showInvalidGlow = useAppSelector((state) => state.game.showInvalidGlow);
   const copyStatus = useAppSelector((state) => state.game.copyStatus);
   const showSidebar = useAppSelector((state) => state.game.showSidebar);
-  const calculatedGrid = useAppSelector(selectCalculatedGrid);
   const roomsByType = useAppSelector(selectRoomsByType);
 
-  const hoveredRoom =
-    hoveredCell &&
-    roomsData[calculatedGrid[hoveredCell.x][hoveredCell.y]?.roomId || ""];
+  const hoveredRoom = hoveredCell && roomsData[hoveredCell.roomId || ""];
 
   const shareLayout = () => {
     const url = window.location.href;

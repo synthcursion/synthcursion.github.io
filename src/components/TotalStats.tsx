@@ -7,7 +7,7 @@ export function TotalStats() {
   const showTotalStats = useAppSelector((state) => state.game.showTotalStats);
   const totalStats = useAppSelector(selectTotalStats);
 
-  if (showTotalStats)
+  if (showTotalStats) {
     return (
       (Object.keys(totalStats.mods).length > 0 ||
         Object.keys(totalStats.descriptions).length > 0) && (
@@ -37,7 +37,7 @@ export function TotalStats() {
         </div>
       )
     );
-  else
+  } else {
     return (
       (Object.keys(totalStats.mods).length > 0 ||
         Object.keys(totalStats.descriptions).length > 0) && (
@@ -50,4 +50,5 @@ export function TotalStats() {
         </button>
       )
     );
+  }
 }

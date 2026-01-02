@@ -12,7 +12,7 @@ import { selectCalculatedGrid } from "src/store/selectors/selectCalculatedGrid.t
 import {
   getConnectionsFromPathType,
   getPathTypeFromConnections,
-} from "src/utils/pathConnections.ts";
+} from "src/utils/getConnections.ts";
 
 export const handleCellClick = createAsyncThunk(
   "game/handleCellClick",

@@ -1,10 +1,10 @@
 import { useAppSelector } from "src/hooks/store.ts";
-import { selectCalculatedGrid } from "src/store/selectors/selectCalculatedGrid.ts";
 import { roomsData } from "src/data/constants.ts/gameUtils.ts";
+import { selectHoveredCell } from "src/store/selectors/selectHoveredCell.ts";
 
 export function HoverInfo() {
-  const calculatedGrid = useAppSelector(selectCalculatedGrid);
   const hoveredCell = useAppSelector((state) => state.game.hoveredCell);
+  const cell = useAppSelector(selectHoveredCell);
 
   if (!hoveredCell) return null;
   const { x, y } = hoveredCell;
@@ -27,7 +27,6 @@ export function HoverInfo() {
     );
   }
 
-  const cell = calculatedGrid[x][y];
   return (
     <div className="hover-info">
       <div className="hover-header">

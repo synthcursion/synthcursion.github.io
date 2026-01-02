@@ -1,7 +1,7 @@
 import { createAppSelector } from "src/store";
 import { GRID_SIZE, roomsData } from "src/data/constants.ts/gameUtils.ts";
 import type { Direction, GridCell } from "src/types.ts";
-import { getConnectionsFromPathType } from "src/utils/pathConnections.ts";
+import { getConnectionsFromPathType } from "src/utils/getConnections.ts";
 
 export const selectCalculatedGrid = createAppSelector(
   [(state) => state.game.grid],

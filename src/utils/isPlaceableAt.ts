@@ -1,11 +1,10 @@
-import { createAppSelector } from "src/store";
-import { GridCell } from "src/types";
+import type { GridCell } from "src/types.ts";
 import {
   ENTRY,
   GRID_SIZE,
   roomsData,
 } from "src/data/constants.ts/gameUtils.ts";
-import { getConnectionsFromPathType } from "src/utils/pathConnections.ts";
+import { getConnectionsFromPathType } from "src/utils/getConnections.ts";
 
 export const isPlaceableAt = (
   x: number,
@@ -197,15 +196,3 @@ export const isPlaceableAt = (
 
   return false;
 };
-
-export const selectIsPlaceableAt = createAppSelector(
-  [(state) => state.game.grid],
-  (grid) => {
-    return (
-      x: number,
-      y: number,
-      targetGrid: (GridCell | null)[][],
-      cellToPlace: GridCell,
-    ): boolean => isPlaceableAt(x, y, targetGrid, cellToPlace);
-  },
-);
