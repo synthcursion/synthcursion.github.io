@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Room to Room Deletability", () => {
   beforeEach(() => {
@@ -9,9 +8,7 @@ describe("Room to Room Deletability", () => {
   });
 
   it("should NOT allow deleting a room if it is the only connection to another room via room-to-room connection", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place Path at 4,1
     fireEvent.click(screen.getByTitle("path2"));
@@ -48,9 +45,7 @@ describe("Room to Room Deletability", () => {
   });
 
   it("should allow deleting a room if the other room is NOT connected via room-to-room connection and has another connection", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place Path at 4,1 and 2,1
     fireEvent.click(screen.getByTitle("path2"));
@@ -99,9 +94,7 @@ describe("Room to Room Deletability", () => {
   });
 
   it("should NOT allow deleting Armoury at 4,1 if it's the sole connection for Garrison at 4,2 and Armoury at 4,3", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place Armoury at 4,1
     fireEvent.click(screen.getAllByTitle("Armoury")[0]);

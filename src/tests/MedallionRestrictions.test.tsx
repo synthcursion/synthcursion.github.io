@@ -1,11 +1,10 @@
 import { fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Medallion Restrictions", () => {
   it("prevents placing upgrade medallion on rooms without multiple tiers", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
 
     // Select Treasure Vault (only 1 tier)
     const architectRoom = screen.getByTitle("Treasure Vault");
@@ -29,7 +28,7 @@ describe("Medallion Restrictions", () => {
   });
 
   it("allows placing upgrade medallion on rooms with multiple tiers", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
 
     // Select Garrison (multiple tiers)
     const garrisonRoom = screen.getByTitle("Garrison");
@@ -54,7 +53,7 @@ describe("Medallion Restrictions", () => {
   });
 
   it("prevents placing upgrade medallion on a room that is already Tier 3", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
 
     // We need to make a room T3.
     // Garrison is upgraded by Commander and Armoury.
@@ -92,9 +91,7 @@ describe("Medallion Restrictions", () => {
   });
 
   it("allows placing lock medallion even on T3 rooms or single tier rooms", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Treasure Vault (single tier)
     const architectRoom = screen.getByTitle("Treasure Vault");

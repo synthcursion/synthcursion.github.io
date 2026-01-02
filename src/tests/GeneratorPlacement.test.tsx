@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Generator Placement Restrictions", () => {
   beforeEach(() => {
@@ -9,7 +8,7 @@ describe("Generator Placement Restrictions", () => {
   });
 
   it("cannot place a generator on an empty grid", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
     const generatorButton = screen.getByTitle("Generator");
     fireEvent.click(generatorButton);
 
@@ -21,9 +20,7 @@ describe("Generator Placement Restrictions", () => {
 
   it("cannot place a generator next to another room", () => {
     // We use debug mode to set up the initial state
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place a Garrison
     const garrisonButton = screen.getAllByTitle("Garrison")[0];
@@ -50,9 +47,7 @@ describe("Generator Placement Restrictions", () => {
   });
 
   it("cannot place a generator next to a path without a facing connection", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place a path1 (top-bottom) at 4,4
     fireEvent.click(screen.getByTitle("path1"));
@@ -73,9 +68,7 @@ describe("Generator Placement Restrictions", () => {
   });
 
   it("CAN place a generator next to a path with a facing connection", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place a path2 (left-right) at 4,4
     fireEvent.click(screen.getByTitle("path2"));

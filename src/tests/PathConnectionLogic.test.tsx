@@ -1,13 +1,10 @@
 import { fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Path Connection Logic", () => {
   it("places the selected path tile when clicking in completely empty space", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "?debug=true",
-    });
+    const { screen } = renderApp("?debug=true");
     const pathButton = screen.getByTitle("path1");
     fireEvent.click(pathButton);
 
@@ -18,7 +15,7 @@ describe("Path Connection Logic", () => {
   });
 
   it("upgrades existing paths with new connections without losing existing ones", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
     const pathButton = screen.getByTitle("path1");
     fireEvent.click(pathButton);
 
@@ -37,9 +34,7 @@ describe("Path Connection Logic", () => {
   });
 
   it("preserves connections even after the neighbor is removed (permanent logic)", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
     const pathButton = screen.getByTitle("path1");
     fireEvent.click(pathButton);
 
@@ -57,7 +52,7 @@ describe("Path Connection Logic", () => {
   });
 
   it("does NOT connect paths to newly placed non-path rooms", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
     // Place a room first
     fireEvent.click(screen.getByTitle("Garrison"));
     fireEvent.click(screen.getByTestId("cell-4-5"));

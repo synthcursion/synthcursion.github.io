@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Room Deletion Restrictions", () => {
   beforeEach(() => {
@@ -10,9 +9,7 @@ describe("Room Deletion Restrictions", () => {
 
   it("cannot delete a room if it leaves another non-boss room stranded", () => {
     // Enable debug to set up the scenario easily
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place Garrison at 4,1 (above ENTRY 4,0)
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);
@@ -51,9 +48,7 @@ describe("Room Deletion Restrictions", () => {
 
   it("CAN delete a room if it only leaves a boss/reward room stranded", () => {
     // Enable debug to set up the scenario easily
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place Garrison at 4,1
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

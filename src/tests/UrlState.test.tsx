@@ -1,12 +1,10 @@
-import { renderWithProviders } from "src/utils/test-utils.tsx";
-import App from "src/App.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 import { expect, test } from "vitest";
 
 test("loads state from URL correctly", () => {
-  const { screen } = renderWithProviders(<App />, {
-    queryString:
-      "?rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
-  });
+  const { screen } = renderApp(
+    "?rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
+  );
 
   // Cells have test-id="cell-{x}-{y}" in App.tsx
   // Let's verify some of them are populated.

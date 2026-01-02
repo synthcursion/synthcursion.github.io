@@ -1,12 +1,10 @@
 import { fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Boss and Reward Room Deletability and Placement", () => {
   it("Boss rooms skip placement restrictions (can be placed in isolation)", () => {
-    const queryString = "?debug=true";
-    const { screen } = renderWithProviders(<App />, { queryString });
+    const { screen } = renderApp("?debug=true");
 
     // Toggle debug off immediately - we want to test normal placement
     const debugCheckbox = screen.getByLabelText(
@@ -24,8 +22,7 @@ describe("Boss and Reward Room Deletability and Placement", () => {
   });
 
   it("Boss rooms are always deletable even if they would break local placement of neighbors", () => {
-    const queryString = "?debug=true";
-    const { screen } = renderWithProviders(<App />, { queryString });
+    const { screen } = renderApp("?debug=true");
 
     // Place Royal Access Chamber at 4,1 (above ENTRY 4,0)
     fireEvent.click(screen.getAllByTitle("Royal Access Chamber")[0]);

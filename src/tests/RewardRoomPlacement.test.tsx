@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Reward Room Placement", () => {
   beforeEach(() => {
@@ -9,7 +8,7 @@ describe("Reward Room Placement", () => {
   });
 
   it("CAN place a reward room in isolation", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
 
     // Currency Vault is a reward room (IsBossReward: true)
     // Find Currency Vault button
@@ -26,7 +25,7 @@ describe("Reward Room Placement", () => {
   });
 
   it("cannot place a regular room in isolation", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
 
     // Garrison is NOT a reward room
     const regularRoomBtn = screen.getAllByTitle("Garrison")[0];

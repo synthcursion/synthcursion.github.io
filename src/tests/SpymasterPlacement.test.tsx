@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Spymaster Placement and Conversion", () => {
   beforeEach(() => {
@@ -12,9 +11,7 @@ describe("Spymaster Placement and Conversion", () => {
     "?rooms[]=Garrison-5-0&rooms[]=Commander-5-1&rooms[]=Garrison-5-2&rooms[]=Garrison-6-1&rooms[]=Armoury-6-2";
 
   it("validates that a spymaster is highlighted as placeable, with a strong glow, at 6,0", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: initialStateQuery + "&debug=true",
-    });
+    const { screen } = renderApp(initialStateQuery + "&debug=true");
 
     // Select Spymaster
     const spymasterButton = screen.getAllByTitle("Spymaster")[0];
@@ -30,9 +27,7 @@ describe("Spymaster Placement and Conversion", () => {
   });
 
   it("converts garrisons after placing spymaster at 6,0", async () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: initialStateQuery + "&debug=true",
-    });
+    const { screen } = renderApp(initialStateQuery + "&debug=true");
 
     // Select Spymaster
     const spymasterButton = screen.getAllByTitle("Spymaster")[0];

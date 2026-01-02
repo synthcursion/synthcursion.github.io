@@ -1,31 +1,11 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
-import App from "src/App.tsx";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
+import { describe, expect, it } from "vitest";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Valid Placement Highlighting", () => {
   it("should not highlight room that could have been validly placed, even if it would not be re-placeable", () => {
-    // rooms[]=Garrison-3-0&rooms[]=Armoury-3-1&rooms[]=Garrison-4-1&rooms[]=Armoury-4-2
-    const params =
-      "?rooms[]=Garrison-3-0&rooms[]=Armoury-3-1&rooms[]=Garrison-4-1&rooms[]=Armoury-4-2";
-
-    // Mocking window.location.search
-    Object.defineProperty(window, "location", {
-      value: {
-        search: params,
-        href: `http://localhost/${params}`,
-      },
-      writable: true,
-    });
-
-    render(<App />);
+    const { screen } = renderApp(
+      "?rooms[]=Garrison-3-0&rooms[]=Armoury-3-1&rooms[]=Garrison-4-1&rooms[]=Armoury-4-2",
+    );
 
     const armoury31 = screen.getByTestId("cell-3-1");
     const armoury42 = screen.getByTestId("cell-4-2");

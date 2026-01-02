@@ -1,13 +1,11 @@
 import { act, fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Architect Deletability Influence", () => {
   it("placing Architect should not prevent deletion of other rooms that connect it", async () => {
     // Enable debug to set up the scenario
-    const queryString = "?debug=true";
-    const { screen } = renderWithProviders(<App />, { queryString });
+    const { screen } = renderApp("?debug=true");
 
     await act(async () => {
       // Place Garrison at 4,1 (above ENTRY 4,0)

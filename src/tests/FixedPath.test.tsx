@@ -1,19 +1,18 @@
 import { fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 export const ENTRY = { x: 4, y: 0 };
 
 describe(`Unremovable Four-way Path at (${ENTRY.x},${ENTRY.y})`, () => {
   it(`should have a path at (${ENTRY.x},${ENTRY.y}) on initial load`, () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
     const cellEntry = screen.getByTestId(`cell-${ENTRY.x}-${ENTRY.y}`);
     expect(cellEntry.getAttribute("data-cell-type")).toBe("path");
   });
 
   it("should not be removable by the eraser", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
     const eraserButton = screen.getByTitle("Eraser");
     fireEvent.click(eraserButton);
 
@@ -24,7 +23,7 @@ describe(`Unremovable Four-way Path at (${ENTRY.x},${ENTRY.y})`, () => {
   });
 
   it("should not be modifiable by another room type", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
     const garrisonButton = screen.getByTitle("Garrison");
     fireEvent.click(garrisonButton);
 
@@ -36,7 +35,7 @@ describe(`Unremovable Four-way Path at (${ENTRY.x},${ENTRY.y})`, () => {
   });
 
   it("should remain after Clear Grid is clicked", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
     const clearButton = screen.getByText("Clear Grid");
     fireEvent.click(clearButton);
 

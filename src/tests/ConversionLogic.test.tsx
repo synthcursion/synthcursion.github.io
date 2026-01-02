@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Room Conversion Logic", () => {
   beforeEach(() => {
@@ -9,9 +8,7 @@ describe("Room Conversion Logic", () => {
   });
 
   it("converts Garrison to Legion Barracks when placed next to Spymaster", async () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place Garrison at 4,4
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);
@@ -31,9 +28,7 @@ describe("Room Conversion Logic", () => {
   });
 
   it("converts Legion Barracks to Transcendent Barracks when placed next to Synthflesh Lab", async () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place Garrison at 4,4
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

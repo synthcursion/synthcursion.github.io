@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 describe("Path Placement Restrictions", () => {
   beforeEach(() => {
@@ -9,9 +8,7 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("cannot place a path in isolation if the grid is not empty", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place first path at 0,0
     fireEvent.click(screen.getByTitle("path1"));
@@ -29,9 +26,7 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("cannot place a path next to another path if they don't connect", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place path1 (top-bottom) at 4,4
     fireEvent.click(screen.getByTitle("path1"));
@@ -51,9 +46,7 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("CAN place a path next to another path if they connect", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place path2 (left-right) at 4,4
     fireEvent.click(screen.getByTitle("path2"));
@@ -73,9 +66,7 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("cannot place a path next to a room (paths must connect to paths)", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "debug=true",
-    });
+    const { screen } = renderApp("debug=true");
 
     // Place a room
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

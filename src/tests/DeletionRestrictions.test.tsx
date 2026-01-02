@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import App from "src/App.tsx";
-import { renderWithProviders } from "src/utils/test-utils.tsx";
+import { renderApp } from "src/utils/test-utils.tsx";
 
 // Mock ResizeObserver for react-tooltip
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -12,7 +11,7 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 
 describe("Deletion Restrictions Logic", () => {
   it("does not allow deleting a tile if it leaves a neighbor unplaceable", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
 
     // Select path1 (top-bottom)
     const path1Button = screen.getByTitle("path1");
@@ -45,7 +44,7 @@ describe("Deletion Restrictions Logic", () => {
   });
 
   it("allows deleting a tile if neighbors have other connections", () => {
-    const { screen } = renderWithProviders(<App />);
+    const { screen } = renderApp();
 
     // Select path1 (top-bottom)
     const path1Button = screen.getByTitle("path1");
@@ -78,9 +77,7 @@ describe("Deletion Restrictions Logic", () => {
   });
 
   it("shows red glow for deletable tiles regardless of selection", () => {
-    const { screen } = renderWithProviders(<App />, {
-      queryString: "paths[]=path1-4-1",
-    });
+    const { screen } = renderApp("paths[]=path1-4-1");
 
     const cell41 = screen.getByTestId("cell-4-1");
 
@@ -122,10 +119,9 @@ describe("Deletion Restrictions Logic", () => {
     // Armoury-8-1
     initialGrid[8][1] = { type: "room", roomId: "Armoury", tier: 1 };
 
-    const { screen } = renderWithProviders(<App />, {
-      queryString:
-        "rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
-    });
+    const { screen } = renderApp(
+      "rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
+    );
 
     const cell71 = screen.getByTestId("cell-7-1");
 
