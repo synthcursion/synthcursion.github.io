@@ -1,6 +1,6 @@
 import { createAppSelector } from "src/store";
 import { selectCalculatedGrid } from "src/store/selectors/selectCalculatedGrid.ts";
-import { roomsData } from "src/utils/gameUtils.ts";
+import { roomsData } from "src/data/constants.ts/gameUtils.ts";
 
 export const selectTotalStats = createAppSelector(
   [selectCalculatedGrid],

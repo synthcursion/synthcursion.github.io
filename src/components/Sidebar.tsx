@@ -1,16 +1,19 @@
 import { useAppDispatch, useAppSelector } from "../hooks/store";
 import {
-  setSelectedType,
-  setSelectedRoomId,
-  setSelectedPathType,
-  setDebug,
-  setShowRemovableGlow,
-  setShowInvalidGlow,
-  setGrid,
   setCopyStatus,
+  setDebug,
+  setGrid,
+  setSelectedPathType,
+  setSelectedRoomId,
+  setSelectedType,
+  setShowInvalidGlow,
+  setShowRemovableGlow,
+  setShowSidebar,
 } from "../store/gameSlice";
-import type { IncursionRoom, PathType, GridCell } from "../types";
+import type { IncursionRoom, PathType } from "../types";
 import data from "../data/generated/English.json";
+import { selectCalculatedGrid } from "src/store/selectors/selectCalculatedGrid.ts";
+import { selectRoomsByType } from "src/store/selectors/selectRoomsByType.ts";
 
 const roomsData = data.Incursion2Rooms as Record<string, IncursionRoom>;
 
@@ -31,21 +34,7 @@ const PATH_TYPES: Record<string, string[]> = {
   paththreeway4: ["bottom", "left", "top"],
 };
 
-interface SidebarProps {
-  roomsByType: {
-    present: {
-      regular: IncursionRoom[];
-      reward: IncursionRoom[];
-    };
-    past: {
-      regular: IncursionRoom[];
-      reward: IncursionRoom[];
-    };
-  };
-  calculatedGrid: (GridCell | null)[][];
-}
-
-export const Sidebar = ({ roomsByType, calculatedGrid }: SidebarProps) => {
+export const Sidebar = () => {
   const dispatch = useAppDispatch();
   const selectedType = useAppSelector((state) => state.game.selectedType);
   const selectedRoomId = useAppSelector((state) => state.game.selectedRoomId);
@@ -59,6 +48,9 @@ export const Sidebar = ({ roomsByType, calculatedGrid }: SidebarProps) => {
   );
   const showInvalidGlow = useAppSelector((state) => state.game.showInvalidGlow);
   const copyStatus = useAppSelector((state) => state.game.copyStatus);
+  const showSidebar = useAppSelector((state) => state.game.showSidebar);
+  const calculatedGrid = useAppSelector(selectCalculatedGrid);
+  const roomsByType = useAppSelector(selectRoomsByType);
 
   const hoveredRoom =
     hoveredCell &&
@@ -73,6 +65,18 @@ export const Sidebar = ({ roomsByType, calculatedGrid }: SidebarProps) => {
       }, 5000);
     });
   };
+
+  if (!showSidebar) {
+    return (
+      <button
+        className="toggle-sidebar"
+        onClick={() => dispatch(setShowSidebar(!showSidebar))}
+        title={showSidebar ? "Hide Sidebar" : "Show Sidebar"}
+      >
+        {showSidebar ? "◀" : "▶"}
+      </button>
+    );
+  }
 
   return (
     <div className="sidebar">

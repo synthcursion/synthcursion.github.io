@@ -1,12 +1,12 @@
 import { createAppSelector } from "src/store";
 import {
   ENTRY,
-  getConnectionsFromPathType,
   GRID_SIZE,
   roomsData,
-} from "src/utils/gameUtils";
+} from "src/data/constants.ts/gameUtils.ts";
 import { isReachableFromEntry } from "./selectReachableCells.ts";
 import { isPlaceableAt } from "./selectIsPlaceableAt";
+import { getConnectionsFromPathType } from "src/utils/pathConnections.ts";
 
 export const selectGetHighlightType = createAppSelector(
   [

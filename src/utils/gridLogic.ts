@@ -1,10 +1,10 @@
 import type { Direction, GridCell } from "../types";
 import {
   ENTRY,
-  getConnectionsFromPathType,
   GRID_SIZE,
   roomsData,
-} from "./gameUtils";
+} from "src/data/constants.ts/gameUtils.ts";
+import { getConnectionsFromPathType } from "src/utils/pathConnections.ts";
 
 export const getRoomToRoomConnections = (
   x: number,

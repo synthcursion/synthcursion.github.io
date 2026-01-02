@@ -2,10 +2,10 @@ import { createAppSelector } from "src/store";
 import { GridCell } from "src/types";
 import {
   ENTRY,
-  getConnectionsFromPathType,
   GRID_SIZE,
   roomsData,
-} from "src/utils/gameUtils";
+} from "src/data/constants.ts/gameUtils.ts";
+import { getConnectionsFromPathType } from "src/utils/pathConnections.ts";
 
 export const isPlaceableAt = (
   x: number,
