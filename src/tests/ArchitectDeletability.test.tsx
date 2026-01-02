@@ -1,4 +1,4 @@
-import { act, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { renderApp } from "src/utils/test-utils.tsx";
 
@@ -7,27 +7,25 @@ describe("Architect Deletability Influence", () => {
     // Enable debug to set up the scenario
     const { screen } = renderApp("?debug=true");
 
-    await act(async () => {
-      // Place Garrison at 4,1 (above ENTRY 4,0)
-      fireEvent.click(screen.getAllByTitle("Garrison")[0]);
-      fireEvent.click(screen.getByTestId("cell-4-1"));
+    // Place Garrison at 4,1 (above ENTRY 4,0)
+    fireEvent.click(screen.getAllByTitle("Garrison")[0]);
+    fireEvent.click(screen.getByTestId("cell-4-1"));
 
-      // Place Architect at 4,2 (above Garrison)
-      fireEvent.click(screen.getAllByTitle("Architect's Chamber")[0]);
-      fireEvent.click(screen.getByTestId("cell-4-2"));
+    // Place Architect at 4,2 (above Garrison)
+    fireEvent.click(screen.getAllByTitle("Architect's Chamber")[0]);
+    fireEvent.click(screen.getByTestId("cell-4-2"));
 
-      // Toggle debug off
-      const debugCheckbox = screen.getByLabelText(
-        "ignore placement restrictions",
-      );
-      fireEvent.click(debugCheckbox);
+    // Toggle debug off
+    const debugCheckbox = screen.getByLabelText(
+      "ignore placement restrictions",
+    );
+    fireEvent.click(debugCheckbox);
 
-      // Try to delete Garrison (4,1).
-      // If Architect (4,2) is treated as a regular room that MUST be reachable,
-      // deleting Garrison will be blocked because Architect would be stranded.
-      fireEvent.click(screen.getByTitle("Eraser"));
-      fireEvent.click(screen.getByTestId("cell-4-1"));
-    });
+    // Try to delete Garrison (4,1).
+    // If Architect (4,2) is treated as a regular room that MUST be reachable,
+    // deleting Garrison will be blocked because Architect would be stranded.
+    fireEvent.click(screen.getByTitle("Eraser"));
+    fireEvent.click(screen.getByTestId("cell-4-1"));
 
     // Expected behavior per issue: Architect should NOT affect deletability.
     // So Garrison SHOULD be deletable even if Architect is stranded.

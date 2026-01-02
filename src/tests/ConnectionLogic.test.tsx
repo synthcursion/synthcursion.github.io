@@ -1,4 +1,4 @@
-import { act, fireEvent } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderApp } from "src/utils/test-utils.tsx";
 import { roomsData } from "src/data/constants.ts";
@@ -12,16 +12,12 @@ describe("Connection Logic Visuals", () => {
     const { screen } = renderApp("debug=true");
 
     // Place Architect at 4,4
-    act(() => {
-      fireEvent.click(screen.getByTitle("Architect's Chamber"));
-      fireEvent.click(screen.getByTestId("cell-4-4"));
-    });
+    fireEvent.click(screen.getByTitle("Architect's Chamber"));
+    fireEvent.click(screen.getByTestId("cell-4-4"));
 
     // Place Garrison at 4,5
-    act(() => {
-      fireEvent.click(screen.getByTitle("Garrison"));
-      fireEvent.click(screen.getByTestId("cell-4-5"));
-    });
+    fireEvent.click(screen.getByTitle("Garrison"));
+    fireEvent.click(screen.getByTestId("cell-4-5"));
 
     // (4,5) is y+1 relative to (4,4) -> direction "top" for (4,4)
     // (4,4) is y-1 relative to (4,5) -> direction "bottom" for (4,5)
@@ -49,16 +45,12 @@ describe("Connection Logic Visuals", () => {
       (r) => r.IsBossReward && r.Id !== "Atziri",
     )!;
 
-    act(() => {
-      fireEvent.click(screen.getByTitle(rewardRoom.Name));
-      fireEvent.click(screen.getByTestId("cell-4-4"));
-    });
+    fireEvent.click(screen.getByTitle(rewardRoom.Name));
+    fireEvent.click(screen.getByTestId("cell-4-4"));
 
     // Place Garrison at 5,4 (right)
-    act(() => {
-      fireEvent.click(screen.getByTitle("Garrison"));
-      fireEvent.click(screen.getByTestId("cell-5-4"));
-    });
+    fireEvent.click(screen.getByTitle("Garrison"));
+    fireEvent.click(screen.getByTestId("cell-5-4"));
 
     const rewardCell = screen.getByTestId("cell-4-4");
     const garrisonCell = screen.getByTestId("cell-5-4");
@@ -81,15 +73,11 @@ describe("Connection Logic Visuals", () => {
     const { screen } = renderApp("debug=true");
 
     // Garrison is upgraded by Commander
-    act(() => {
-      fireEvent.click(screen.getByTitle("Garrison"));
-      fireEvent.click(screen.getByTestId("cell-4-4"));
-    });
+    fireEvent.click(screen.getByTitle("Garrison"));
+    fireEvent.click(screen.getByTestId("cell-4-4"));
 
-    act(() => {
-      fireEvent.click(screen.getByTitle("Commander"));
-      fireEvent.click(screen.getByTestId("cell-4-3")); // y-1 -> bottom of Garrison
-    });
+    fireEvent.click(screen.getByTitle("Commander"));
+    fireEvent.click(screen.getByTestId("cell-4-3")); // y-1 -> bottom of Garrison
 
     const garrisonCell = screen.getByTestId("cell-4-4");
     const commanderCell = screen.getByTestId("cell-4-3");
