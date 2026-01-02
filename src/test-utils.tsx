@@ -1,11 +1,11 @@
-import React, { PropsWithChildren } from "react";
-import { render } from "@testing-library/react";
+import React from "react";
 import type { RenderOptions } from "@testing-library/react";
-import { configureStore } from "@reduxjs/toolkit";
+import { render } from "@testing-library/react";
+import { configureStore, type Store } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
 import gameReducer, { getInitialState } from "./store/gameSlice";
-import { RootState } from "./store";
+import type { RootState } from "./store";
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
   queryString?: string;
@@ -22,12 +22,15 @@ export function renderWithProviders(
       preloadedState: {
         game: getInitialState(queryString),
       },
-    }),
+    }) as Store<RootState>,
     ...renderOptions
   }: ExtendedRenderOptions = {},
 ) {
-  function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
-    return <Provider store={store}>{children}</Provider>;
-  }
-  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+  return {
+    store,
+    screen: render(ui, {
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+      ...renderOptions,
+    }),
+  };
 }

@@ -9,7 +9,9 @@ describe("Room Conversion Logic", () => {
   });
 
   it("converts Garrison to Legion Barracks when placed next to Spymaster", async () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place Garrison at 4,4
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);
@@ -29,7 +31,9 @@ describe("Room Conversion Logic", () => {
   });
 
   it("converts Legion Barracks to Transcendent Barracks when placed next to Synthflesh Lab", async () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place Garrison at 4,4
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

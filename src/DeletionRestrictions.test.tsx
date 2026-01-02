@@ -12,7 +12,7 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 
 describe("Deletion Restrictions Logic", () => {
   it("does not allow deleting a tile if it leaves a neighbor unplaceable", () => {
-    renderWithProviders(<App />);
+    const { screen } = renderWithProviders(<App />);
 
     // Select path1 (top-bottom)
     const path1Button = screen.getByTitle("path1");
@@ -45,7 +45,7 @@ describe("Deletion Restrictions Logic", () => {
   });
 
   it("allows deleting a tile if neighbors have other connections", () => {
-    renderWithProviders(<App />);
+    const { screen } = renderWithProviders(<App />);
 
     // Select path1 (top-bottom)
     const path1Button = screen.getByTitle("path1");
@@ -78,7 +78,7 @@ describe("Deletion Restrictions Logic", () => {
   });
 
   it("shows red glow for deletable tiles regardless of selection", () => {
-    renderWithProviders(<App />, {
+    const { screen } = renderWithProviders(<App />, {
       queryString: "paths[]=path1-4-1",
     });
 
@@ -122,7 +122,7 @@ describe("Deletion Restrictions Logic", () => {
     // Armoury-8-1
     initialGrid[8][1] = { type: "room", roomId: "Armoury", tier: 1 };
 
-    renderWithProviders(<App />, {
+    const { screen } = renderWithProviders(<App />, {
       queryString:
         "rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
     });

@@ -9,7 +9,7 @@ describe("Reward Room Placement", () => {
   });
 
   it("CAN place a reward room in isolation", () => {
-    renderWithProviders(<App />);
+    const { screen } = renderWithProviders(<App />);
 
     // Currency Vault is a reward room (IsBossReward: true)
     // Find Currency Vault button
@@ -26,7 +26,7 @@ describe("Reward Room Placement", () => {
   });
 
   it("cannot place a regular room in isolation", () => {
-    renderWithProviders(<App />);
+    const { screen } = renderWithProviders(<App />);
 
     // Garrison is NOT a reward room
     const regularRoomBtn = screen.getAllByTitle("Garrison")[0];

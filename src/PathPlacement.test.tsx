@@ -9,7 +9,9 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("cannot place a path in isolation if the grid is not empty", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place first path at 0,0
     fireEvent.click(screen.getByTitle("path1"));
@@ -27,7 +29,9 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("cannot place a path next to another path if they don't connect", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place path1 (top-bottom) at 4,4
     fireEvent.click(screen.getByTitle("path1"));
@@ -47,7 +51,9 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("CAN place a path next to another path if they connect", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place path2 (left-right) at 4,4
     fireEvent.click(screen.getByTitle("path2"));
@@ -67,7 +73,9 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("cannot place a path next to a room (paths must connect to paths)", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place a room
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

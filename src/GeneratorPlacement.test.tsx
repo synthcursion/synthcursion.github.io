@@ -9,7 +9,7 @@ describe("Generator Placement Restrictions", () => {
   });
 
   it("cannot place a generator on an empty grid", () => {
-    renderWithProviders(<App />);
+    const { screen } = renderWithProviders(<App />);
     const generatorButton = screen.getByTitle("Generator");
     fireEvent.click(generatorButton);
 
@@ -21,7 +21,9 @@ describe("Generator Placement Restrictions", () => {
 
   it("cannot place a generator next to another room", () => {
     // We use debug mode to set up the initial state
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place a Garrison
     const garrisonButton = screen.getAllByTitle("Garrison")[0];
@@ -48,7 +50,9 @@ describe("Generator Placement Restrictions", () => {
   });
 
   it("cannot place a generator next to a path without a facing connection", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place a path1 (top-bottom) at 4,4
     fireEvent.click(screen.getByTitle("path1"));
@@ -69,7 +73,9 @@ describe("Generator Placement Restrictions", () => {
   });
 
   it("CAN place a generator next to a path with a facing connection", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place a path2 (left-right) at 4,4
     fireEvent.click(screen.getByTitle("path2"));

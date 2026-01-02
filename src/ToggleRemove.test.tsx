@@ -1,11 +1,11 @@
-import { screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireEvent } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import { App } from "./App";
 import { renderWithProviders } from "./test-utils";
 
 describe("Toggle to Remove Logic", () => {
   it("removes a room when clicking it with the same room selected", () => {
-    const { store } = renderWithProviders(<App />, {
+    const { screen } = renderWithProviders(<App />, {
       queryString: "debug=true",
     });
     const roomButton = screen.getByTitle("Garrison");
@@ -22,7 +22,7 @@ describe("Toggle to Remove Logic", () => {
   });
 
   it("removes any path when clicking it with ANY path selected", () => {
-    renderWithProviders(<App />, {
+    const { screen } = renderWithProviders(<App />, {
       queryString: "debug=true",
     });
 
@@ -52,7 +52,7 @@ describe("Toggle to Remove Logic", () => {
   });
 
   it("updates neighbors when a path is removed", () => {
-    renderWithProviders(<App />, {
+    const { screen } = renderWithProviders(<App />, {
       queryString: "debug=true",
     });
     const path1Button = screen.getByTitle("path1");

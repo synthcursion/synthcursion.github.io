@@ -1,5 +1,5 @@
-import { screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireEvent } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 import { renderWithProviders } from "./test-utils";
 
@@ -10,7 +10,9 @@ describe("Room Deletion Restrictions", () => {
 
   it("cannot delete a room if it leaves another non-boss room stranded", () => {
     // Enable debug to set up the scenario easily
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place Garrison at 4,1 (above ENTRY 4,0)
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);
@@ -19,6 +21,14 @@ describe("Room Deletion Restrictions", () => {
     // Place Armoury at 4,2 (above Garrison)
     fireEvent.click(screen.getAllByTitle("Armoury")[0]);
     fireEvent.click(screen.getByTestId("cell-4-2"));
+
+    // Garrison should still be there
+    expect(screen.getByTestId("cell-4-1").getAttribute("data-room-id")).toBe(
+      "Garrison",
+    );
+    expect(screen.getByTestId("cell-4-2").getAttribute("data-room-id")).toBe(
+      "Armoury",
+    );
 
     // Toggle debug off
     const debugCheckbox = screen.getByLabelText(
@@ -31,17 +41,19 @@ describe("Room Deletion Restrictions", () => {
     fireEvent.click(screen.getByTestId("cell-4-1"));
 
     // Garrison should still be there
-    expect(screen.getByTestId("cell-4-1").getAttribute("data-cell-type")).toBe(
-      "room",
+    expect(screen.getByTestId("cell-4-1").getAttribute("data-room-id")).toBe(
+      "Garrison",
     );
-    expect(screen.getByTestId("cell-4-2").getAttribute("data-cell-type")).toBe(
-      "room",
+    expect(screen.getByTestId("cell-4-2").getAttribute("data-room-id")).toBe(
+      "Armoury",
     );
   });
 
   it("CAN delete a room if it only leaves a boss/reward room stranded", () => {
     // Enable debug to set up the scenario easily
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place Garrison at 4,1
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

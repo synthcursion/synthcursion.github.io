@@ -1,5 +1,5 @@
-import { screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireEvent } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
 import data from "./data/generated/English.json";
 import { renderWithProviders } from "./test-utils";
@@ -12,7 +12,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows room-to-room connection for Architect", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place Architect at 4,4
     fireEvent.click(screen.getByTitle("Architect's Chamber"));
@@ -29,22 +31,20 @@ describe("Connection Logic Visuals", () => {
     const garrisonCell = screen.getByTestId("cell-4-5");
 
     // Check for connection images
-    const r2r_top = architectCell.querySelector(
-      'img[src*="roomconnectroomvertical"]',
-    );
-    const r2r_bot = garrisonCell.querySelector(
-      'img[src*="roomconnectroomvertical"]',
-    );
+    const r2r_top = architectCell.querySelector(".room-connect-top");
+    const r2r_bot = garrisonCell.querySelector(".room-connect-bottom");
 
     expect(r2r_top).toBeTruthy();
     expect(r2r_bot).toBeTruthy();
 
-    expect(r2r_top?.className).toContain("room-connect-top");
-    expect(r2r_bot?.className).toContain("room-connect-bottom");
+    expect(r2r_top?.getAttribute("src")).toContain("roomconnectroomvertical");
+    expect(r2r_bot?.getAttribute("src")).toContain("roomconnectroomvertical");
   });
 
   it("shows room-to-room connection for Reward rooms", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Find a reward room. "Atziri" is one, but it's fixed at 4,9.
     // Let's find another one from data.
@@ -77,7 +77,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows room-to-room connection for UpgradedBy rooms", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Garrison is upgraded by Commander
     fireEvent.click(screen.getByTitle("Garrison"));
@@ -104,7 +106,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows room-to-path connection when NOT connected to a path", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place a room at 4,4
     fireEvent.click(screen.getByTitle("Garrison"));
@@ -138,7 +142,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows powered connections when powered", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place Generator at 4,4
     fireEvent.click(screen.getByTitle("Generator"));
@@ -166,7 +172,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows connection to Entry point (4,0)", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place a room at 4,1.
     // Entry is at 4,0. 4,0 is y-1 relative to 4,1 -> bottom.
@@ -182,7 +190,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("Does not show connection to Atziri's Chamber (4,9)", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Atziri is at 4,9. Place a room at 4,8.
     // 4,9 is y+1 relative to 4,8 -> top.
@@ -197,7 +207,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows path-to-path connection", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place path1 (top-bottom) at 4,4
     fireEvent.click(screen.getByTitle("path1"));
@@ -220,7 +232,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows path-to-room connection", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place Garrison at 4,4
     fireEvent.click(screen.getByTitle("Garrison"));
@@ -256,7 +270,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows pathconnect for permanent path-to-room connection", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Entry point (4,0) is a pathfourway.
     // Place Garrison at (3,0) (x-1 -> Left)
@@ -272,7 +288,9 @@ describe("Connection Logic Visuals", () => {
   });
 
   it("shows pathconnect for permanent room-to-path connection", () => {
-    renderWithProviders(<App />, { queryString: "debug=true" });
+    const { screen } = renderWithProviders(<App />, {
+      queryString: "debug=true",
+    });
 
     // Place Garrison at (3,0)
     fireEvent.click(screen.getByTitle("Garrison"));
