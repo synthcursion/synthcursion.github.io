@@ -1,0 +1,339 @@
+import {createAppSelector} from "src/store";
+import {
+  getConnectionsFromPathType,
+  GRID_SIZE,
+  roomsData,
+} from "src/utils/gameUtils.ts";
+import type { Direction, GridCell } from "src/types.ts";
+
+export const selectCalculatedGrid = createAppSelector(
+  [(state) => state.game.grid],
+  (grid) => {
+    const newGrid = grid.map((row) =>
+      row.map((cell) => (cell ? { ...cell } : null)),
+    );
+
+    // 0. Phase 0: Conversions
+    let changed = true;
+    let iterations = 0;
+    while (changed && iterations < 5) {
+      changed = false;
+      iterations++;
+      newGrid.forEach((row, x) => {
+        row.forEach((cell, y) => {
+          if (cell && cell.type === "room" && cell.roomId) {
+            const currentRoom = roomsData[cell.roomId];
+            if (!currentRoom) return;
+
+            const neighbors = [
+              [x - 1, y],
+              [x + 1, y],
+              [x, y - 1],
+              [x, y + 1],
+            ];
+            for (let i = 0; i < currentRoom.ConvertedBy.length; i++) {
+              const converterId = currentRoom.ConvertedBy[i];
+              const convertToId = currentRoom.ConvertedTo[i];
+              const converterRoom = roomsData[converterId];
+              const convertToRoom = roomsData[convertToId];
+
+              if (!converterRoom || !convertToRoom) continue;
+
+              const isAdjacentToConverter = neighbors.some(([nx, ny]) => {
+                if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+                  const neighbor = newGrid[nx][ny];
+                  return (
+                    neighbor &&
+                    neighbor.type === "room" &&
+                    neighbor.roomId === converterRoom.Id
+                  );
+                }
+                return false;
+              });
+
+              if (isAdjacentToConverter) {
+                if (cell.roomId !== convertToRoom.Id) {
+                  cell.roomId = convertToRoom.Id;
+                  changed = true;
+                }
+                break;
+              }
+            }
+          }
+        });
+      });
+    }
+
+    // 1. Phase 1: Adjacency and Medallions
+    newGrid.forEach((row, x) => {
+      row.forEach((cell, y) => {
+        if (cell && cell.type === "room" && cell.roomId) {
+          cell.upgradedByRooms = [];
+          const baseRoom = roomsData[cell.roomId];
+          if (baseRoom) {
+            const connectedCounts: Record<string, number> = {};
+            const connectedRoomNames: Record<string, string> = {};
+            const neighbors = [
+              [x - 1, y],
+              [x + 1, y],
+              [x, y - 1],
+              [x, y + 1],
+            ];
+            neighbors.forEach(([nr, nc]) => {
+              if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
+                const neighbor = newGrid[nr][nc];
+                if (neighbor && neighbor.type === "room" && neighbor.roomId) {
+                  const nBaseRoom = roomsData[neighbor.roomId];
+                  if (nBaseRoom) {
+                    connectedCounts[nBaseRoom.Id] =
+                      (connectedCounts[nBaseRoom.Id] || 0) + 1;
+                    connectedRoomNames[nBaseRoom.Id] = nBaseRoom.Name;
+                  }
+                }
+              }
+            });
+
+            const upgradeByCounts: Record<string, number> = {};
+            baseRoom.UpgradedBy.forEach((id) => {
+              const upgradeRoom = roomsData[id];
+              if (upgradeRoom) {
+                upgradeByCounts[id] = (upgradeByCounts[id] || 0) + 1;
+              }
+            });
+
+            let bonus = 0;
+            const hasThreeCopy = Object.values(upgradeByCounts).some(
+              (count) => count === 3,
+            );
+
+            if (hasThreeCopy) {
+              let hasTwoOfThree = false;
+              for (const id in upgradeByCounts) {
+                if (
+                  upgradeByCounts[id] === 3 &&
+                  (connectedCounts[id] || 0) >= 2
+                ) {
+                  hasTwoOfThree = true;
+                  break;
+                }
+              }
+              if (hasTwoOfThree) {
+                let totalMatches = 0;
+                for (const id in upgradeByCounts) {
+                  if (upgradeByCounts[id] === 3) {
+                    totalMatches += connectedCounts[id] || 0;
+                  }
+                }
+                if (totalMatches >= 3) {
+                  bonus = 2;
+                } else {
+                  bonus = 1;
+                }
+              }
+            } else {
+              for (const id in upgradeByCounts) {
+                if (connectedCounts[id]) {
+                  bonus += connectedCounts[id];
+                }
+              }
+            }
+
+            if (bonus > 0) {
+              for (const id in upgradeByCounts) {
+                if (connectedCounts[id]) {
+                  cell.upgradedByRooms!.push(connectedRoomNames[id]);
+                }
+              }
+            }
+
+            cell.tier = Math.min(1 + bonus, baseRoom.MaxLevel);
+          }
+        }
+      });
+    });
+
+    // 2. Phase 2: Power and Generators
+    newGrid.forEach((row) => {
+      row.forEach((cell) => {
+        if (cell && cell.type === "room") {
+          cell.isPowered = false;
+          cell.poweredByGenerators = [];
+        }
+      });
+    });
+
+    const generators: { x: number; y: number; tier: number }[] = [];
+    newGrid.forEach((row, x) => {
+      row.forEach((cell, y) => {
+        if (cell && cell.type === "room" && cell.roomId === "Generator") {
+          generators.push({ x, y, tier: cell.tier || 1 });
+        }
+      });
+    });
+
+    generators.forEach((gen) => {
+      const queue: { x: number; y: number; dist: number }[] = [
+        { x: gen.x, y: gen.y, dist: 0 },
+      ];
+      const visited = new Set<string>();
+      visited.add(`${gen.x},${gen.y}`);
+
+      while (queue.length > 0) {
+        const { x, y, dist } = queue.shift()!;
+        if (dist > gen.tier) continue;
+
+        const cell = newGrid[x][y];
+        if (cell && cell.type === "room") {
+          cell.isPowered = true;
+          if (dist > 0) {
+            cell.poweredByGenerators!.push({
+              x: gen.x,
+              y: gen.y,
+              tier: gen.tier,
+              distance: dist,
+            });
+          }
+        }
+
+        const neighbors = [
+          [x - 1, y],
+          [x + 1, y],
+          [x, y - 1],
+          [x, y + 1],
+        ];
+        neighbors.forEach(([nx, ny]) => {
+          if (
+            nx >= 0 &&
+            nx < GRID_SIZE &&
+            ny >= 0 &&
+            ny < GRID_SIZE &&
+            !visited.has(`${nx},${ny}`)
+          ) {
+            const neighbor = newGrid[nx][ny];
+            if (neighbor && neighbor.type === "room") {
+              visited.add(`${nx},${ny}`);
+              queue.push({ x: nx, y: ny, dist: dist + 1 });
+            }
+          }
+        });
+      }
+    });
+
+    // 3. Phase 3: Path Connections
+    const extendedGrid = [...newGrid.map((row) => [...row])];
+    const oppositeDir: Record<Direction, Direction> = {
+      top: "bottom",
+      bottom: "top",
+      left: "right",
+      right: "left",
+    };
+
+    extendedGrid.forEach((row, x) => {
+      row.forEach((cell, y) => {
+        if (!cell) return;
+
+        cell.roomToRoomConnections = [];
+        cell.roomToPathConnections = [];
+        cell.roomToPathPermanentConnections = [];
+        cell.pathToPathConnections = [];
+        cell.pathToRoomConnections = [];
+        cell.pathToRoomPermanentConnections = [];
+
+        const neighbors = [
+          { nx: x, ny: y + 1, dir: "top" },
+          { nx: x, ny: y - 1, dir: "bottom" },
+          { nx: x - 1, ny: y, dir: "left" },
+          { nx: x + 1, ny: y, dir: "right" },
+        ] as { nx: number; ny: number; dir: Direction }[];
+
+        neighbors.forEach(({ nx, ny, dir }) => {
+          let neighborCell: GridCell | null = null;
+          if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
+            neighborCell = extendedGrid[nx][ny];
+          } else if (nx === 4 && ny === -1) {
+            neighborCell = { type: "path", pathType: "pathfourway" };
+          }
+
+          if (!neighborCell) return;
+
+          if (cell.type === "room") {
+            if (neighborCell.type === "room") {
+              cell.roomToRoomConnections!.push(dir);
+            } else if (
+              neighborCell.type === "path" ||
+              (nx === 4 && ny === -1)
+            ) {
+              const neighborPathType = neighborCell?.pathType || "pathfourway";
+              const neighborPathConns =
+                getConnectionsFromPathType(neighborPathType);
+
+              if (neighborPathConns[oppositeDir[dir]]) {
+                cell.roomToPathPermanentConnections!.push(dir);
+                if (neighborCell.type === "path") {
+                  neighborCell.pathToRoomPermanentConnections =
+                    neighborCell.pathToRoomPermanentConnections || [];
+                  if (
+                    !neighborCell.pathToRoomPermanentConnections.includes(
+                      oppositeDir[dir],
+                    )
+                  ) {
+                    neighborCell.pathToRoomPermanentConnections.push(
+                      oppositeDir[dir],
+                    );
+                  }
+                }
+              } else {
+                cell.roomToPathConnections!.push(dir);
+                if (neighborCell.type === "path") {
+                  neighborCell.pathToRoomConnections =
+                    neighborCell.pathToRoomConnections || [];
+                  if (
+                    !neighborCell.pathToRoomConnections.includes(
+                      oppositeDir[dir],
+                    )
+                  ) {
+                    neighborCell.pathToRoomConnections.push(oppositeDir[dir]);
+                  }
+                }
+              }
+            }
+          } else if (cell.type === "path") {
+            const currentPathConns = getConnectionsFromPathType(
+              cell.pathType || "path1",
+            );
+
+            if (neighborCell.type === "path" || (nx === 4 && ny === -1)) {
+              const neighborPathType = neighborCell?.pathType || "pathfourway";
+              const neighborPathConns =
+                getConnectionsFromPathType(neighborPathType);
+
+              if (
+                currentPathConns[dir] ||
+                neighborPathConns[oppositeDir[dir]]
+              ) {
+                if (!cell.pathToPathConnections!.includes(dir)) {
+                  cell.pathToPathConnections!.push(dir);
+                }
+              }
+            } else if (neighborCell.type === "room") {
+              const neighborRoomId = neighborCell.roomId;
+              if (neighborRoomId !== "Generator") {
+                if (currentPathConns[dir]) {
+                  if (!cell.pathToRoomPermanentConnections!.includes(dir)) {
+                    cell.pathToRoomPermanentConnections!.push(dir);
+                  }
+                } else {
+                  if (!cell.pathToRoomConnections!.includes(dir)) {
+                    cell.pathToRoomConnections!.push(dir);
+                  }
+                }
+              }
+            }
+          }
+        });
+      });
+    });
+
+    return extendedGrid;
+  },
+);
