@@ -143,6 +143,10 @@ export const selectCalculatedGrid = createAppSelector(
               }
             }
 
+            if (cell.medallionType === "medallion_levelup") {
+              bonus += 1;
+            }
+
             cell.tier = Math.min(1 + bonus, baseRoom.MaxLevel);
           }
         }
