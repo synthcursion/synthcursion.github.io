@@ -61,3 +61,8 @@ export const getPathTypeFromConnections = (
   if (left || right) return "path2";
   return "path1";
 };
+
+export function processDescription(text: string) {
+  if (!text) return text;
+  return text.replace(/\[[^|\]]+\|([^\]]+)]/g, "$1");
+}
