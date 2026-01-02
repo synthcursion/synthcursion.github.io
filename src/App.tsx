@@ -50,7 +50,8 @@ export function App() {
   ): "regular" | "strong" | "deletable" | "invalid" | null => {
     if (grid[x][y]) {
       const cell = grid[x][y]!;
-      if (!isPlaceableAt(x, y, grid, cell)) {
+      const isPlaceable = isPlaceableAt(x, y, grid, cell);
+      if (!isPlaceable) {
         return "invalid";
       }
 
@@ -154,8 +155,9 @@ export function App() {
           });
 
           if (
-            nUpgradedByCounts[selectedRoomId] &&
-            currentUpgradesByType < nUpgradedByCounts[selectedRoomId]
+            (nUpgradedByCounts[selectedRoomId] &&
+              currentUpgradesByType < nUpgradedByCounts[selectedRoomId]) ||
+            nBaseRoom.ConvertedBy.includes(selectedRoomId)
           ) {
             canPlaceStrong = true;
           }
@@ -183,7 +185,7 @@ export function App() {
     });
 
     if (canPlaceStrong) return "strong";
-    if (canPlaceRegular) return "regular";
+    if (canPlaceRegular || debug) return "regular";
 
     // Reward rooms can be placed anywhere
     if (selectedRoom?.IsBossReward) {
@@ -214,7 +216,7 @@ export function App() {
       if (isNextToEntry) return "regular";
     }
 
-    return null;
+    return debug ? "regular" : null;
   };
 
   const isPlaceableAt = (
@@ -441,17 +443,20 @@ export function App() {
         const currentRoom = roomsData[cell.roomId!];
         const otherRoom = roomsData[neighborCell.roomId!];
 
+        if (!currentRoom || !otherRoom) return;
+
         const isArchitect =
           cell.roomId === "Architect" || neighborCell.roomId === "Architect";
-        const isReward =
-          (currentRoom && currentRoom.IsBossReward) ||
-          (otherRoom && otherRoom.IsBossReward);
+        const isReward = currentRoom.IsBossReward || otherRoom.IsBossReward;
         const isUpgrade =
-          (currentRoom &&
-            currentRoom.UpgradedBy.includes(neighborCell.roomId!)) ||
-          (otherRoom && otherRoom.UpgradedBy.includes(cell.roomId!));
+          currentRoom.UpgradedBy.includes(neighborCell.roomId!) ||
+          otherRoom.UpgradedBy.includes(cell.roomId!);
 
-        if (isArchitect || isReward || isUpgrade) {
+        const isConversion =
+          currentRoom.ConvertedBy.includes(neighborCell.roomId!) ||
+          otherRoom.ConvertedBy.includes(cell.roomId!);
+
+        if (isArchitect || isReward || isUpgrade || isConversion) {
           connections.push(dir);
         }
       }
