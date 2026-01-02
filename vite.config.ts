@@ -80,6 +80,7 @@ const datExport = (options: DatExportOptions): Plugin => {
     },
 
     async buildStart() {
+      await fs.mkdir(outputRoot, { recursive: true });
       const cdnUrl = await fetch("https://ggpk.exposed/version?poe=2").then(
         (r) => r.text(),
       );
@@ -87,6 +88,16 @@ const datExport = (options: DatExportOptions): Plugin => {
       if (!patch) {
         throw new Error("Could not find patch version from cdnUrl");
       }
+      const versionFile = path.join(outputRoot, `version.json`);
+      // compare patch to existing version
+      const existingVersion = await fs
+        .readFile(versionFile, "utf-8")
+        .catch(() => null);
+      if (existingVersion === patch) {
+        console.log(`Version ${patch} already exported, skipping export`);
+        return;
+      }
+      await fs.writeFile(versionFile, patch);
       const cdnBundleLoader = await CdnBundleLoader.create(
         path.join(cacheDir, "bundles"),
         patch,
@@ -114,7 +125,6 @@ const datExport = (options: DatExportOptions): Plugin => {
         loader,
       );
 
-      await fs.mkdir(outputRoot, { recursive: true });
       for (const lang of LANGS) {
         const combined: Record<string, unknown> = {};
         const rooms = (await load(lang, "Incursion2Rooms")) as IncursionRoom[];

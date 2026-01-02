@@ -1,33 +1,15 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
+import { renderWithProviders } from "./test-utils";
 
 describe("Room Conversion Logic", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    window.location.search = "";
   });
 
   it("converts Garrison to Legion Barracks when placed next to Spymaster", async () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place Garrison at 4,4
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);
@@ -47,8 +29,7 @@ describe("Room Conversion Logic", () => {
   });
 
   it("converts Legion Barracks to Transcendent Barracks when placed next to Synthflesh Lab", async () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place Garrison at 4,4
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

@@ -27,7 +27,7 @@ test("loads state from URL correctly", () => {
 
   const { getByTestId } = renderWithProviders(<App />, {
     queryString:
-      "rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
+      "?rooms[]=Commander-5-0&rooms[]=Garrison-6-0&rooms[]=Armoury-6-1&rooms[]=Commander-7-0&rooms[]=Garrison-7-1&rooms[]=Garrison-8-0&rooms[]=Armoury-8-1",
   });
 
   // Cells have test-id="cell-{x}-{y}" in App.tsx
@@ -51,7 +51,7 @@ test("loads state from URL correctly", () => {
 
 test("does not add debug=false to the URL", async () => {
   const { store, findByTestId } = renderWithProviders(<App />, {
-    queryString: "debug=false",
+    queryString: "?debug=false",
   });
 
   // Wait for the cell to be rendered which indicates the app has initialized and useEffect has likely run

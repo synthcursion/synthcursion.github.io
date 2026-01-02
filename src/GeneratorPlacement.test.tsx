@@ -1,33 +1,15 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import App from "./App";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
+import { renderWithProviders } from "./test-utils";
 
 describe("Generator Placement Restrictions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset location for each test
-    window.location.search = "";
   });
 
   it("cannot place a generator on an empty grid", () => {
-    render(<App />);
+    renderWithProviders(<App />);
     const generatorButton = screen.getByTitle("Generator");
     fireEvent.click(generatorButton);
 
@@ -39,8 +21,7 @@ describe("Generator Placement Restrictions", () => {
 
   it("cannot place a generator next to another room", () => {
     // We use debug mode to set up the initial state
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place a Garrison
     const garrisonButton = screen.getAllByTitle("Garrison")[0];
@@ -67,8 +48,7 @@ describe("Generator Placement Restrictions", () => {
   });
 
   it("cannot place a generator next to a path without a facing connection", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place a path1 (top-bottom) at 4,4
     fireEvent.click(screen.getByTitle("path1"));
@@ -89,8 +69,7 @@ describe("Generator Placement Restrictions", () => {
   });
 
   it("CAN place a generator next to a path with a facing connection", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place a path2 (left-right) at 4,4
     fireEvent.click(screen.getByTitle("path2"));

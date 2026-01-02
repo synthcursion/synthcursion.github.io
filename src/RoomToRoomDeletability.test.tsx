@@ -1,47 +1,15 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import App from "./App";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
+import { renderWithProviders } from "./test-utils";
 
 describe("Room to Room Deletability", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    window.location.search = "";
   });
 
   it("should NOT allow deleting a room if it is the only connection to another room via room-to-room connection", () => {
-    // Scenario:
-    // Entry (4,0)
-    // Path (4,1)
-    // Room A (3,1) - Connected to Path (4,1)
-    // Room B (3,2) - Room A and Room B are NOT "connected" via room-to-room logic by default
-    // BUT if Room A is "Garrison" and Room B is "Armoury", and Room B is placed next to Room A,
-    // they might have a room-to-room connection if one upgrades the other.
-
-    // Actually, let's use a simpler case:
-    // Entry (4,0)
-    // Path (4,1)
-    // Room A (3,1) - Connected to Path (4,1)
-    // Room B (2,1) - Room B is connected to Room A.
-
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place Path at 4,1
     fireEvent.click(screen.getByTitle("path2"));
@@ -78,8 +46,7 @@ describe("Room to Room Deletability", () => {
   });
 
   it("should allow deleting a room if the other room is NOT connected via room-to-room connection and has another connection", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place Path at 4,1 and 2,1
     fireEvent.click(screen.getByTitle("path2"));
@@ -128,16 +95,7 @@ describe("Room to Room Deletability", () => {
   });
 
   it("should NOT allow deleting Armoury at 4,1 if it's the sole connection for Garrison at 4,2 and Armoury at 4,3", () => {
-    // Layout: rooms[]=Armoury-4-1&rooms[]=Garrison-4-2&rooms[]=Armoury-4-3
-    // Entry is at 4,0.
-    // Armoury (4,1) is next to Entry (4,0).
-    // Garrison (4,2) is next to Armoury (4,1). (Armoury upgrades Garrison)
-    // Armoury (4,3) is next to Garrison (4,2). (Armoury upgrades Garrison)
-    // All are connected via Room-to-Room connections.
-    // Deleting Armoury (4,1) would leave the other two stranded.
-
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place Armoury at 4,1
     fireEvent.click(screen.getAllByTitle("Armoury")[0]);

@@ -1,33 +1,15 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import App from "./App";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
+import { renderWithProviders } from "./test-utils";
 
 describe("Path Placement Restrictions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    window.location.search = "";
   });
 
   it("cannot place a path in isolation if the grid is not empty", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place first path at 0,0
     fireEvent.click(screen.getByTitle("path1"));
@@ -45,8 +27,7 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("cannot place a path next to another path if they don't connect", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place path1 (top-bottom) at 4,4
     fireEvent.click(screen.getByTitle("path1"));
@@ -66,8 +47,7 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("CAN place a path next to another path if they connect", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place path2 (left-right) at 4,4
     fireEvent.click(screen.getByTitle("path2"));
@@ -87,8 +67,7 @@ describe("Path Placement Restrictions", () => {
   });
 
   it("cannot place a path next to a room (paths must connect to paths)", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place a room
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

@@ -6,7 +6,7 @@ import { renderWithProviders } from "./test-utils";
 describe("Path Connection Logic", () => {
   it("places the selected path tile when clicking in completely empty space", () => {
     renderWithProviders(<App />, {
-      queryString: "debug=true",
+      queryString: "?debug=true",
     });
     const pathButton = screen.getByTitle("path1");
     fireEvent.click(pathButton);

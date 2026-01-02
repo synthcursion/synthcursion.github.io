@@ -1,34 +1,16 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import App from "./App";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
+import { renderWithProviders } from "./test-utils";
 
 describe("Room Deletion Restrictions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    window.location.search = "";
   });
 
   it("cannot delete a room if it leaves another non-boss room stranded", () => {
     // Enable debug to set up the scenario easily
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place Garrison at 4,1 (above ENTRY 4,0)
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);
@@ -59,8 +41,7 @@ describe("Room Deletion Restrictions", () => {
 
   it("CAN delete a room if it only leaves a boss/reward room stranded", () => {
     // Enable debug to set up the scenario easily
-    window.location.search = "?debug=true";
-    render(<App />);
+    renderWithProviders(<App />, { queryString: "debug=true" });
 
     // Place Garrison at 4,1
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

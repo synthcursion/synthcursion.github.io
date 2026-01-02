@@ -1,32 +1,15 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import App from "./App";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
+import { renderWithProviders } from "./test-utils";
 
 describe("Reward Room Placement", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    window.location.search = "";
   });
 
   it("CAN place a reward room in isolation", () => {
-    render(<App />);
+    renderWithProviders(<App />);
 
     // Currency Vault is a reward room (IsBossReward: true)
     // Find Currency Vault button
@@ -43,7 +26,7 @@ describe("Reward Room Placement", () => {
   });
 
   it("cannot place a regular room in isolation", () => {
-    render(<App />);
+    renderWithProviders(<App />);
 
     // Garrison is NOT a reward room
     const regularRoomBtn = screen.getAllByTitle("Garrison")[0];
