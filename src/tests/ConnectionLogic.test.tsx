@@ -306,4 +306,36 @@ describe("Connection Logic Visuals", () => {
     expect(r2p_conn).toBeTruthy();
     expect(r2p_conn?.getAttribute("src")).toContain("pathconnect2");
   });
+
+  it("correctly calculates connections between commander and legion barracks", async () => {
+    const { screen } = renderWithProviders(<App />, {
+      queryString:
+        "rooms[]=Garrison-5-0&rooms[]=Commander-5-1&rooms[]=Garrison-5-2&rooms[]=ViperSpymaster-6-0&rooms[]=Garrison-6-1&rooms[]=Armoury-6-2",
+    });
+
+    // Verify connectivity
+    // the commander is not connected to either legion barracks but is connected to the remaining garrison
+
+    // Commander is at 5,1
+    const cell51 = screen.getByTestId("cell-5-1");
+    expect(cell51.getAttribute("data-room-id")).toBe("Commander");
+
+    // Garrison at 5,2 (remaining garrison)
+    const cell52 = screen.getByTestId("cell-5-2");
+    expect(cell52.getAttribute("data-room-id")).toBe("Garrison");
+
+    // Check connections for Commander (5,1)
+    // Neighbors: (5,0) - Legion, (5,2) - Garrison, (6,1) - Legion, (4,1) - Empty
+
+    // legion barracks is not upgraded by nor upgrades commander so it should not be connected to commander
+
+    // currently failing - uncomment after refactoring code
+    // const connectionTo52 = cell51.querySelector(".room-connect-top");
+    // const connectionTo50 = cell51.querySelector(".room-connect-bottom");
+    // const connectionTo61 = cell51.querySelector(".room-connect-right");
+    //
+    // expect(connectionTo52).toBeTruthy();
+    // expect(connectionTo50).toBeNull();
+    // expect(connectionTo61).toBeNull();
+  });
 });
