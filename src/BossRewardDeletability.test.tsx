@@ -1,33 +1,12 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireEvent } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import App from "./App";
-
-// Mock URL and window.history since the App uses it for persistence
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
+import { renderWithProviders } from "src/test-utils.tsx";
 
 describe("Boss and Reward Room Deletability and Placement", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    window.location.search = "";
-  });
-
   it("Boss rooms skip placement restrictions (can be placed in isolation)", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    const queryString = "?debug=true";
+    const { screen } = renderWithProviders(<App />, { queryString });
 
     // Toggle debug off immediately - we want to test normal placement
     const debugCheckbox = screen.getByLabelText(
@@ -45,8 +24,8 @@ describe("Boss and Reward Room Deletability and Placement", () => {
   });
 
   it("Boss rooms are always deletable even if they would break local placement of neighbors", () => {
-    window.location.search = "?debug=true";
-    render(<App />);
+    const queryString = "?debug=true";
+    const { screen } = renderWithProviders(<App />, { queryString });
 
     // Place Royal Access Chamber at 4,1 (above ENTRY 4,0)
     fireEvent.click(screen.getAllByTitle("Royal Access Chamber")[0]);

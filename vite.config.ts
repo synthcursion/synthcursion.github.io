@@ -201,4 +201,9 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
+  resolve: {
+    alias: {
+      src: path.resolve(__dirname, "./src"),
+    },
+  },
 } as UserConfig);

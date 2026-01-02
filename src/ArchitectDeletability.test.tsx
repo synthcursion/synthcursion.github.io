@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireEvent, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import App from "./App";
+import { renderWithProviders } from "src/test-utils";
 
 // Mock URL and window.history since the App uses it for persistence
 const mockReplaceState = vi.fn();
@@ -20,15 +21,10 @@ Object.defineProperty(window, "location", {
 });
 
 describe("Architect Deletability Influence", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    window.location.search = "";
-  });
-
   it("placing Architect should not prevent deletion of other rooms that connect it", () => {
     // Enable debug to set up the scenario
-    window.location.search = "?debug=true";
-    render(<App />);
+    const queryString = "?debug=true";
+    renderWithProviders(<App />, { queryString });
 
     // Place Garrison at 4,1 (above ENTRY 4,0)
     fireEvent.click(screen.getAllByTitle("Garrison")[0]);

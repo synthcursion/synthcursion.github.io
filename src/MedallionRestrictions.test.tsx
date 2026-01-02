@@ -1,31 +1,11 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { fireEvent } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import App from "./App";
-
-// Mock URL and window.history
-const mockReplaceState = vi.fn();
-Object.defineProperty(window, "history", {
-  value: {
-    replaceState: mockReplaceState,
-  },
-});
-
-// Mocking window.location.search to turn off debug mode by default
-Object.defineProperty(window, "location", {
-  value: {
-    search: "",
-    href: "http://localhost/",
-  },
-  writable: true,
-});
+import { renderWithProviders } from "src/test-utils.tsx";
 
 describe("Medallion Restrictions", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("prevents placing Quipolatl's Medallion on rooms without multiple tiers", () => {
-    render(<App />);
+    const { screen } = renderWithProviders(<App />);
 
     // Select Architect's Chamber (only 1 tier)
     const architectRoom = screen.getByTitle("Architect's Chamber");
@@ -49,7 +29,7 @@ describe("Medallion Restrictions", () => {
   });
 
   it("allows placing Quipolatl's Medallion on rooms with multiple tiers", () => {
-    render(<App />);
+    const { screen } = renderWithProviders(<App />);
 
     // Select Garrison (multiple tiers)
     const garrisonRoom = screen.getByTitle("Garrison");
@@ -73,7 +53,7 @@ describe("Medallion Restrictions", () => {
   });
 
   it("prevents placing Quipolatl's Medallion on a room that is already Tier 3", () => {
-    render(<App />);
+    const { screen } = renderWithProviders(<App />);
 
     // We need to make a room T3.
     // Garrison is upgraded by Commander and Armoury.
@@ -111,7 +91,7 @@ describe("Medallion Restrictions", () => {
   });
 
   it("allows placing Juatalotli's Medallion even on T3 rooms or single tier rooms", () => {
-    render(<App />);
+    const { screen } = renderWithProviders(<App />);
 
     // Architect's Chamber (single tier)
     const architectRoom = screen.getByTitle("Architect's Chamber");
