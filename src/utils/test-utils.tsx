@@ -5,7 +5,7 @@ import { configureStore, type Store } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
 import gameReducer, { getInitialState } from "src/store/gameSlice.ts";
-import type { RootState } from "src/store";
+import { listenerMiddleware, type RootState } from "src/store";
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
   queryString?: string;
@@ -22,6 +22,8 @@ export function renderWithProviders(
       preloadedState: {
         game: getInitialState(queryString),
       },
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().prepend(listenerMiddleware.middleware),
     }) as Store<RootState>,
     ...renderOptions
   }: ExtendedRenderOptions = {},

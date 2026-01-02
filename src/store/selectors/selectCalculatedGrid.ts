@@ -1,4 +1,4 @@
-import {createAppSelector} from "src/store";
+import { createAppSelector } from "src/store";
 import {
   getConnectionsFromPathType,
   GRID_SIZE,
@@ -153,17 +153,21 @@ export const selectCalculatedGrid = createAppSelector(
     });
 
     // 2. Phase 2: Power and Generators
-    newGrid.forEach((row) => {
-      row.forEach((cell) => {
-        if (cell && cell.type === "room") {
-          cell.isPowered = false;
-          cell.poweredByGenerators = [];
+    const newGridWithPower = newGrid.map((row) =>
+      row.map((cell) => {
+        if (cell) {
+          const newCell = { ...cell, isPowered: false };
+          if (cell.type === "room") {
+            newCell.poweredByGenerators = [];
+          }
+          return newCell;
         }
-      });
-    });
+        return null;
+      }),
+    );
 
     const generators: { x: number; y: number; tier: number }[] = [];
-    newGrid.forEach((row, x) => {
+    newGridWithPower.forEach((row, x) => {
       row.forEach((cell, y) => {
         if (cell && cell.type === "room" && cell.roomId === "Generator") {
           generators.push({ x, y, tier: cell.tier || 1 });
@@ -180,12 +184,12 @@ export const selectCalculatedGrid = createAppSelector(
 
       while (queue.length > 0) {
         const { x, y, dist } = queue.shift()!;
-        if (dist > gen.tier) continue;
+        if (dist > gen.tier + 2) continue;
 
-        const cell = newGrid[x][y];
-        if (cell && cell.type === "room") {
+        const cell = newGridWithPower[x][y];
+        if (cell) {
           cell.isPowered = true;
-          if (dist > 0) {
+          if (cell.type === "room" && dist > 0) {
             cell.poweredByGenerators!.push({
               x: gen.x,
               y: gen.y,
@@ -195,13 +199,21 @@ export const selectCalculatedGrid = createAppSelector(
           }
         }
 
+        // Only generators (at dist 0) and paths can propagate power
+        if (dist > 0 && cell?.type === "room") continue;
+
+        const currentConnections =
+          cell?.type === "path"
+            ? getConnectionsFromPathType(cell.pathType!)
+            : { top: true, bottom: true, left: true, right: true };
+
         const neighbors = [
-          [x - 1, y],
-          [x + 1, y],
-          [x, y - 1],
-          [x, y + 1],
+          { nx: x, ny: y + 1, dir: "top" as const },
+          { nx: x, ny: y - 1, dir: "bottom" as const },
+          { nx: x - 1, ny: y, dir: "left" as const },
+          { nx: x + 1, ny: y, dir: "right" as const },
         ];
-        neighbors.forEach(([nx, ny]) => {
+        neighbors.forEach(({ nx, ny, dir }) => {
           if (
             nx >= 0 &&
             nx < GRID_SIZE &&
@@ -209,18 +221,74 @@ export const selectCalculatedGrid = createAppSelector(
             ny < GRID_SIZE &&
             !visited.has(`${nx},${ny}`)
           ) {
-            const neighbor = newGrid[nx][ny];
-            if (neighbor && neighbor.type === "room") {
-              visited.add(`${nx},${ny}`);
-              queue.push({ x: nx, y: ny, dist: dist + 1 });
+            const neighbor = newGridWithPower[nx][ny];
+            if (neighbor) {
+              const neighborConnections =
+                neighbor.type === "path"
+                  ? getConnectionsFromPathType(neighbor.pathType!)
+                  : { top: true, bottom: true, left: true, right: true };
+
+              const oppositeDir: Record<Direction, Direction> = {
+                top: "bottom",
+                bottom: "top",
+                left: "right",
+                right: "left",
+              };
+
+              if (
+                currentConnections[dir] ||
+                neighborConnections[oppositeDir[dir]]
+              ) {
+                // If current is a path, it MUST have connection in 'dir' to propagate
+                // If neighbor is a path, it MUST have connection in 'oppositeDir' to receive
+                const canPropagate =
+                  cell?.type === "path" ? currentConnections[dir] : true;
+                const canReceive =
+                  neighbor.type === "path"
+                    ? neighborConnections[oppositeDir[dir]]
+                    : true;
+
+                if (canPropagate && canReceive) {
+                  visited.add(`${nx},${ny}`);
+                  queue.push({ x: nx, y: ny, dist: dist + 1 });
+                }
+              }
             }
           }
         });
       }
     });
 
+    // 2.1 Phase 2.1: Recalculate Tiers based on Power
+    newGridWithPower.forEach((row) => {
+      row.forEach((cell) => {
+        if (cell && cell.type === "room") {
+          if (cell.medallionType === "medallion_lock") return;
+
+          const baseRoom = roomsData[cell.roomId!];
+          if (baseRoom) {
+            const numGenerators = cell.poweredByGenerators?.length || 0;
+            const powerBonus =
+              baseRoom.UpgradedByPower && numGenerators > 0 ? numGenerators : 0;
+            const upgradeBonus = baseRoom.UpgradedBy.includes("Generator")
+              ? numGenerators
+              : 0;
+
+            const totalPowerBonus = Math.max(powerBonus, upgradeBonus);
+
+            if (totalPowerBonus > 0) {
+              cell.tier = Math.min(
+                cell.tier! + totalPowerBonus,
+                baseRoom.MaxLevel,
+              );
+            }
+          }
+        }
+      });
+    });
+
     // 3. Phase 3: Path Connections
-    const extendedGrid = [...newGrid.map((row) => [...row])];
+    const extendedGrid = [...newGridWithPower.map((row) => [...row])];
     const oppositeDir: Record<Direction, Direction> = {
       top: "bottom",
       bottom: "top",
