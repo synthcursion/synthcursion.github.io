@@ -1,6 +1,6 @@
 import { screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { App } from "./App";
+import App from "./App";
 import { renderWithProviders } from "./test-utils";
 
 describe("Path Connection Logic", () => {

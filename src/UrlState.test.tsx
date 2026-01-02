@@ -1,5 +1,5 @@
 import { renderWithProviders } from "./test-utils";
-import { App } from "./App.tsx";
+import App from "./App";
 import { expect, test } from "vitest";
 
 test("loads state from URL correctly", () => {

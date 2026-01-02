@@ -2177,12 +2177,4 @@ export function App() {
   );
 }
 
-function Wrapped() {
-  return (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-}
-
-export default Wrapped;
+export default App;
