@@ -24,3 +24,5 @@ export type AppStartListening = TypedStartListening<RootState, AppDispatch>;
 export const startAppListening =
   listenerMiddleware.startListening as AppStartListening;
 export const createAppSelector = createSelector.withTypes<RootState>();
+
+import("./listeners.ts");
