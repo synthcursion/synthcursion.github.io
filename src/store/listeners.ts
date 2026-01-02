@@ -7,6 +7,8 @@ startAppListening({
   effect: (_action, listenerApi) => {
     const url = new URL(window.location.href);
     url.search = selectQueryParams(listenerApi.getState());
-    window.history.pushState({}, "", url.toString());
+    if (window?.history?.pushState) {
+      window.history.pushState({}, "", url.toString());
+    }
   },
 });

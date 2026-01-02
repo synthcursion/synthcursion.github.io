@@ -3,7 +3,7 @@ import "./App.css";
 import type { Direction, GridCell, IncursionRoom } from "./types";
 import { useAppDispatch, useAppSelector } from "./hooks/store";
 import {
-  setGrid,
+  handleCellClick,
   setHoveredCell,
   setShowSidebar,
   setShowTotalStats,
@@ -13,7 +13,6 @@ import "./index.css";
 import {
   ENTRY,
   getConnectionsFromPathType,
-  getPathTypeFromConnections,
   GRID_SIZE,
   roomsData,
 } from "./utils/gameUtils";
@@ -646,177 +645,6 @@ export function App() {
     return true;
   };
 
-  const handleCellClick = (x: number, y: number) => {
-    if (x === ENTRY.x && y === ENTRY.y) return; // ENTRY is unremovable and unmodifiable
-
-    const newGrid = [...grid.map((row) => [...row])];
-
-    const updateCellConnections = (
-      row: number,
-      col: number,
-      currentGrid: (GridCell | null)[][],
-    ) => {
-      const cell = currentGrid[row][col];
-      if (!cell || cell.type !== "path") return;
-
-      let { top, bottom, left, right } = getConnectionsFromPathType(
-        cell.pathType!,
-      );
-
-      // Check all current neighbors to ensure they are connected
-      const isNeighbor = (nx: number, ny: number) => {
-        if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE)
-          return false;
-        return !!currentGrid[nx][ny];
-      };
-
-      if (isNeighbor(row, col + 1)) {
-        // Only auto-connect if the neighbor is a path, OR if we are in debug mode
-        const neighbor = currentGrid[row][col + 1];
-        if (neighbor?.type === "path" || debug) top = true;
-      }
-      if (isNeighbor(row, col - 1)) {
-        const neighbor = currentGrid[row][col - 1];
-        if (neighbor?.type === "path" || debug) bottom = true;
-      }
-      if (isNeighbor(row - 1, col)) {
-        const neighbor = currentGrid[row - 1][col];
-        if (neighbor?.type === "path" || debug) left = true;
-      }
-      if (isNeighbor(row + 1, col)) {
-        const neighbor = currentGrid[row + 1][col];
-        if (neighbor?.type === "path" || debug) right = true;
-      }
-
-      currentGrid[row][col] = {
-        ...cell,
-        pathType: getPathTypeFromConnections(top, bottom, left, right),
-      };
-    };
-
-    const canPlace = getHighlightType(x, y);
-    // Only restrict placement if we are trying to place a ROOM or PATH
-    if (
-      (selectedType === "room" || selectedType === "path") &&
-      !canPlace &&
-      !debug
-    )
-      return;
-
-    if (selectedType === "empty") {
-      if (!isDeletable(x, y) && !debug) return;
-      newGrid[x][y] = null;
-    } else if (selectedType === "medallion") {
-      const cell = newGrid[x][y];
-      if (cell && cell.type === "room") {
-        if (
-          selectedRoomId === "medallion_levelup" ||
-          selectedRoomId === "medallion_lock"
-        ) {
-          const isRemoving = cell.medallionType === selectedRoomId;
-
-          // Only allow applying if no medallion, or removing existing same medallion
-          if (!cell.medallionType || isRemoving) {
-            // Restrictions for Quipolatl's Medallion (Level Up)
-            if (
-              selectedRoomId === "medallion_levelup" &&
-              !isRemoving &&
-              !debug
-            ) {
-              const calcCell = calculatedGrid[x][y];
-              if (calcCell?.tier && calcCell.roomId) {
-                if (calcCell.tier >= roomsData[calcCell.roomId].MaxLevel)
-                  return;
-              }
-            }
-
-            newGrid[x][y] = {
-              ...cell,
-              medallionType: isRemoving ? undefined : selectedRoomId,
-            };
-          }
-        }
-      }
-    } else if (selectedType === "room") {
-      const existingCell = grid[x][y];
-      if (
-        existingCell?.type === "room" &&
-        existingCell.roomId === selectedRoomId
-      ) {
-        if (!isDeletable(x, y) && !debug) return;
-        newGrid[x][y] = null;
-      } else {
-        // Architect's Chamber: only one allowed
-        if (selectedRoomId === "Architect") {
-          const exists = grid.some((row) =>
-            row.some(
-              (cell) => cell?.type === "room" && cell.roomId === "Architect",
-            ),
-          );
-          if (exists) return;
-        }
-
-        newGrid[x][y] = {
-          type: "room",
-          roomId: selectedRoomId,
-          tier: 1, // Will be calculated
-          isPowered: false, // Will be calculated
-        };
-      }
-    } else if (selectedType === "path") {
-      const existingCell = grid[x][y];
-      if (existingCell?.type === "path") {
-        if (!isDeletable(x, y) && !debug) return;
-        newGrid[x][y] = null;
-      } else {
-        // For new paths, use the selectedPathType but also check neighbors
-        // Top/Bottom are mapped to Column +/- 1 (visual Up-Right/Down-Left)
-        // Left/Right are mapped to Row +/- 1 (visual Up-Left/Down-Right)
-        const isPath = (nx: number, ny: number) => {
-          if (nx < 0 || nx >= GRID_SIZE || ny < 0 || ny >= GRID_SIZE)
-            return false;
-          return newGrid[nx][ny]?.type === "path";
-        };
-
-        const top = isPath(x, y + 1);
-        const bottom = isPath(x, y - 1);
-        const left = isPath(x - 1, y);
-        const right = isPath(x + 1, y);
-
-        const initialConnections = getConnectionsFromPathType(selectedPathType);
-
-        newGrid[x][y] = {
-          type: "path",
-          pathType: getPathTypeFromConnections(
-            initialConnections.top || top,
-            initialConnections.bottom || bottom,
-            initialConnections.left || left,
-            initialConnections.right || right,
-          ),
-          isPowered: false, // Will be calculated
-        };
-      }
-    }
-
-    if (newGrid[x][y] !== grid[x][y]) {
-      // Something changed, update neighbor paths to re-evaluate their connections
-      const neighbors = [
-        [x + 1, y],
-        [x - 1, y],
-        [x, y + 1],
-        [x, y - 1],
-      ];
-
-      neighbors.forEach(([nr, nc]) => {
-        if (nr >= 0 && nr < GRID_SIZE && nc >= 0 && nc < GRID_SIZE) {
-          updateCellConnections(nr, nc, newGrid);
-        }
-      });
-    }
-
-    dispatch(setGrid(newGrid));
-  };
-
   const getIconPath = (cell: GridCell) => {
     if (cell.type === "room") {
       const room = roomsData[cell.roomId!];
@@ -1100,7 +928,7 @@ export function App() {
                   key={`${x}-${y}`}
                   className={`cell ${cell ? cell.type : "empty"}`}
                   style={getCellPosition(x, y)}
-                  onClick={() => handleCellClick(x, y)}
+                  onClick={() => dispatch(handleCellClick({ x, y }))}
                   onMouseEnter={() => dispatch(setHoveredCell({ x, y }))}
                   onMouseLeave={() => dispatch(setHoveredCell(null))}
                   data-powered={cell?.isPowered}
