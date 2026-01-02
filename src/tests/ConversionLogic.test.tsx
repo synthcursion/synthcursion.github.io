@@ -1,4 +1,4 @@
-import { fireEvent, screen } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "src/App.tsx";
 import { renderWithProviders } from "src/utils/test-utils.tsx";

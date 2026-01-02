@@ -1,4 +1,4 @@
-import type { Direction, GridCell } from "../types";
+import type { Direction, GridCell, PathType } from "../types";
 import { ENTRY, GRID_SIZE, roomsData } from "src/data/constants.ts";
 import { getConnectionsFromPathType } from "src/utils/getConnections.ts";
 
@@ -408,7 +408,7 @@ export const getHighlightType = (
   grid: (GridCell | null)[][],
   selectedType: string,
   selectedRoomId: string,
-  selectedPathType: any,
+  selectedPathType: PathType,
   debug: boolean = false,
 ): "regular" | "strong" | "deletable" | "invalid" | null => {
   if (grid[x][y]) {

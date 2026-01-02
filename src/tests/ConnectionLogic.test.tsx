@@ -1,10 +1,8 @@
 import { fireEvent } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "src/App.tsx";
-import data from "src/data/generated/English.json";
 import { renderWithProviders } from "src/utils/test-utils.tsx";
-
-const roomsData = data.Incursion2Rooms as any;
+import { roomsData } from "src/data/constants.ts";
 
 describe("Connection Logic Visuals", () => {
   beforeEach(() => {
@@ -49,8 +47,8 @@ describe("Connection Logic Visuals", () => {
     // Find a reward room. "Atziri" is one, but it's fixed at 4,9.
     // Let's find another one from data.
     const rewardRoom = Object.values(roomsData).find(
-      (r: any) => r.IsBossReward && r.Id !== "Atziri",
-    ) as any;
+      (r) => r.IsBossReward && r.Id !== "Atziri",
+    )!;
 
     fireEvent.click(screen.getByTitle(rewardRoom.Name));
     fireEvent.click(screen.getByTestId("cell-4-4"));
