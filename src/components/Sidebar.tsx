@@ -84,6 +84,9 @@ export const Sidebar = () => {
                 <h4>{category.charAt(0).toUpperCase() + category.slice(1)}</h4>
                 {Object.entries(types).map(([subCategory, rooms]) => (
                   <div key={subCategory} className="room-subcategory">
+                    {subCategory !== "default" && (
+                      <div className="subcategory-heading">{subCategory}</div>
+                    )}
                     <div className="room-grid">
                       {rooms.map((r) => {
                         const roomInfo = r.Levels.find(Boolean);

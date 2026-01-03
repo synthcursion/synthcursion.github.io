@@ -29,12 +29,15 @@
     overflow-y: auto;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(8px);
-    transition: transform 0.3s ease;
+    transition: width 0.3s ease, padding 0.3s ease;
     background-color: rgba(26, 26, 26, 0.95);
 }
 
 .sidebar-hidden .sidebar {
-    transform: translateX(-100%);
+    width: 80px;
+    padding: 20px 10px;
+    overflow-x: hidden;
+    align-items: center;
 }
 
 .toggle-sidebar {
@@ -64,7 +67,14 @@
 }
 
 .sidebar-hidden .toggle-sidebar {
-    left: 20px;
+    left: 100px;
+}
+
+.sidebar-hidden .header,
+.sidebar-hidden .room-category h4,
+.sidebar-hidden .subcategory-heading,
+.sidebar-hidden .actions {
+    display: none;
 }
 
 .header h2 {
@@ -177,6 +187,11 @@ label {
     padding-right: 5px;
 }
 
+.sidebar-hidden .room-selector-grid {
+    gap: 8px;
+    padding-right: 0;
+}
+
 .room-selector-grid h4 {
     margin: 0 0 8px 0;
     font-size: 0.9em;
@@ -191,18 +206,19 @@ label {
     gap: 8px;
 }
 
+.sidebar-hidden .room-grid {
+    grid-template-columns: 1fr;
+    width: 60px;
+}
+
 .room-item {
     aspect-ratio: 1;
     cursor: pointer;
-    border: 1px solid #333;
-    background-color: #111;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
-    overflow: hidden;
     position: relative;
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     touch-action: manipulation;
 }
 
@@ -230,6 +246,17 @@ label {
     margin-bottom: 10px;
 }
 
+.sidebar-hidden .room-subcategory {
+    margin-bottom: 0;
+}
+
+.sidebar-hidden .room-category {
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .subcategory-heading {
     margin: 5px 0 2px 0;
     font-size: 0.8em;
@@ -238,10 +265,13 @@ label {
     letter-spacing: 1px;
 }
 
+.sidebar-hidden .room-item {
+    padding: 2px;
+}
+
 .room-item img {
     width: 75%;
     height: 75%;
-    object-fit: cover;
 }
 
 .grid-container {
@@ -256,7 +286,7 @@ label {
 }
 
 .sidebar-hidden .grid-container {
-    padding-left: 0;
+    padding-left: 80px;
 }
 
 /* Mobile responsive styles */
@@ -271,12 +301,16 @@ label {
     }
 
     .sidebar-hidden .toggle-sidebar {
-        left: 20px;
+        left: 100px;
     }
 
     .grid-container {
         padding-left: 0;
         zoom: 35%; /* Slightly more zoomed out on mobile */
+    }
+
+    .sidebar-hidden .grid-container {
+        padding-left: 80px;
     }
 
     .hover-info {

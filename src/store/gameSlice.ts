@@ -103,7 +103,7 @@ export function getInitialState(
     hoveredCell: null,
     debug: (parsed.debug as boolean) || false,
     copyStatus: false,
-    showSidebar: true,
+    showSidebar: window.innerWidth > 768,
     showTotalStats: true,
     showRemovableGlow: true,
     showInvalidGlow: true,
