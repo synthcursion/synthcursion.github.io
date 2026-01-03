@@ -85,4 +85,29 @@ describe("Spymaster Placement and Conversion", () => {
     const glow = cell43.querySelector(".placement-glow");
     expect(glow).toBeFalsy();
   });
+
+  it("supports 'russian tech' spymaster/barracks chains", async () => {
+    const { screen } = renderApp(
+      "rooms[]=ViperSpymaster-4-1&rooms[]=Garrison-4-2&rooms[]=Armoury-5-2&rooms[]=Garrison-5-3&selected=ViperSpymaster",
+    );
+
+    const cell43 = screen.getByTestId("cell-4-3");
+    fireEvent.mouseOver(cell43);
+
+    // Spymaster should be placeable here, it would upgrade the temporary barracks on the armoury.
+    const glow = cell43.querySelector(".placement-glow");
+    expect(glow).toBeTruthy();
+    expect(glow?.getAttribute("src")).toContain("incursion2tileglowstrong.png");
+
+    fireEvent.click(cell43);
+
+    const cell52 = screen.getByTestId("cell-5-2");
+    fireEvent.mouseOver(cell52);
+
+    const armouryGlow = cell52.querySelector(".placement-glow");
+    expect(armouryGlow).toBeTruthy();
+    expect(armouryGlow?.getAttribute("src")).toContain(
+      "incursion2tileglowred.png",
+    );
+  });
 });
