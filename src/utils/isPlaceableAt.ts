@@ -146,7 +146,23 @@ export const isPlaceableAt = (
         });
 
         if (selectedUpgradedByCounts[neighbor.roomId]) {
-          canPlaceStrong = true;
+          // Check how many of this neighbor type we already have adjacent to (x, y)
+          let currentSelectedUpgradesByType = 0;
+          neighbors.forEach(({ nx: nnx, ny: nny }) => {
+            if (nnx >= 0 && nnx < GRID_SIZE && nny >= 0 && nny < GRID_SIZE) {
+              const nn = targetGrid[nnx][nny];
+              if (nn && nn.type === "room" && nn.roomId === neighbor.roomId) {
+                currentSelectedUpgradesByType++;
+              }
+            }
+          });
+
+          if (
+            currentSelectedUpgradesByType <=
+            selectedUpgradedByCounts[neighbor.roomId]
+          ) {
+            canPlaceStrong = true;
+          }
         }
       }
     }

@@ -130,7 +130,7 @@ export const selectCalculatedGrid = createAppSelector(
             } else {
               for (const id in upgradeByCounts) {
                 if (connectedCounts[id]) {
-                  bonus += connectedCounts[id];
+                  bonus += Math.min(connectedCounts[id], upgradeByCounts[id]);
                 }
               }
             }

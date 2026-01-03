@@ -71,4 +71,18 @@ describe("Spymaster Placement and Conversion", () => {
     expect(cell43.getAttribute("data-room-id")).toBe("ViperLegionBarracks");
     expect(cell43.getAttribute("data-tier")).toBe("2");
   });
+
+  it("does not allow naive spymaster/barracks chains", async () => {
+    const { screen } = renderApp(
+      "?rooms[]=ViperSpymaster-4-1&rooms[]=Garrison-4-2&selected=ViperSpymaster",
+    );
+
+    const cell43 = screen.getByTestId("cell-4-3");
+    fireEvent.mouseOver(cell43);
+
+    // Spymaster should not be placeable here, as the barracks is already upgraded by another spymaster,
+    // and spymaster only appears once in ViperLegionBarracks.UpgradedBy.
+    const glow = cell43.querySelector(".placement-glow");
+    expect(glow).toBeFalsy();
+  });
 });

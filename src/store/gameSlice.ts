@@ -91,19 +91,17 @@ const getInitialGrid = (query: string): (GridCell | null)[][] => {
 export function getInitialState(
   query: string = window.location.search,
 ): GameState {
+  const parsed = queryString.parse(query, {
+    parseBooleans: true,
+    arrayFormat: "bracket",
+  });
   return {
     grid: getInitialGrid(query),
     selectedType: "room",
-    selectedRoomId: "Garrison",
+    selectedRoomId: String(parsed.selected || "Garrison"),
     selectedPathType: "path1",
     hoveredCell: null,
-    debug: (() => {
-      const parsed = queryString.parse(query, {
-        parseBooleans: true,
-        arrayFormat: "bracket",
-      });
-      return (parsed.debug as boolean) || false;
-    })(),
+    debug: (parsed.debug as boolean) || false,
     copyStatus: false,
     showSidebar: true,
     showTotalStats: true,

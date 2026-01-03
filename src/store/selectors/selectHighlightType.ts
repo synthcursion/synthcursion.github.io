@@ -4,9 +4,11 @@ import { getConnectionsFromPathType } from "src/utils/getConnections.ts";
 import { selectIsDeletable } from "src/store/selectors/selectIsDeletable.ts";
 import { isPlaceableAt } from "src/utils/isPlaceableAt.ts";
 
+import { selectCalculatedGrid } from "src/store/selectors/selectCalculatedGrid.ts";
+
 export const selectHighlightType = createAppSelector(
   [
-    (state) => state.game.grid,
+    selectCalculatedGrid,
     (state) => state.game.selectedType,
     (state) => state.game.selectedRoomId,
     (state) => state.game.selectedPathType,
@@ -156,7 +158,25 @@ export const selectHighlightType = createAppSelector(
             selectedUpgradedByCounts[neighbor.roomId] ||
             selectedRoom.ConvertedBy.includes(neighbor.roomId)
           ) {
-            canPlaceStrong = true;
+            // Check how many of this neighbor type we already have adjacent to the place we want to put the selected room
+            let currentSelectedUpgradesByType = 0;
+            neighbors.forEach(({ nx: nnx, ny: nny }) => {
+              if (nnx >= 0 && nnx < GRID_SIZE && nny >= 0 && nny < GRID_SIZE) {
+                const nn = grid[nnx][nny];
+                if (nn && nn.type === "room" && nn.roomId === neighbor.roomId) {
+                  currentSelectedUpgradesByType++;
+                }
+              }
+            });
+
+            if (
+              (selectedUpgradedByCounts[neighbor.roomId] &&
+                currentSelectedUpgradesByType <=
+                  selectedUpgradedByCounts[neighbor.roomId]) ||
+              selectedRoom.ConvertedBy.includes(neighbor.roomId)
+            ) {
+              canPlaceStrong = true;
+            }
           }
         }
       }
