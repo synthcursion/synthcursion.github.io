@@ -3,8 +3,13 @@ import queryString from "query-string";
 import { ENTRY } from "src/data/constants.ts";
 
 export const selectQueryParams = createAppSelector(
-  [(state) => state.game.grid, (state) => state.game.debug],
-  (grid, debug) => {
+  [
+    (state) => state.game.grid,
+    (state) => state.game.debug,
+    (state) => state.game.selectedRoomId,
+    (_, full?: boolean) => full,
+  ],
+  (grid, debug, selected, full) => {
     const rooms: string[] = [];
     const paths: string[] = [];
     const medallions: string[] = [];
@@ -23,9 +28,17 @@ export const selectQueryParams = createAppSelector(
       });
     });
 
-    return queryString.stringify(
-      { rooms, paths, medallions, ...(debug ? { debug } : {}) },
+    const qs = queryString.stringify(
+      {
+        rooms,
+        paths,
+        medallions,
+        ...(debug && full ? { debug } : {}),
+        ...(selected && full ? { selected } : {}),
+      },
       { arrayFormat: "bracket" },
     );
+    console.log(qs);
+    return qs;
   },
 );
