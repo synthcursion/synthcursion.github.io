@@ -164,6 +164,18 @@ export const gameSlice = createSlice({
     setShowInvalidGlow: (state, action: PayloadAction<boolean>) => {
       state.showInvalidGlow = action.payload;
     },
+    loadStateFromQuery: (state, action: PayloadAction<string>) => {
+      const newState = getInitialState(action.payload);
+      state.grid = newState.grid;
+      state.debug = newState.debug;
+
+      const parsed = queryString.parse(action.payload, {
+        arrayFormat: "bracket",
+      });
+      if (parsed.selected && typeof parsed.selected === "string") {
+        state.selectedRoomId = parsed.selected;
+      }
+    },
   },
 });
 
@@ -179,6 +191,7 @@ export const {
   setShowTotalStats,
   setShowRemovableGlow,
   setShowInvalidGlow,
+  loadStateFromQuery,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
