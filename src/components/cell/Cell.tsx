@@ -6,11 +6,15 @@ import { Highlight } from "src/components/cell/Highlight.tsx";
 import React from "react";
 import { Content } from "src/components/cell/Content.tsx";
 import { selectCell } from "src/store/selectors/selectCell.ts";
+import { selectHighlightType } from "src/store/selectors/selectHighlightType.ts";
 
 export const Cell: React.FC<{ x: number; y: number }> = ({ x, y }) => {
   const dispatch = useAppDispatch();
   const hoveredCell = useAppSelector((state) => state.game.hoveredCell);
   const cell = useAppSelector((state) => selectCell(state, x, y));
+  const highlightType = useAppSelector((state) =>
+    selectHighlightType(state, x, y),
+  );
 
   return (
     <div
@@ -25,6 +29,7 @@ export const Cell: React.FC<{ x: number; y: number }> = ({ x, y }) => {
       data-cell-type={cell?.type}
       data-room-id={cell?.roomId}
       data-testid={`cell-${x}-${y}`}
+      data-highlight-type={highlightType}
     >
       <Highlight x={x} y={y} />
       {hoveredCell?.x === x && hoveredCell?.y === y && (

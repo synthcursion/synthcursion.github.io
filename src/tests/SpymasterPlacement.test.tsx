@@ -26,7 +26,7 @@ describe("Spymaster Placement and Conversion", () => {
     expect(glow?.getAttribute("src")).toContain("incursion2tileglowstrong.png");
   });
 
-  it("converts garrisons after placing spymaster at 6,0", async () => {
+  it("converts garrisons after placing spymaster", async () => {
     const { screen } = renderApp(initialStateQuery + "&debug=true");
 
     // Select Spymaster
@@ -49,5 +49,26 @@ describe("Spymaster Placement and Conversion", () => {
 
     expect(cell61.getAttribute("data-room-id")).toBe("ViperLegionBarracks");
     expect(cell61.getAttribute("data-tier")).toBe("3");
+  });
+
+  it("allows placing garrison after spymaster", async () => {
+    const { screen } = renderApp(
+      "rooms[]=Garrison-4-1&rooms[]=ViperSpymaster-4-2",
+    );
+
+    // Select Garrison for placement
+    fireEvent.click(screen.getAllByTitle("Garrison")[0]);
+    const cell43 = screen.getByTestId("cell-4-3");
+    fireEvent.mouseOver(cell43);
+
+    const glow = cell43.querySelector(".placement-glow");
+
+    expect(glow).toBeTruthy();
+    expect(glow?.getAttribute("src")).toContain("incursion2tileglowstrong.png");
+
+    fireEvent.click(cell43);
+
+    expect(cell43.getAttribute("data-room-id")).toBe("ViperLegionBarracks");
+    expect(cell43.getAttribute("data-tier")).toBe("2");
   });
 });

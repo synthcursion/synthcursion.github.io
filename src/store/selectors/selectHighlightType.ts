@@ -152,7 +152,10 @@ export const selectHighlightType = createAppSelector(
             }
           });
 
-          if (selectedUpgradedByCounts[neighbor.roomId]) {
+          if (
+            selectedUpgradedByCounts[neighbor.roomId] ||
+            selectedRoom.ConvertedBy.includes(neighbor.roomId)
+          ) {
             canPlaceStrong = true;
           }
         }

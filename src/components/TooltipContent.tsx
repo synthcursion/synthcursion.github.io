@@ -27,14 +27,14 @@ export const TooltipContent: FC<{ content: string | null }> = ({ content }) => {
           {upgradesRooms.map((r) => r.Name).join(", ")}
         </div>
       )}
-      {room.ConvertedBy.length > 0 && (
-        <div className="tooltip-section">
+      {room.ConvertedBy.map((id, i) => (
+        <div key={id} className="tooltip-section">
           <span className="tooltip-label">
-            Converted to ${room.ConvertedTo} By:
+            Converted to {roomsData[room.ConvertedTo[i]]?.Name} By:
           </span>{" "}
-          {room.ConvertedBy.map((id) => roomsData[id]?.Name || id).join(", ")}
+          {roomsData[id]?.Name}
         </div>
-      )}
+      ))}
       {convertsRooms.length > 0 && (
         <div className="tooltip-section">
           <span className="tooltip-label">Converts:</span>{" "}
